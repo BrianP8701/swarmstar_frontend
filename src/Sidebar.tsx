@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from './GlobalContext';
 
 type SidebarProps = {
   setCurrentSection: (section: string) => void;
 };
 
-const Sidebar = ({ setCurrentSection }: SidebarProps) => {
+const Sidebar = () => {
+  const { setCurrentSection } = useContext(GlobalContext);
+
   return (
     <div style={{ width: '40px', height: '100vh', backgroundColor: '#000000', position: 'fixed', zIndex: 1 }}>
         <div style={{ width: '40px', height: '40px', marginTop: '10px', marginBottom: '30px', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/icon.ico)', backgroundSize: 'cover' }}></div>

@@ -2,11 +2,7 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../../GlobalContext';
 
 const AgentNavigation = () => {
-  const context = useContext(GlobalContext);
-  if (!context) {
-    throw new Error('GlobalContext is undefined, ensure the GlobalProvider is in the component tree above AgentNavigation');
-  }
-  const { agents } = context; // Assuming agents is an array of agent names
+  const { setSelectedAgent, agents } = useContext(GlobalContext);
 
   return (
     <div style={{
@@ -21,7 +17,7 @@ const AgentNavigation = () => {
       padding: '0 10px'
     }}>
       {agents.map((agent, index) => (
-        <div key={index} style={{
+      <button key={index} onClick={() => setSelectedAgent(agent)} style={{
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
@@ -31,7 +27,7 @@ const AgentNavigation = () => {
           margin: '3px 0'
         }}>
           {agent}
-        </div>
+        </button>
       ))}
     </div>
   );

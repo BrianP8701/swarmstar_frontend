@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../GlobalContext';
 import AgentNavigation from './AgentNavigation';
+import ChatSection from './ChatSection';
 
 const Chat = () => {
   const context = useContext(GlobalContext);
-  if (!context) {
-    throw new Error('GlobalContext is undefined, ensure the GlobalProvider is in the component tree above Chat');
-  }
   const { isRunning } = context;
 
   if (!isRunning) {
@@ -18,7 +16,7 @@ const Chat = () => {
       <div style={{ flex: 0.1, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <AgentNavigation />
       </div>
-      <div style={{ flex: 0.9, height: '100%' }}>Chat Area</div>
+      <ChatSection />
     </div>
   );
 };

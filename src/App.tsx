@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import HeaderBar from './HeaderBar';
+import { GlobalContext } from './GlobalContext';
 
 function App() {
-  const [currentSection, setCurrentSection] = useState<string>("Spawn");
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
       <HeaderBar />
       <div style={{ display: 'flex', flex: 1 }}>
-        <Sidebar setCurrentSection={setCurrentSection} />
-        <Main currentSection={currentSection} />
+        <Sidebar />
+        <Main />
       </div>
     </div>
   );

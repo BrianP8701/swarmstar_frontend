@@ -3,9 +3,6 @@ import { GlobalContext } from './GlobalContext';
 
 const HeaderBar = () => {
   const context = useContext(GlobalContext);
-  if (!context) {
-    throw new Error('GlobalContext is undefined, ensure the GlobalProvider is in the component tree above HeaderBar');
-  }
   const { isRunning } = context;
 
   return (
