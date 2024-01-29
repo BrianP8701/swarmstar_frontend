@@ -33,6 +33,8 @@ const defaultGlobalContextValues: GlobalContextProps = {
 
 export const GlobalContext = React.createContext<GlobalContextProps>(defaultGlobalContextValues);
 
+// MAX LENGTH OF AGENT NAME IS 15 CHARACTERS
+
 export const GlobalProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [swarmKey, setSwarmKey] = useState(localStorage.getItem('swarmKey') || '');
   const [currentGoal, setCurrentGoal] = useState(localStorage.getItem('currentGoal') || '');
