@@ -6,15 +6,15 @@ import ChatContainer from '../MainAreaSections/ChatContainer/index';
 const Main = () => {
   const { currentSection } = useContext(GlobalContext);
 
-    return (
-      <div style={{ flex: 1, backgroundColor: '#343541', boxSizing: 'border-box', overflow: 'hidden', width: 'calc(100vw - 40px)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ height: '100%', width: '100%', boxSizing: 'border-box', padding: '5%' }}>
-          {currentSection === 'Spawn' && <Spawn />}
-          {currentSection === 'Chat' && <ChatContainer />}
-        </div>
+  return (
+    <div style={{ flex: 1, backgroundColor: '#343541', boxSizing: 'border-box', overflow: 'hidden', width: 'calc(100vw - 40px)', height: 'calc(100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ height: '100%', width: '100%', boxSizing: 'border-box', padding: '1%' }}>
+        {currentSection === 'Spawn' && <Spawn />}
+        {currentSection === 'Chat' && <ChatContainer />}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default Main;
 

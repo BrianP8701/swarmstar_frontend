@@ -6,16 +6,16 @@ const NodePreview = () => {
 
   if (!selectedAgent) {
     return (
-        <div style={{ 
-            height: '100%', 
-            width: '80%',
-            borderRadius: '10px', 
-            margin: '0 auto', // Updated margin
-            border: '1px solid #000', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center',
-          }}>No Agent Selected</div>
+      <div style={{
+        height: '90%',
+        width: '90%',
+        borderRadius: '15px',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: 'inset 0px 0px 20px 0px rgba(0,0,0,0.85), 0px 0px 20px 0px rgba(0,0,0,0.85)',
+      }}>No Agent Selected</div>
     );
   }
 
@@ -23,16 +23,16 @@ const NodePreview = () => {
   const agentInfo = {}; // Replace with actual logic to retrieve agent info
 
   return (
-    <div style={{ 
-        height: '100%', 
-        width: '100%',
-        borderRadius: '10px', 
-        margin: '0 auto', // Updated margin
-        border: '1px solid #000', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-      }}>Agent Info Here</div>
+    <div style={{
+      height: '90%',
+      width: '90%',
+      borderRadius: '15px',
+      color: 'white',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxShadow: 'inset 0px 0px 20px 0px rgba(0,0,0,0.85), 0px 0px 20px 0px rgba(0,0,0,0.85)',
+    }}>Agent Info Here</div>
   );
 };
 

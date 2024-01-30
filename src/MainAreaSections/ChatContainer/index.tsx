@@ -19,27 +19,26 @@ const ChatContainer = () => {
         width: '150px',
         height: 'calc(100vh - 50px)',
         top: '50px',
-        left: '60px',
+        left: '70px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
       }}>
         <ChatNavigation />
       </div>
-      <div style={{ 
+      <div style={{
         position: 'fixed',
-        width: 'calc(100vw - 250px)',
-        height: 'calc(100vh - 110px)',
-        top: '50px',
-        left: '210px',
+        width: 'calc(100vw - 220px)',
+        height: 'calc(100vh - 50px)',
+        top: '65px',
+        left: '220px',
         display: 'flex',
         flexDirection: 'column',
-        padding: '20px'
-        }}>
-        <div style={{ height: '20%', width: '100%' }}>
+      }}>
+        <div style={{ height: '10%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <NodePreview />
         </div>
-        <div style={{ height: '80%', width: '100%' }}>
+        <div style={{ height: '90%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <ChatSection />
         </div>
       </div>

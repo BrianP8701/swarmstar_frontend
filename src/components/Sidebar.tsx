@@ -6,11 +6,11 @@ const Sidebar = () => {
 
   return (
     <div style={{ width: '40px', height: '100vh', backgroundColor: '#202123', position: 'fixed', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '40px', height: '40px', marginTop: '10px', marginBottom: '20px', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/icon.ico)', backgroundSize: 'cover' }}></div>
-        <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Spawn')}></button>
-        <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/chat.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Chat')}></button>
-        <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/metrics.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Metrics')}></button>
-        <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/bug.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Debugging')}></button>
+      <div style={{ width: '50px', height: '50px', marginBottom: '30px', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/WimpyBaby.png)', background: 'transparent22' }}></div>
+      <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Spawn')}></button>
+      <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/chat.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Chat')}></button>
+      <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/metrics.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Metrics')}></button>
+      <button style={{ marginTop: '7.5px', marginBottom: '7.5px', background: 'transparent', width: '30px', height: '30px', padding: '0', border: 'none', backgroundImage: 'url(' + process.env.PUBLIC_URL + '/bug.png)', backgroundSize: 'cover', backgroundPosition: 'center' }} onClick={() => setCurrentSection('Debugging')}></button>
     </div>
   );
 };
