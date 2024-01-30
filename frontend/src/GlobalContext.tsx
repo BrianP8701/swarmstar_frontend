@@ -1,6 +1,8 @@
 // src/GlobalContext.tsx
 import React, { useState, useEffect } from 'react';
 
+const backendUrl = 'http://127.0.0.1:5000';
+
 interface GlobalContextProps {
   swarmKey: string;
   setSwarmKey: React.Dispatch<React.SetStateAction<string>>;
@@ -14,21 +16,23 @@ interface GlobalContextProps {
   setSelectedAgent: React.Dispatch<React.SetStateAction<string>>;
   currentSection: string;
   setCurrentSection: React.Dispatch<React.SetStateAction<string>>;
+  backendUrl: string;
 }
 
 const defaultGlobalContextValues: GlobalContextProps = {
   swarmKey: '',
-  setSwarmKey: () => {}, // Placeholder function
+  setSwarmKey: () => { }, // Placeholder function
   isRunning: false,
-  setIsRunning: () => {}, // Placeholder function
+  setIsRunning: () => { }, // Placeholder function
   currentGoal: '',
-  setCurrentGoal: () => {}, // Placeholder function
+  setCurrentGoal: () => { }, // Placeholder function
   agents: [],
-  setAgents: () => {}, // Placeholder function
+  setAgents: () => { }, // Placeholder function
   selectedAgent: '',
-  setSelectedAgent: () => {}, // Placeholder function
+  setSelectedAgent: () => { }, // Placeholder function
   currentSection: '',
-  setCurrentSection: () => {}, // Placeholder function
+  setCurrentSection: () => { }, // Placeholder function
+  backendUrl: backendUrl,
 };
 
 export const GlobalContext = React.createContext<GlobalContextProps>(defaultGlobalContextValues);
@@ -44,24 +48,25 @@ export const GlobalProvider: React.FC<React.PropsWithChildren<{}>> = ({ children
   const [currentSection, setCurrentSection] = useState<string>('Spawn');
 
   useEffect(() => {
-      localStorage.setItem('swarmKey', swarmKey);
-      localStorage.setItem('currentGoal', currentGoal);
-      localStorage.setItem('isRunning', isRunning.toString());
-      localStorage.setItem('agents', agents.toString());
-      localStorage.setItem('selectedAgent', selectedAgent);
-      localStorage.setItem('currentSection', currentSection);
+    localStorage.setItem('swarmKey', swarmKey);
+    localStorage.setItem('currentGoal', currentGoal);
+    localStorage.setItem('isRunning', isRunning.toString());
+    localStorage.setItem('agents', agents.toString());
+    localStorage.setItem('selectedAgent', selectedAgent);
+    localStorage.setItem('currentSection', currentSection);
   }, [swarmKey, currentGoal, isRunning, agents, selectedAgent, currentSection]);
 
   return (
-      <GlobalContext.Provider value={{ 
-        swarmKey, setSwarmKey, 
-        currentGoal, setCurrentGoal, 
-        isRunning, setIsRunning, 
-        agents, setAgents, 
-        selectedAgent, setSelectedAgent,
-        currentSection, setCurrentSection
-         }}>
+    <GlobalContext.Provider value={{
+      swarmKey, setSwarmKey,
+      currentGoal, setCurrentGoal,
+      isRunning, setIsRunning,
+      agents, setAgents,
+      selectedAgent, setSelectedAgent,
+      currentSection, setCurrentSection,
+      backendUrl: backendUrl,
+    }}>
       {children}
-      </GlobalContext.Provider>
+    </GlobalContext.Provider>
   );
 };

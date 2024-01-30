@@ -15,7 +15,7 @@ const NodePreview = () => {
         justifyContent: 'center',
         alignItems: 'center',
         boxShadow: 'inset 0px 0px 20px 0px rgba(0,0,0,0.85), 0px 0px 20px 0px rgba(0,0,0,0.85)',
-      }}>No Agent Selected</div>
+      }}></div>
     );
   }
 

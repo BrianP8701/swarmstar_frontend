@@ -1,16 +1,32 @@
 // src/components/Spawn/index.tsx
 import { GlobalContext } from '../../GlobalContext';
 import React, { useContext } from 'react';
+import { sendDataToBackend } from '../../utils/api';
 
 const Spawn = () => {
     const context = useContext(GlobalContext);
-    const { swarmKey, setSwarmKey, setIsRunning, currentGoal, setCurrentGoal } = context;
+    const { swarmKey, setSwarmKey, setIsRunning, currentGoal, setCurrentGoal, backendUrl } = context;
+
+    const handleSendData = async () => {
+        const data = { 
+            type: 'spawn_swarm_instance',
+            swarm_key: swarmKey,
+            goal: currentGoal
+        };
+
+        try {
+            const responseData = await sendDataToBackend(data, backendUrl);
+            console.log('Response from backend:', responseData);
+        } catch (error) {
+            console.error('Error sending data to backend:', error);
+        }
+    };
 
     const spawn = async () => {
-        // TODO: Fix postToRouter implementation
-        // For now, setIsRunning is set to true to simulate a successful response
+
         setIsRunning(true);
         setCurrentGoal(currentGoal);
+        handleSendData();
     };
 
     return (
