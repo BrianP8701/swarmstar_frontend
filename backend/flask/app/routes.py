@@ -1,20 +1,36 @@
-from flask import request, jsonify
+# In app/routes.py
+from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 
-def init_routes(app):
-    @app.route('/post', methods=['POST'])
-    def receive_data():
-        print('are we even here?')
-        data = request.json  # Data received as a dictionary
-        print(data)  # Process the data as needed
-        return jsonify({"message": "Data received"}), 200
+routes = Blueprint('routes', __name__)
 
-    @app.route('/get', methods=['GET'])
-    def send_data():
-        data_to_send = {"key": "value"}  # Data you want to send
-        return jsonify(data_to_send), 200
+@routes.route('/post_router', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def receive_data():
+    data = request.json  # Data received as a dictionary
+    print(data)
+    print(type(data))
+    return jsonify({"message": "Data received"}), 200
 
-    def post_router(data):
-        print(data['body']) 
-        
-    def get_router():
-        print('get_router called')
+@routes.route('/get_router', methods=['GET'])
+@cross_origin(origin='http://localhost:3000')
+def send_data():
+    data_to_send = {"key": "value"}  # Data you want to send
+    return jsonify(data_to_send), 200
+
+@routes.route('/login', methods=['POST'])
+@cross_origin(origin='http://localhost:3000')
+def login():
+    data = request.json
+    username = data['body']['username']
+    password = data['body']['password']
+    return jsonify({"message": "Login successful"}), 200
+
+def post_router(data):
+    print(data['body'])
+    
+def get_router():
+    print('get_router called')
+
+
+    

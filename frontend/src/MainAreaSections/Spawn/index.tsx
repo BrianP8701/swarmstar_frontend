@@ -1,7 +1,7 @@
 // src/components/Spawn/index.tsx
 import { GlobalContext } from '../../GlobalContext';
 import React, { useContext } from 'react';
-import { sendDataToBackend } from '../../utils/api';
+import { sendDataToBackend } from '../../api/backend_router';
 
 const Spawn = () => {
     const context = useContext(GlobalContext);

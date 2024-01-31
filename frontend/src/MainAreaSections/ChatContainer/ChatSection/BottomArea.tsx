@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { text } from 'stream/consumers';
 
 interface BottomAreaProps {
     onHeightChange: (height: number) => void;
@@ -22,8 +23,11 @@ class BottomArea extends React.Component<BottomAreaProps> {
         const lineHeight = 20;
 
         textarea.style.height = 'auto';
+
         const newHeight = Math.min(textarea.scrollHeight, lineHeight * maxLines);
+        console.log('newHeight ' + newHeight);
         textarea.style.height = `${newHeight}px`;
+
 
         if (this.divRef.current) {
             this.divRef.current.style.height = `${newHeight}px`;
