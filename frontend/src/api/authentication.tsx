@@ -1,8 +1,9 @@
+import config from '@configs/configLoader';
 
 
-const handleLogin = async (username: string, password: string, backendUrl: string) => {
+const handleLogin = async (username: string, password: string): Promise<Record<string, any>> => {
     try {
-        const response = await fetch(backendUrl + '/login', {
+        const response = await fetch(config.login_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -11,23 +12,42 @@ const handleLogin = async (username: string, password: string, backendUrl: strin
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            console.error(response);
+            throw new Error(`Login request failed with status: ${response.status}`);
         }
 
-        const data = await response.json();
-        localStorage.setItem('token', data.token); // Store token in localStorage
+        // Extract the user data from the response
+        const responseData = await response.json();
+        // const user: User = responseData.user;
+        // setUser(user);
+
+        return responseData; // This is now a User type object
+
     } catch (error) {
         console.error(error);
+        throw error;
     }
 }
 
-const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from localStorage
+const isAuthenticated = async (): Promise<boolean> => {
+    try {
+        const response = await fetch(config.authentication_url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+            return false;
+        }
+
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+
+    return true;
 };
 
-const isAuthenticated = () => {
-    return localStorage.getItem('token') !== null;
-};
-
-export { handleLogin, handleLogout, isAuthenticated };
+export { handleLogin, isAuthenticated };
 

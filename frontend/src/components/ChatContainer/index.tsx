@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from 'GlobalContext';
+import { useContext } from 'react';
+import { GlobalContext } from '@configs/GlobalContext';
 import ChatNavigation from '@components/ChatContainer/ChatNavigation/ChatNavigation';
 import NodePreview from '@components/ChatContainer/NodePreview/NodePreview';
 import ChatSection from '@components/ChatContainer/ChatSection/ChatSection';
 
 const ChatContainer = () => {
   const context = useContext(GlobalContext);
-  const { isRunning } = context;
+  const { user } = context;
+  const isRunning = user.isRunning;
 
   if (!isRunning) {
     return <div>No active swarm</div>;

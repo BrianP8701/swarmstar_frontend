@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from 'GlobalContext';
+import { GlobalContext } from '@configs/GlobalContext';
 
 const NodePreview = () => {
-  const { selectedAgent } = useContext(GlobalContext);
+  const { agents } = useContext(GlobalContext);
+  const currentAgent = agents.currentAgent;
 
-  if (!selectedAgent) {
+  if (!currentAgent) {
     return (
       <div style={{
         height: '90%',

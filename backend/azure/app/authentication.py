@@ -2,19 +2,32 @@ import jwt
 from datetime import datetime, timedelta
 from azure.functions import HttpRequest, HttpResponse
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+import json
 
 def login(req: HttpRequest) -> HttpResponse:
+    # Extract username and password from the request
+    username = req.json.get('username', None)
+    password = req.json.get('password', None)
     # Generate a JWT token (simplified example)
     secret_key = "your_secret_key"
     token_expiry = datetime.utcnow() + timedelta(days=1)
     token = jwt.encode({'user': 'username', 'exp': token_expiry}, secret_key, algorithm="HS256")
 
-    # Set the token in a cookie
+
+    user_data = {
+        'currentSwarm': 'exampleSwarm',
+        'username': username,  # This should be the actual username
+        'userSwarms': ['swarm1', 'swarm2'],
+        'currentSection': 'exampleSection',
+        'currentGoal': 'exampleGoal',
+    }
+
+    # Set the token and user data in the response
     headers = {
         'Set-Cookie': f'token={token}; HttpOnly; Path=/; Expires={token_expiry.strftime("%a, %d-%b-%Y %H:%M:%S GMT")}'
     }
-    return HttpResponse("Logged in successfully", headers=headers)
-
+    return HttpResponse(json.dumps({'message': "Logged in successfully", 'user': user_data}), headers=headers, status_code=200)
+    
 
 def authenticate(req: HttpRequest) -> HttpResponse:
     # Extract the token from the cookie

@@ -30,6 +30,9 @@
       "@api/*": [
         "api/*"
       ],
+      "@models/*": [
+        "models/*"
+      ]
     }
   },
   "include": [

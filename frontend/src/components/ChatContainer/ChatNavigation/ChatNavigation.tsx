@@ -1,9 +1,12 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from 'GlobalContext';
+import { useContext } from 'react';
+import { GlobalContext } from '@configs/GlobalContext';
 import '@components/ChatContainer/ChatNavigation/ChatNavigation.css'; // Import the CSS file here
 
 const ChatNavigation = () => {
-  const { setSelectedAgent, agents } = useContext(GlobalContext);
+  const { agents, setAgents } = useContext(GlobalContext);
+  const all_agents = agents.all_agents;
+
+
 
   return (
     <div style={{
@@ -20,8 +23,8 @@ const ChatNavigation = () => {
       boxShadow: '0 0 10px 0 #000',
       gap: '8px' // Added gap to create space between buttons
     }}>
-      {agents.map((agent, index) => (
-      <button key={index} onClick={() => setSelectedAgent(agent)} style={{
+      {all_agents.map((agent, index) => (
+        <button key={index} onClick={() => setAgents(prev => ({ ...prev, currentAgent: agent }))} style={{
           display: 'inline-block', // Changed from 'flex' to 'inline-block' to make the button size fit the content
           justifyContent: 'flex-start',
           minWidth: '150px',
@@ -36,9 +39,9 @@ const ChatNavigation = () => {
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis'
         }}
-        onMouseOver={(e) => e.currentTarget.style.border = '1px solid #c5c5d2'}
-        onMouseOut={(e) => e.currentTarget.style.border = 'none'}
-      >
+          onMouseOver={(e) => e.currentTarget.style.border = '1px solid #c5c5d2'}
+          onMouseOut={(e) => e.currentTarget.style.border = 'none'}
+        >
           {agent}
         </button>
       ))}

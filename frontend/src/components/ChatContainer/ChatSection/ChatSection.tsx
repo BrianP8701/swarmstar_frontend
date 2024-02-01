@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { GlobalContext } from 'GlobalContext';
+import { useContext, useState } from 'react';
+import { GlobalContext } from '@configs/GlobalContext';
 import BottomArea from '@components/ChatContainer/ChatSection/BottomArea';
 import TopArea from '@components/ChatContainer/ChatSection/TopArea';
 
 const ChatSection = () => {
-  const { selectedAgent } = useContext(GlobalContext);
+  const { agents } = useContext(GlobalContext);
   const [bottomAreaHeight, setBottomAreaHeight] = useState(40);
 
-  if (!selectedAgent) {
+  if (!agents.currentAgent) {
     return <div style={{
       display: 'flex',
       justifyContent: 'center',

@@ -23,7 +23,19 @@ def login():
     # Create JWT token
     expires = timedelta(hours=24)  # 24 hours
     token = create_access_token(identity=username, expires_delta=expires)
-    response = jsonify({"token": token})
+
+    # User data to be returned
+    user_data = {
+        'currentSwarm': 'exampleSwarm',
+        'username': username,  # Use the actual username from the request
+        'userSwarms': ['swarm1', 'swarm2'],
+        'currentSection': 'exampleSection',
+        'currentGoal': 'exampleGoal',
+    }
+
+    # Add user_data to the response
+    response = jsonify({"token": token, "user": user_data})
     response.set_cookie('token', token, httponly=True)
+    
     return response
 

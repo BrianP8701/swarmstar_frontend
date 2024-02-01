@@ -1,4 +1,3 @@
-import React from 'react';
 
 const TopArea = ({ bottomAreaHeight }: { bottomAreaHeight: number }) => {
     const topAreaHeight = `calc(100% - ${bottomAreaHeight}px)`;
