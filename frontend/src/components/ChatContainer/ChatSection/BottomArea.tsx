@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import { text } from 'stream/consumers';
 
 interface BottomAreaProps {
     onHeightChange: (height: number) => void;

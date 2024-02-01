@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../../GlobalContext';
-import ChatNavigation from './ChatNavigation/ChatNavigation';
-import NodePreview from './NodePreview/NodePreview';
-import ChatSection from './ChatSection/ChatSection';
+import { GlobalContext } from 'GlobalContext';
+import ChatNavigation from '@components/ChatContainer/ChatNavigation/ChatNavigation';
+import NodePreview from '@components/ChatContainer/NodePreview/NodePreview';
+import ChatSection from '@components/ChatContainer/ChatSection/ChatSection';
 
 const ChatContainer = () => {
   const context = useContext(GlobalContext);

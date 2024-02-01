@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../GlobalContext';
-import Spawn from '../MainAreaSections/Spawn/index';
-import ChatContainer from '../MainAreaSections/ChatContainer/index';
+import { GlobalContext } from 'GlobalContext';
+import Spawn from '@components/Spawn';
+import ChatContainer from '@components/ChatContainer';
 
 const Main = () => {
   const { currentSection } = useContext(GlobalContext);

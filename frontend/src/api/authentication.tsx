@@ -1,3 +1,5 @@
+
+
 const handleLogin = async (username: string, password: string, backendUrl: string) => {
     try {
         const response = await fetch(backendUrl + '/login', {
@@ -23,4 +25,9 @@ const handleLogout = () => {
     localStorage.removeItem('token'); // Remove token from localStorage
 };
 
-export { handleLogin, handleLogout };
+const isAuthenticated = () => {
+    return localStorage.getItem('token') !== null;
+};
+
+export { handleLogin, handleLogout, isAuthenticated };
+

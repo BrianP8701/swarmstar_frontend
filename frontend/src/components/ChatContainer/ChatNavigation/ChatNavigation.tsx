@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../../../GlobalContext';
-import './ChatNavigation.css'; // Import the CSS file here
+import { GlobalContext } from 'GlobalContext';
+import '@components/ChatContainer/ChatNavigation/ChatNavigation.css'; // Import the CSS file here
 
 const ChatNavigation = () => {
   const { setSelectedAgent, agents } = useContext(GlobalContext);

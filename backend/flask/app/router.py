@@ -18,14 +18,6 @@ def send_data():
     data_to_send = {"key": "value"}  # Data you want to send
     return jsonify(data_to_send), 200
 
-@routes.route('/login', methods=['POST'])
-@cross_origin(origin='http://localhost:3000')
-def login():
-    data = request.json
-    username = data['body']['username']
-    password = data['body']['password']
-    return jsonify({"message": "Login successful"}), 200
-
 def post_router(data):
     print(data['body'])
     

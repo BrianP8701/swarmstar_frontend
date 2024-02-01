@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import Sidebar from './components/Sidebar';
-import Main from './components/MainArea';
-import HeaderBar from './components/HeaderBar';
+import Sidebar from '@components/Sidebar';
+import Main from '@components/MainArea';
+import HeaderBar from '@components/HeaderBar';
 import { GlobalContext } from './GlobalContext';
 
 function App() {

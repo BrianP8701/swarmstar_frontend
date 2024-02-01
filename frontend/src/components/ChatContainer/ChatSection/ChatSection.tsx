@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { GlobalContext } from '../../../GlobalContext';
-import BottomArea from './BottomArea';
-import TopArea from './TopArea';
+import { GlobalContext } from 'GlobalContext';
+import BottomArea from '@components/ChatContainer/ChatSection/BottomArea';
+import TopArea from '@components/ChatContainer/ChatSection/TopArea';
 
 const ChatSection = () => {
   const { selectedAgent } = useContext(GlobalContext);

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../../../GlobalContext';
+import { GlobalContext } from 'GlobalContext';
 
 const NodePreview = () => {
   const { selectedAgent } = useContext(GlobalContext);

@@ -77,7 +77,7 @@ swarm_blueprint: {
     state: SwarmState
 }
 
-Ill need to have some balancer that takes user_id and points to the cosmosdb that contains right user when i scale. In fact each user should have their own entry in cosmos db
+cosmodb cant support all that. we need to use a combination of cosmodb and blob storage. thats also not scalable. in the future, if we do scale we can we use some load balancers etc but thats for another time.
 
 One cosmo db holds this: (If we scale this can be something else instead of cosmo)
 CosmoDB: Partition Key[username]
@@ -110,7 +110,7 @@ CosmoDB: Partition Key[user_id]
     },
     ... more users
 }
-SwarmSpace contains pointers to these in blob storage: 
+SwarmSpace in the cosmodb above contains pointers to these in blob storage. this stuff belongs in blob cuz these files can get big
 {
     user_id: {
         swarm_id: {
