@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include'
             });
 
             // Wait for the Azure Function to process the request and return a response

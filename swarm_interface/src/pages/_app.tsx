@@ -1,22 +1,33 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie'; // You might need to install js-cookie
-
+import useAuthCheck from '@/hooks/authCheck';
 import { AppProps } from 'next/app';
+import { useEffect } from 'react';
+import { GlobalProvider } from '@/configs/GlobalContext';
+import '@/styles/globals.css';
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+
+const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
+  const isAuthenticated = useAuthCheck();
 
   useEffect(() => {
-    const jwtToken = Cookies.get('jwtToken'); // Replace 'jwtToken' with your cookie name
-    if (!jwtToken) {
+    if (isAuthenticated === false) {
       router.push('/login');
-    } else {
+    }
+    if (isAuthenticated === true) {
       router.push('/spawn');
     }
-  }, []);
+  }, [isAuthenticated, router]);
 
-  return <Component {...pageProps} />;
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>; // Or a more sophisticated loader/spinner
+  }
+
+  return (
+    <GlobalProvider>
+      <Component {...pageProps} />
+    </GlobalProvider>
+  );
 };
 
-export default MyApp;
+export default App;
