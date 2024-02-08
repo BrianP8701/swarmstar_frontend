@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import Sidebar from '@components/Sidebar';
 import Main from '@components/MainArea';
 import HeaderBar from '@components/HeaderBar';
+import Login from '@components/Login';
 import { isAuthenticated } from '@api/authentication';
-
-// Placeholder for the Login component
-const Login = () => <div>Login Page</div>;
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -28,19 +26,21 @@ function App() {
   return (
     <div>
       {auth ? (
-        <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', position: 'fixed' }}>
-          <div style={{ display: 'flex', height: '50px', width: 'calc(100vw - 40px)', backgroundColor: '#202123', position: 'fixed', marginLeft: '40px', zIndex: 1 }}>
+        <div className="flex h-screen w-screen overflow-hidden fixed">
+          <div className="flex h-12 w-[calc(100vw-10rem)] bg-my-black fixed ml-10 z-10">
             <HeaderBar />
           </div>
-          <div style={{ display: 'flex', height: '100vh', width: '40px', backgroundColor: '#202123', position: 'fixed', zIndex: 1 }}>
+          <div className="flex h-screen w-10 bg-my-black fixed z-10">
             <Sidebar />
           </div>
-          <div style={{ display: 'flex', height: 'calc(100vh - 50px)', width: 'calc(100vw-40px)', position: 'fixed', marginLeft: '40px', marginTop: '50px' }}>
+          <div className="flex h-[calc(100vh-3rem)] w-[calc(100vw-10rem)] fixed ml-10 mt-12">
             <Main />
           </div>
         </div>
       ) : (
-        <Login />
+        <div className="flex h-screen w-screen justify-center items-center bg-chatgpt-gray">
+          <Login />
+        </div>
       )}
     </div>
   );

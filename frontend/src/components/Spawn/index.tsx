@@ -35,12 +35,28 @@ const Spawn = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', flex: 1 }}>
-            <input type="password" placeholder="Enter swarm key" value={currentSwarm || ''} onChange={(e) => setUser(prev => ({ ...prev, currentSwarm: e.target.value }))} style={{ marginBottom: '20px', width: '300px', padding: '10px', backgroundColor: 'transparent', color: 'white', boxShadow: 'inset 0px 0px 20px 0px rgba(0,0,0,0.85)', borderRadius: '30px', border: 'none', outline: 'none' }} />
-            <textarea placeholder="Enter goal" value={currentGoal} onChange={(e) => setUser(prev => ({ ...prev, currentGoal: e.target.value }))} style={{ minWidth: '300px', width: '350px', maxWidth: '95%', minHeight: '20px', height: '150px', padding: '20px', backgroundColor: 'transparent', color: 'white', boxShadow: 'inset 0px 0px 20px 0px rgba(0,0,0,0.85)', borderRadius: '30px', resize: 'both', border: 'none', outline: 'none' }} />
-            <button disabled={!currentSwarm || !currentGoal} onClick={() => { spawn(); }} style={{ marginTop: '15px', borderRadius: '30px', background: 'transparent', color: 'white' }}>Spawn</button>
+        <div className="flex flex-col justify-center items-center h-full flex-1">
+            <input
+                type="password"
+                placeholder="Enter swarm key"
+                value={currentSwarm || ''}
+                onChange={(e) => setUser(prev => ({ ...prev, currentSwarm: e.target.value }))}
+                className="mb-5 w-7 p-2.5 bg-transparent text-white shadow-my-inset rounded-full border-none outline-none"
+            />
+            <textarea
+                placeholder="Enter goal"
+                value={currentGoal}
+                onChange={(e) => setUser(prev => ({ ...prev, currentGoal: e.target.value }))}
+                className="min-w-72 w-88 max-w-95% min-h-5 h-37.5 p-5 bg-transparent text-white shadow-my-inset rounded-full resize border-none outline-none"
+            />
+            <button
+                disabled={!currentSwarm || !currentGoal}
+                onClick={() => { spawn(); }}
+                className="mt-3.5 rounded-full bg-transparent text-white"
+            >
+                Spawn
+            </button>
         </div>
     );
-};
-
+}
 export default Spawn;

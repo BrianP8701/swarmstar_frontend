@@ -1,8 +1,6 @@
 const flaskConfig = {
-    login_url: "http://localhost:5000/login",
-    authentication_url: "http://localhost:5000/authenticate",
-    get_swarm_blueprint_url: "http://localhost:5000/getSwarmBlueprint",
-    holderUrl: ''
+    login_url: "http://lvh.me:5000/login",
+    authentication_url: "http://lvh.me:5000/auth"
 };
 
 export default flaskConfig;

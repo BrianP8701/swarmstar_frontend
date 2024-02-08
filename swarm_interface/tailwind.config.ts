@@ -13,18 +13,32 @@ const config: Config = {
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        "chatgpt-gray": "#343541"
+        "gray-50": "#f7f7f8",
+        "gray-100": "#ececf1",
+        "gray-200": "#d9d9e3",
+        "gray-300": "#c5c5d2",
+        "gray-400": "#acacbe",
+        "gray-500": "#999",
+        "gray-600": "#666",
+        "gray-700": "#40414f",
+        "gray-800": "#343541",
+        "gray-900": "#202123",
+        "gray-950": "#0f0f0f",
       },
       boxShadow: {
-        "my-inset": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        "shadow-inside": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        "shadow-outside": "0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        "shadow-both": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06), 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
       },
       borderRadius: {
-        's': '0.375rem', // This translates to 6px
-        'm': '0.5rem', // This translates to 8px
-        'l': '0.75rem', // This translates to 12px
+        '1': '1px', // This translates to 6px
+        '2': '3rem', // This translates to 8px
+        '3': '5rem', // This translates to 12px
       },
     },
   },
   plugins: [],
 };
 export default config;
+
+

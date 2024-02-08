@@ -3,13 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
   try {
     const response = await fetch(config.authentication_url, {
       method: 'GET',
-      credentials: 'include', // to send the cookie
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: req.headers as HeadersInit,
     });
 
     if (response.ok) {

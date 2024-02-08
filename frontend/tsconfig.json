@@ -32,7 +32,10 @@
       ],
       "@models/*": [
         "models/*"
-      ]
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
     }
   },
   "include": [

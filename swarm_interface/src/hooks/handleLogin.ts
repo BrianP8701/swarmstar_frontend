@@ -9,18 +9,21 @@ const useHandleLogin = () => {
         try {
             const response = await fetch('/api/handleLogin', {
                 method: 'POST',
+                body: JSON.stringify({ username, password }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
             });
 
             if (response.ok) {
-                const userData = await response.json();
-                setUser(userData as unknown as User);
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                setUser(data.user as unknown as User);
+            } else {
+                throw new Error('Login failed due to server error');
             }
         } catch (error) {
-            console.error('Failed to connect to the server');
+            throw error;
         }
     };
 

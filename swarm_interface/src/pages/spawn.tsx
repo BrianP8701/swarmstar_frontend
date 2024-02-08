@@ -1,11 +1,11 @@
-// src/components/Spawn/index.tsx
+// src/pages/spawn.tsx
 import { GlobalContext } from '@/configs/GlobalContext';
 import { useContext } from 'react';
 
 const Spawn = () => {
+    console.log('Spawn page');
     const context = useContext(GlobalContext);
     const { user, setUser } = context;
-
     const currentSwarm = user.currentSwarm;
     const isRunning = user.isRunning;
     const currentGoal = user.currentGoal;
@@ -35,7 +35,7 @@ const Spawn = () => {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center h-full flex-1">
+        <div className="flex flex-col justify-center items-center h-full w-full">
             <input
                 type="password"
                 placeholder="Enter swarm key"

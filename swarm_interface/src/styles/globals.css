@@ -18,16 +18,34 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  .shadow-inside {
+    box-shadow: inset 0 0 10px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .shadow-outside {
+    box-shadow: 0 0px 10px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .shadow-both {
+    box-shadow: inset 0 0 10px 6px rgba(0, 0, 0, 0.6), 0 0 10px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .text-border-white {
+    @apply bg-gray-800 text-white border border-white rounded-2 appearance-none leading-normal focus:outline-none py-2 px-4;
+  }
+
+  .button-text {
+    @apply bg-gray-300 text-gray-600 rounded-1 text-sm appearance-none leading-normal focus:outline-none border border-gray-600 px-1 hover:bg-gray-400 active:bg-gray-500;
+  }
+
 }
