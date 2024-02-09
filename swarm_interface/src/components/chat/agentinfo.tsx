@@ -7,7 +7,7 @@ const AgentInfo = () => {
     const isRunning = user.isRunning;
 
     return (
-        <div className="">
+        <div className="h-full w-full border border-white">
             boom
         </div>
     );

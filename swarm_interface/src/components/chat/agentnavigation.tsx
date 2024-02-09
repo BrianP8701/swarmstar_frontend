@@ -12,7 +12,7 @@ const AgentNavigation = () => {
     };
 
     return (
-        <div className="h-full w-full bg-gray-900 pl-1 pr-1 pt-2 pb-2 agent-navigation-container">
+        <div className="h-full w-full bg-gray-900 pl-1 pr-1 pt-2 pb-2 border border-white agent-navigation-container ">
             {all_agents.map((agent, index) => (
                 <button className="agent-button w-full" key={index} onClick={() => selectAgent(index)}>
                     {agent}
