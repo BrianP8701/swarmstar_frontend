@@ -31,9 +31,11 @@ const config: Config = {
         "shadow-both": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06), 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
       },
       borderRadius: {
-        '1': '1px', // This translates to 6px
-        '2': '3rem', // This translates to 8px
-        '3': '5rem', // This translates to 12px
+        '10': '10px',
+        '20': '20px', 
+        '30': '30px', 
+        '40': '40px', 
+        '50': '50px',
       },
     },
   },

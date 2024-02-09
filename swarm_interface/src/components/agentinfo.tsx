@@ -1,16 +1,17 @@
 import { useContext } from 'react';
 import { GlobalContext } from '@configs/GlobalContext';
 
-const HeaderBar = () => {
+const AgentInfo = () => {
     const context = useContext(GlobalContext);
     const { user } = context;
     const isRunning = user.isRunning;
 
     return (
-        <div className="h-12 w-full fixed bg-black text-white flex items-center justify-end pr-10">
-            <div >{isRunning ? 'Running' : 'Not running'}</div>
+        <div className="">
+            boom
         </div>
     );
 };
 
-export default HeaderBar;
+export default AgentInfo;
+

@@ -20,7 +20,7 @@ const defaultUser: User = {
 };
 
 const defaultAgent: Agents = {
-  all_agents: [],
+  all_agents: ['Agent1', 'Agent2', 'Agent3', 'Agent4', 'Agent5', 'Agent6asbdjsajkdbsjkbd', 'Agent7', 'Agent8', 'Agent9', 'Agent10', 'Agent11', 'Agent12', 'Agent13', 'Agent14', 'Agent15', 'Agent16', 'Agent17', 'Agent18', 'Agent20', 'Agent21'],
   currentAgent: null,
   currentGoal: ''
 };
@@ -34,11 +34,18 @@ const defaultGlobalContextValues: GlobalContextProps = {
 
 export const GlobalContext = React.createContext<GlobalContextProps>(defaultGlobalContextValues);
 
-// MAX LENGTH OF AGENT NAME IS 15 CHARACTERS
+
 
 export const GlobalProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [user, setUser] = useState<User>(defaultUser);
-  const [agents, setAgents] = useState<Agents>(defaultAgent);
+  const [user, setUser] = useState<User>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : defaultUser;
+  });
+  // MAX LENGTH OF AGENT NAME IS 15 CHARACTERS
+  const [agents, setAgents] = useState<Agents>(() => {
+    const savedAgents = localStorage.getItem('agents');
+    return savedAgents ? JSON.parse(savedAgents) : defaultAgent;
+  });
 
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(user));

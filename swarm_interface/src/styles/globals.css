@@ -41,11 +41,64 @@ body {
   }
 
   .text-border-white {
-    @apply bg-gray-800 text-white border border-white rounded-2 appearance-none leading-normal focus:outline-none py-2 px-4;
+    @apply bg-gray-800 text-white border border-white rounded-30 appearance-none leading-normal focus:outline-none py-2 px-4;
+  }
+
+  .text-1 {
+    @apply bg-gray-800 text-white border border-white rounded-30 appearance-none leading-normal focus:outline-none py-2 px-4;
   }
 
   .button-text {
-    @apply bg-gray-300 text-gray-600 rounded-1 text-sm appearance-none leading-normal focus:outline-none border border-gray-600 px-1 hover:bg-gray-400 active:bg-gray-500;
+    @apply bg-gray-300 text-gray-600 rounded-10 text-sm appearance-none leading-normal focus:outline-none border border-gray-600 px-1 hover:bg-gray-400 active:bg-gray-500;
   }
 
+  .sidebar-section-icon {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: transparent;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .agent-button {
+    padding: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    border-radius: 5px;
+  }
+
+  .agent-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to left, transparent, rgba(80, 80, 80, 0.5) 90%);
+    pointer-events: none;
+  }
+
+  .agent-button:hover,
+  .agent-button:focus,
+  .agent-button:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+  }
+
+  .agent-button:active {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .agent-navigation-container {
+    overflow-y: scroll;
+    scrollbar-width: 5px;
+    scrollbar-color: #4A4A4A80 transparent;
+}
 }
