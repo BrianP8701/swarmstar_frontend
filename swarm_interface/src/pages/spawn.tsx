@@ -1,4 +1,4 @@
-// pages/your-page.tsx
+// pages/spawn.tsx
 import Layout from '@components/layout';
 import Spawn from '@components/spawn';
 

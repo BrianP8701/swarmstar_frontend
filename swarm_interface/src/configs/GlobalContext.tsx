@@ -1,4 +1,3 @@
-// src/GlobalContext.tsx
 import React, { useState, useEffect } from 'react';
 import { User } from '@models/user';
 import { Agents } from '@models/agents';
@@ -8,6 +7,8 @@ interface GlobalContextProps {
   setUser: React.Dispatch<React.SetStateAction<User>>;
   agents: Agents;
   setAgents: React.Dispatch<React.SetStateAction<Agents>>;
+  currentPage: string;
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const defaultUser: User = {
@@ -25,37 +26,58 @@ const defaultAgent: Agents = {
   currentGoal: ''
 };
 
+const defaultCurrentPage: string = '/spawn';
+
 const defaultGlobalContextValues: GlobalContextProps = {
   user: defaultUser,
   setUser: () => { },
   agents: defaultAgent,
-  setAgents: () => { }
+  setAgents: () => { },
+  currentPage: defaultCurrentPage,
+  setCurrentPage: () => { }
 };
 
 export const GlobalContext = React.createContext<GlobalContextProps>(defaultGlobalContextValues);
 
-
-
 export const GlobalProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [user, setUser] = useState<User>(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : defaultUser;
-  });
-  // MAX LENGTH OF AGENT NAME IS 15 CHARACTERS
-  const [agents, setAgents] = useState<Agents>(() => {
-    const savedAgents = localStorage.getItem('agents');
-    return savedAgents ? JSON.parse(savedAgents) : defaultAgent;
-  });
+  // Initialize state without attempting to access localStorage
+  const [user, setUser] = useState<User>(defaultUser);
+  const [agents, setAgents] = useState<Agents>(defaultAgent);
+  const [currentPage, setCurrentPage] = useState<string>(defaultCurrentPage);
 
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('agents', JSON.stringify(agents));
+    // Now that we are client-side, it's safe to access localStorage
+    const savedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+
+    const savedAgents = typeof window !== 'undefined' ? localStorage.getItem('agents') : null;
+    if (savedAgents) {
+      setAgents(JSON.parse(savedAgents));
+    }
+
+    let savedCurrentPage = typeof window !== 'undefined' ? localStorage.getItem('currentPage') : defaultCurrentPage;
+    if (!savedCurrentPage) {
+      savedCurrentPage = defaultCurrentPage;
+    }
+    setCurrentPage(savedCurrentPage);
+  }, []);
+
+  useEffect(() => {
+    // Save to localStorage when user or agents state changes, client-side only
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('agents', JSON.stringify(agents));
+      // No need to save currentPage here as it's being handled in _app.tsx
+    }
   }, [user, agents]);
 
   return (
     <GlobalContext.Provider value={{
       user, setUser,
-      agents, setAgents
+      agents, setAgents,
+      currentPage, setCurrentPage
     }}>
       {children}
     </GlobalContext.Provider>
