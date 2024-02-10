@@ -6,7 +6,7 @@ import AgentChat from '@/components/chat/agentchat';
 
 const ChatPage = () => (
     <Layout>
-        <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gridTemplateRows: '100px 1fr', height: '100%', width: '100%', overflow: 'hidden' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gridTemplateRows: '50px 1fr', height: '100%', width: '100%', overflow: 'hidden' }}>
             <div style={{ gridColumn: '1', gridRow: '1 / -1' }}>
                 <AgentNavigation />
             </div>

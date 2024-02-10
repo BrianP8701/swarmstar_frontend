@@ -1,63 +1,93 @@
 // src/pages/spawn.tsx
-import { GlobalContext } from '@/configs/GlobalContext';
-import { useContext } from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootStateType } from '@models/rootstate';
+import { setCurrentSwarm, setCurrentGoal, setIsRunning } from '@/redux/userSlice';
 
 const Spawn = () => {
-    console.log('Spawn page');
-    const context = useContext(GlobalContext);
-    const { user, setUser } = context;
-    const currentSwarm = user.currentSwarm;
-    const currentGoal = user.currentGoal;
+    const dispatch = useDispatch();
+    const current_goal = useSelector((state: RootStateType) => state.user.current_goal);
+    const user_swarms = useSelector((state: RootStateType) => state.user.user_swarms);
+    const [newSwarm, setNewSwarm] = useState('');
+    const [selectedSwarm, setSelectedSwarm] = useState('');
 
-    const spawn = async () => {
-        setUser((prev) => {
-            return { ...prev, isRunning: true, currentGoal: currentGoal };
-        });
+    const createSwarm = () => {
+        if (newSwarm) {
+            // Dispatch an action to create a new swarm or set it directly (based on your app logic)
+            dispatch(setCurrentSwarm(newSwarm));
+            setNewSwarm('');
+        }
+    };
 
-        const data = {
-            type: 'spawn_swarm_instance',
-            swarm_key: currentSwarm,
-            goal: currentGoal
-        };
-
-        try {
-            // Make a POST request to the /api/postToAzure endpoint
-            const response = await fetch('/api/postToAzure', {
-                body: JSON.stringify(data),
-            });
-
-            const responseData = await response.json();
-            console.log('Response from Azure:', responseData);
-        } catch (error) {
-            console.error('Error sending data to Azure through API:', error);
+    const handleDeleteSwarm = async (swarmId: string) => {
+        // Confirmation dialog
+        if (window.confirm('Are you sure you want to delete this swarm? This action is irreversible.')) {
+            // Dispatch an action to delete the swarm (not shown here, implement according to your app logic)
+            console.log('Deleting swarm:', swarmId);
+            // Optionally, update UI or state as needed after deletion
         }
     };
 
     return (
         <div className="flex flex-col justify-center items-center h-full w-full">
-            <input
-                type="password"
-                placeholder="Enter swarm key"
-                value={user.currentSwarm || ''}
-                onChange={(e) => setUser(prev => ({ ...prev, currentSwarm: e.target.value }))}
-                className="text-1 mb-5 w-380 p-2.5"
-                style={{ width: '250px' }} // Adjusted width with 'px'
-            />
-            <textarea
-                placeholder="Enter goal"
-                value={user.currentGoal}
-                onChange={(e) => setUser(prev => ({ ...prev, currentGoal: e.target.value }))}
-                className="text-1 min-w-72 w-88 max-w-50% max-h-50% min-h-5 h-37.5 p-5"
-                style={{ resize: 'both', overflow: 'auto', maxWidth: '90%', maxHeight: '80%', minHeight: '150px', minWidth: '300px' }} // Adjusted maxWidth and maxHeight
-            />
-            <button
-                disabled={!user.currentSwarm || !user.currentGoal}
-                onClick={() => { spawn(); }}
-                className="button-text mt-3.5"
-            >
-                Spawn
-            </button>
+            <div className="w-300 h-400 border overflow-auto">
+                <div className="text-center border-b p-1">My Swarms</div>
+                <input
+                    type="text"
+                    placeholder="Create a new swarm"
+                    value={newSwarm}
+                    onChange={(e) => setNewSwarm(e.target.value)}
+                    className="w-full p-2.5"
+                    onBlur={createSwarm} // Consider creating the swarm on blur or add a button to confirm creation
+                />
+                <div className="flex flex-col">
+                    {user_swarms.map((swarm, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setSelectedSwarm(swarm)}
+                            className={`p-2 ${selectedSwarm === swarm ? 'bg-gray-300' : ''}`}
+                        >
+                            {swarm}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {selectedSwarm && (
+                <div>
+                    <button
+                        onClick={() => console.log('Resuming swarm:', selectedSwarm)}
+                        className="button-text mt-3.5"
+                    >
+                        Resume
+                    </button>
+                    <button
+                        onClick={() => handleDeleteSwarm(selectedSwarm)}
+                        className="button-text mt-3.5"
+                    >
+                        Delete
+                    </button>
+                </div>
+            )}
+            {!selectedSwarm && newSwarm && (
+                <>
+                    <textarea
+                        placeholder="Enter goal"
+                        value={current_goal || ''}
+                        onChange={(e) => dispatch(setCurrentGoal(e.target.value))}
+                        className="text-1 min-w-72 w-88 max-w-50% max-h-50% min-h-5 h-37.5 p-5"
+                        style={{ resize: 'both', overflow: 'auto', maxWidth: '90%', maxHeight: '80%', minHeight: '150px', minWidth: '300px' }}
+                    />
+                    <button
+                        onClick={() => console.log('Spawning new swarm:', newSwarm)}
+                        className="button-text mt-3.5"
+                        disabled={!current_goal}
+                    >
+                        Spawn
+                    </button>
+                </>
+            )}
         </div>
     );
-}
+};
+
 export default Spawn;

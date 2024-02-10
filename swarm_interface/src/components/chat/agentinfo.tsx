@@ -1,13 +1,11 @@
 import { useContext } from 'react';
-import { GlobalContext } from '@configs/GlobalContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootStateType } from '@models/rootstate';
 
 const AgentInfo = () => {
-    const context = useContext(GlobalContext);
-    const { user } = context;
-    const isRunning = user.isRunning;
 
     return (
-        <div className="h-full w-full border border-white">
+        <div className="h-full w-full bg-gray-800 border-b border-gray-700">
             boom
         </div>
     );

@@ -45,7 +45,10 @@
       ],
       "@styles/*": [
         "./src/styles/*"
-      ]
+      ],
+      "@redux/*": [
+        "./src/redux/*"
+      ],
     }
   },
   "include": [

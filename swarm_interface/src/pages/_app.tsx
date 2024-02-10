@@ -2,8 +2,12 @@ import { useRouter } from 'next/router';
 import useAuthCheck from '@/hooks/authCheck';
 import { AppProps } from 'next/app';
 import { useEffect } from 'react';
-import { GlobalProvider } from '@/configs/GlobalContext';
 import '@/styles/globals.css';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '@/redux/store';
+import { Provider } from 'react-redux';
+
+
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
@@ -12,27 +16,25 @@ const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     // This function will only run on the client side
     const handleRouting = () => {
-      let currentPage = localStorage.getItem('currentPage');
-      if (currentPage === null) {
-        currentPage = '/spawn';
-        localStorage.setItem('currentPage', currentPage);
-      }
-      if (isAuthenticated === null || isAuthenticated === false) {
+      let currentPage = router.pathname;
+      if (isAuthenticated === null || isAuthenticated === false && currentPage !== '/login') {
         router.push('/login');
-      } else if (isAuthenticated === true && currentPage !== router.pathname) {
-        router.push(currentPage);
+      } else if (isAuthenticated === true && currentPage === '/login') {
+        router.push('/spawn');
       }
     };
 
     if (typeof window !== "undefined") {
       handleRouting();
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   return (
-    <GlobalProvider>
-      <Component {...pageProps} />
-    </GlobalProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Component {...pageProps} />
+      </PersistGate>
+    </Provider>
   );
 };
 
