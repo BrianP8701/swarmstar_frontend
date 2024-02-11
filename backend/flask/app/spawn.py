@@ -27,29 +27,31 @@ def create_swarm():
         if not user_info_db_path or not swarms_db_path:
             return jsonify({"error": "Database paths are not configured"}), 500
         
-        user_info = get_from_kv_store(user_info_db_path, user_id)
-        if not user_info:
+        user_swarms = get_from_kv_store(user_info_db_path, user_id)
+        if not user_swarms:
             return jsonify({"error": "User not found"}), 404
         
         swarm_id = generate_uuid(new_swarm_name)
         
-        user_info['user_swarms'].append(swarm_id)
-        user_info['swarm_names'][swarm_id] = new_swarm_name
-        add_to_kv_store(user_info_db_path, user_id, user_info)
+        user_swarms['swarm_ids'].append(swarm_id)
+        user_swarms['swarm_names'][swarm_id] = new_swarm_name
+        add_to_kv_store(user_info_db_path, user_id, user_swarms)
         
         swarm_info = {
-            'swarm_name': new_swarm_name,
-            'swarm_goal': '',
+            'name': new_swarm_name,
+            'goal': '',
             'spawned': False,
             'swarm_users': [user_id]
         }
         
         add_to_kv_store(swarms_db_path, swarm_id, swarm_info)
         swarm_info['swarm_id'] = swarm_id
+        swarm_info['user_swarms'] = user_swarms
         
         return jsonify(swarm_info), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @routes.route('/spawn/delete_swarm', methods=['DELETE'])
 @jwt_required()
@@ -68,19 +70,17 @@ def delete_swarm():
         if not user_info_db_path or not swarms_db_path:
             return jsonify({"error": "Database paths are not configured"}), 500
 
-        user_info = get_from_kv_store(user_info_db_path, user_id)
-        user_swarms = user_info['user_swarms']
+        user_swarms = get_from_kv_store(user_info_db_path, user_id)
         if swarm_id not in user_swarms:
             return jsonify({"error": "User is not part of the swarm"}), 403
         
         user_swarms.remove(swarm_id)
-        user_info['user_swarms'] = user_swarms
         delete_from_kv_store(user_info_db_path, user_id)
-        add_to_kv_store(user_info_db_path, user_id, user_info)
+        add_to_kv_store(user_info_db_path, user_id, user_swarms)
         
         delete_from_kv_store(swarms_db_path, swarm_id)
         
-        return jsonify({"message": "Swarm deleted"}), 200
+        return jsonify({'user_swarms': user_swarms}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -92,12 +92,12 @@ def start_swarm():
     try:
         user_id = get_jwt_identity()
         swarm_id = request.json.get('swarm_id', None)
-        swarm_goal = request.json.get('swarm_goal', None)
+        goal = request.json.get('goal', None)
         
         if not swarm_id:
             return jsonify({"error": "Swarm ID is required"}), 400
         
-        if not swarm_goal:
+        if not goal:
             return jsonify({"error": "Swarm goal is required"}), 400
         
         user_info_db_path = os.getenv('USER_INFO_DB_PATH')
@@ -113,11 +113,37 @@ def start_swarm():
         
         swarm_info = get_from_kv_store(swarms_db_path, swarm_id)
         swarm_info['spawned'] = True
-        swarm_info['swarm_goal'] = swarm_goal
+        swarm_info['goal'] = goal
         delete_from_kv_store(swarms_db_path, swarm_id)
         add_to_kv_store(swarms_db_path, swarm_id, swarm_info)
         
         return jsonify({}), 200
     
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@routes.route('/spawn/get_swarm', methods=['GET'])  
+@jwt_required()
+@cross_origin()
+def get_swarm():
+    try:
+        swarm_id = request.json.get('swarm_id', None)
+        user_id = get_jwt_identity()
+
+        if not swarm_id:
+            return jsonify({"error": "Swarm ID is required"}), 400
+        user_info_db_path = os.getenv('USER_INFO_DB_PATH')
+        swarms_db_path = os.getenv('SWARMS_DB_PATH')
+        if not user_info_db_path or not swarms_db_path:
+            return jsonify({"error": "Database paths are not configured"}), 500
+
+        user_info = get_from_kv_store(user_info_db_path, user_id)
+        user_swarms = user_info['user_swarms']
+        if swarm_id not in user_swarms:
+            return jsonify({"error": "User is not part of the swarm"}), 403
+        
+        swarm_info = get_from_kv_store(swarms_db_path, swarm_id)
+        
+        return jsonify(swarm_info), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

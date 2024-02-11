@@ -6,6 +6,7 @@ from datetime import timedelta
 from flask_jwt_extended import jwt_required
 from dotenv import load_dotenv
 import os
+import openai
 
 from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
 from utils.security import hash_password, check_password, generate_uuid
@@ -17,24 +18,33 @@ routes = Blueprint('auth_routes', __name__)
 @routes.route('/auth/signup', methods=['POST'])
 @cross_origin()
 def signup():
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
-    hashed_password = hash_password(password)
-    user_id = generate_uuid(username)
-    
-    expires = timedelta(hours=1)  
-    token = create_access_token(identity=user_id, expires_delta=expires)
-    user_swarms = {
-        'swarm_ids': [],
-        'swarm_names': {}
-    }
-    
     user_auth_db_path = os.getenv('USER_AUTH_DB_PATH')
     user_info_db_path = os.getenv('USER_INFO_DB_PATH')
-    add_to_kv_store(user_info_db_path, user_swarms)
-    add_to_kv_store(user_auth_db_path, {'user_id': user_id, 'password': hashed_password})
     
-    return jsonify({'user_swarms': user_swarms, 'token': token}), 200
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+    openai_key = request.json.get('openai_key', None)
+    
+    try:
+        client = openai.OpenAI(api_key=openai_key)
+    except:
+        return jsonify({'error': 'Invalid OpenAI key'}), 401
+    
+    try:
+        get_from_kv_store(user_auth_db_path, username)
+        return jsonify({'error': 'Username already exists'}), 401
+    except:
+        pass
+    
+    hashed_password = hash_password(password)
+    user_id = generate_uuid(username)
+    expires = timedelta(hours=1)  
+    token = create_access_token(identity=user_id, expires_delta=expires)
+    
+    add_to_kv_store(user_info_db_path, {'swarm_ids': [],'swarm_names': {}})
+    add_to_kv_store(user_auth_db_path, {'user_id': user_id, 'password': hashed_password, 'openai_key': openai_key})
+    
+    return jsonify({'user_swarms': {'swarm_ids': [],'swarm_names': {}}, 'token': token}), 200
 
 @routes.route('/auth/login', methods=['POST'])
 @cross_origin()
