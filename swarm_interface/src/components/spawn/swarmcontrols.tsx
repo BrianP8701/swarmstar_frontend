@@ -2,7 +2,7 @@ import useDeleteSwarm from '@hooks/spawn/deleteSwarm';
 import useStartSwarm from '@hooks/spawn/startSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSwarmGoal, setIsSpawned } from '@/redux/swarmSlice';
+import { setSwarmGoal } from '@/redux/swarmSlice';
 
 const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: string, setSelectedSwarm: (swarm: string) => void }) => {
     const dispatch = useDispatch();
@@ -13,7 +13,6 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
 
 
     const deleteSwarm = (swarmId: string) => {
-        // Confirmation dialog
         if (window.confirm('Are you sure you want to delete this swarm? This action is irreversible.')) {
             handleDeleteSwarm(swarmId);
             setSelectedSwarm('');
@@ -53,6 +52,7 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
                     />
                     <button
                         className="button-text mt-3.5"
+                        onClick={() => startSwarm(goal)}
                         disabled={!goal}
                     >
                         Spawn

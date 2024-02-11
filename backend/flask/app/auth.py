@@ -27,6 +27,7 @@ def signup():
     
     try:
         client = openai.OpenAI(api_key=openai_key)
+        client.models.list()
     except:
         return jsonify({'error': 'Invalid OpenAI key'}), 401
     
@@ -41,8 +42,8 @@ def signup():
     expires = timedelta(hours=1)  
     token = create_access_token(identity=user_id, expires_delta=expires)
     
-    add_to_kv_store(user_info_db_path, {'swarm_ids': [],'swarm_names': {}})
-    add_to_kv_store(user_auth_db_path, {'user_id': user_id, 'password': hashed_password, 'openai_key': openai_key})
+    add_to_kv_store(user_info_db_path, user_id, {'swarm_ids': [],'swarm_names': {}})
+    add_to_kv_store(user_auth_db_path, username, {'user_id': user_id, 'password': hashed_password, 'openai_key': openai_key})
     
     return jsonify({'user_swarms': {'swarm_ids': [],'swarm_names': {}}, 'token': token}), 200
 

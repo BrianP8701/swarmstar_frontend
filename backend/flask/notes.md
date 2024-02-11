@@ -1,0 +1,2 @@
+export PYTHONPATH=/Users/brianprzezdziecki/Code/agent_swarm_interface/backend/flask
+export OPENAI_API_KEY='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'

@@ -4,7 +4,7 @@ import { setUserSwarms, setToken } from '@/redux/userSlice';
 
 const useHandleLogin = () => {
     const dispatch = useDispatch();
-    
+
     const handleUserLogin = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
         dispatch(setUserSwarms({ swarm_ids, swarm_names }));
         dispatch(setToken(token));
@@ -12,7 +12,7 @@ const useHandleLogin = () => {
 
     const handleLogin = async (username: string, password: string) => {
         try {
-            const response = await fetch('/api/handleLogin', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({ username, password }),
                 headers: {

@@ -14,8 +14,8 @@ export default async function getSwarm(req: NextApiRequest, res: NextApiResponse
         });
 
         if (!response.ok) {
-            const errorDetail = await response.text();
-            throw new Error(`Getting swarm failed with status: ${response.status} and message: ${errorDetail}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Request failed with status: ${response.status}`);
         }
 
         const data = await response.json();

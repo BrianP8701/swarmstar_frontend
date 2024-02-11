@@ -14,7 +14,8 @@ export default async function handleLogin(req: NextApiRequest, res: NextApiRespo
         });
 
         if (!response.ok) {
-            throw new Error(`Login request failed with status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Request failed with status: ${response.status}`);
         }
 
         const data = await response.json();

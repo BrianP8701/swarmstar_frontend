@@ -7,6 +7,7 @@
 .yarn/install-state.gz
 /backend/flask/.env
 backend/flask/.env
+backend/flask/notes.md
 
 # testing
 /coverage

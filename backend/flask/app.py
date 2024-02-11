@@ -6,7 +6,7 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('/Users/brianprzezdziecki/Code/agent_swarm_interface/backend/flask/.env')
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')

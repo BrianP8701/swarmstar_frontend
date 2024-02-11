@@ -14,8 +14,8 @@ export default async function addNewSwarm(req: NextApiRequest, res: NextApiRespo
         });
 
         if (!response.ok) {
-            const errorDetail = await response.text();
-            throw new Error(`Deleting swarm failed with status: ${response.status} and message: ${errorDetail}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Request failed with status: ${response.status}`);
         }
 
         const data = await response.json();

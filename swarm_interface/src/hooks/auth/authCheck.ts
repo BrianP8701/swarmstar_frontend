@@ -16,7 +16,7 @@ const useAuthCheck = () => {
     const checkAuth = async () => {
       try {
         console.log(token)
-        const response = await fetch('/api/authCheck', {
+        const response = await fetch('/api/auth', {
           method: 'GET',
           credentials: 'include',
           headers: {

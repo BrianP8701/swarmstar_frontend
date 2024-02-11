@@ -62,7 +62,7 @@ const SignUp = () => {
                 />
                 <input
                     id="openaiKey"
-                    type="text"
+                    type="password"
                     value={openaiKey}
                     placeholder="OpenAI API Key"
                     onChange={(e) => setOpenaiKey(e.target.value)}

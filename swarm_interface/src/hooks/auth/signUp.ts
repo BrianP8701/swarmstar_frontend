@@ -4,7 +4,7 @@ import { setUserSwarms, setToken } from '@/redux/userSlice';
 
 const useSignUp = () => {
     const dispatch = useDispatch();
-    
+
     const handleUserSignUp = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
         dispatch(setUserSwarms({ swarm_ids, swarm_names }));
         dispatch(setToken(token));
@@ -12,22 +12,24 @@ const useSignUp = () => {
 
     const handleSignUp = async (username: string, password: string, openai_key: string) => {
         try {
-            const response = await fetch('/api/handleSignUp', {
+            console.log("username: ", username)
+            const response = await fetch('/api/auth/signup', {
                 method: 'POST',
                 body: JSON.stringify({ username, password, openai_key }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-
             if (response.ok) {
                 const data = await response.json();
                 handleUserSignUp(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
             } else {
-                throw new Error('Login failed due to server error');
+                const errorData = await response.json();
+                throw new Error(errorData.error);
             }
-        } catch (error) {
-            throw error;
+        } catch (error: any) {
+            console.error(error);
+            throw new Error(error || 'An unexpected error occurred');
         }
     };
     return { handleSignUp };

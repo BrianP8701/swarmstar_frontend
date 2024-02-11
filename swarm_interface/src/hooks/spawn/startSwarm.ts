@@ -8,15 +8,15 @@ import { setSwarm } from '@/redux/swarmSlice';
 const useStartSwarm = () => {
     const dispatch = useDispatch();
 
-    const handleNewSwarm = (swarm_id: string, swarm_name: string, swarm_goal: string, spawned: boolean) => {
-        dispatch(setSwarm({ swarm_id, swarm_name, swarm_goal, spawned }));
+    const handleNewSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean) => {
+        dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned }));
     };
 
     const handleStartSwarm = async (goal: string, swarm_id: string) => {
         try {
             const response = await fetch('/api/spawn/createSwarm', {
                 method: 'POST',
-                body: JSON.stringify({ goal, swarm_id}),
+                body: JSON.stringify({ goal, swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -24,7 +24,7 @@ const useStartSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data.swarm_id, data.swarm_name, data.swarm_goal, data.spawned);
+                handleNewSwarm(data.swarm_id, data.name, data.goal, data.spawned);
             } else {
                 throw new Error('Creating swarm failed due to server error');
             }
