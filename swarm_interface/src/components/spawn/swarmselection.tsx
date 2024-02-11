@@ -1,28 +1,40 @@
 import React, { useState } from 'react';
 import useCreateSwarm from '@/hooks/spawn/createSwarm';
-import { useSelector } from 'react-redux';
+import useSetSwarm from '@/hooks/spawn/setSwarm';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
+import { setCurrentSwarm } from '@/redux/userSlice';
+import { setSwarm } from '@/redux/swarmSlice';
 
-const SwarmSelection = ({selectedSwarm, setSelectedSwarm}: {selectedSwarm: string, setSelectedSwarm: (swarm: string) => void}) => {
-    const user_swarms = useSelector((state: RootStateType) => state.user.user_swarms);
+const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: string, setSelectedSwarm: (swarm: string) => void }) => {
+    const dispatch = useDispatch();
+    const swarm_ids = useSelector((state: RootStateType) => state.user.swarm_ids);
     const swarm_names = useSelector((state: RootStateType) => state.user.swarm_names);
-    const swarmNames = user_swarms.map(swarm => swarm_names[swarm]);
-
+    const swarms = swarm_ids.map(swarm => [swarm, swarm_names[swarm]]);
     const [newSwarm, setNewSwarm] = useState<string>('');
     const [showNewSwarmInput, setShowNewSwarmInput] = useState<boolean>(false);
     const { handleCreateSwarm } = useCreateSwarm();
+    const { handleSetSwarm } = useSetSwarm();
+
+
+    const chooseSwarm = (swarm_id : string) => {
+        setSelectedSwarm(swarm_id);
+        dispatch(setCurrentSwarm(swarm_id));
+        handleSetSwarm(swarm_id);
+    }
 
     const createSwarm = (newSwarm: string) => {
         if (newSwarm != '') {
             handleCreateSwarm(newSwarm);
             setShowNewSwarmInput(false);
-            setNewSwarm('');
+            chooseSwarm('');
         }
     };
+
     return (
         <div className="w-1/5 h-2/5 border border-white overflow-auto text-white round_corners">
             <div className="text-lg font-bold border-b border-gray-700 flex items-center h-12 relative">
-                <button onClick={() => setShowNewSwarmInput(!showNewSwarmInput)} style={{ position: 'absolute', right: '12px' }}>
+                <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); setSelectedSwarm(''); }} style={{ position: 'absolute', right: '12px' }}>
                     <img src="add.png" alt="Add New Swarm" style={{ width: '20px', height: '20px' }} />
                 </button>
                 <div style={{ width: '100%', textAlign: 'center' }}>Swarms</div>
@@ -34,19 +46,19 @@ const SwarmSelection = ({selectedSwarm, setSelectedSwarm}: {selectedSwarm: strin
                         className="w-full mx-2 normalize-text"
                         placeholder="Enter new swarm name..."
                         value={newSwarm}
-                        onChange={(e) => setNewSwarm(e.target.value)}
+                        onChange={(e) => {setNewSwarm(e.target.value); setSelectedSwarm('');}}
                         onKeyDown={(e) => e.key === 'Enter' && createSwarm(newSwarm)}
                     />
                 </div>
             )}
             <div className="flex flex-col">
-                {swarmNames.map((swarm, index) => (
+                {swarms.map(([swarm_id, swarm_name], index) => (
                     <button
                         key={index}
-                        onClick={() => setSelectedSwarm(swarm)}
-                        className={`p-2 border-b border-gray-700 ${selectedSwarm === swarm ? 'bg-gray-700' : ''}`}
+                        onClick={() => { chooseSwarm(swarm_id); }}
+                        className={`p-2 border-b border-gray-700 ${selectedSwarm === swarm_id ? 'bg-gray-700' : ''}`}
                     >
-                        {swarm}
+                        {swarm_name}
                     </button>
                 ))}
             </div>

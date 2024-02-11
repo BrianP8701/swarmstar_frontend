@@ -2,18 +2,18 @@ import { useDispatch } from 'react-redux';
 import { setSwarm } from '@/redux/swarmSlice';
 import { setCurrentSwarm, setUserSwarms } from '@/redux/userSlice';
 
-const useDeleteSwarm = () => {
+const useSetSwarm = () => {
     const dispatch = useDispatch();
 
-    const handleSwarm = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
-        dispatch(setUserSwarms({ swarm_ids, swarm_names }));
-        dispatch(setCurrentSwarm(''));
+    const handleSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean) => {
+        dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned }));
+        dispatch(setCurrentSwarm(swarm_id));
     };
 
-    const handleDeleteSwarm = async (swarm_id: string) => {
+    const handleSetSwarm = async (swarm_id: string) => {
         try {
-            const response = await fetch('/api/spawn/deleteSwarm', {
-                method: 'POST',
+            const response = await fetch('/api/spawn/getSwarm', {
+                method: 'GET',
                 body: JSON.stringify({ swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const useDeleteSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleSwarm(data.user_swarms.swarm_ids, data.user_swarms.swarm_names);
+                handleSwarm(data.swarm_id, data.name, data.goal, data.spawned);
             } else {
                 throw new Error('Creating swarm failed due to server error');
             }
@@ -32,8 +32,7 @@ const useDeleteSwarm = () => {
         }
     };
 
-    return { handleDeleteSwarm };
+    return { handleSetSwarm };
 };
 
-export default useDeleteSwarm;
-
+export default useSetSwarm;

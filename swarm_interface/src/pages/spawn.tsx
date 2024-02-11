@@ -3,7 +3,7 @@ import Layout from '@/components/global_layout/layout';
 import Spawn from '@components/spawn';
 import { useState } from 'react';
 import SwarmSelection from '@/components/spawn/swarmselection';
-import SwarmControls from '@/components/spawn/swarmControls';
+import SwarmControls from '@/components/spawn/swarmcontrols';
 
 const SpawnPage = () => {
     const [selectedSwarm, setSelectedSwarm] = useState<string>('');

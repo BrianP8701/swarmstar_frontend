@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
-export default async function addNewSwarm(req: NextApiRequest, res: NextApiResponse) {
-    const { newSwarmName } = req.body;
+export default async function deleteSwarm(req: NextApiRequest, res: NextApiResponse) {
+    const { swarm_id } = req.body;
 
     try {
         const response = await fetch(config.create_swarm_url, {
@@ -10,7 +10,7 @@ export default async function addNewSwarm(req: NextApiRequest, res: NextApiRespo
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ new_swarm_name: newSwarmName }),
+            body: JSON.stringify({ swarm_id }),
         });
 
         if (!response.ok) {

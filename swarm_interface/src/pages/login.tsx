@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useHandleLogin from '@/hooks/auth/handleLogin';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -51,9 +52,9 @@ const Login = () => {
           <div className="text-red-500 text-center mt-2">{errorMessage}</div>
         )}
         <div className="flex justify-center items-center">
-          <a href="/signup" className="button-text mt-2">
+          <Link href="/signup" className="button-text mt-2">
             Sign up
-          </a>
+          </Link>
         </div>
       </div>
     </div>

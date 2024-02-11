@@ -27,9 +27,12 @@ const swarmSlice = createSlice({
       state.swarm_name = action.payload.swarm_name;
       state.goal = action.payload.goal;
       state.spawned = action.payload.spawned;
+    },
+    setIsSpawned: (state, action: PayloadAction<boolean>) => {
+      state.spawned = action.payload;
     }
   },
 });
 
-export const { setSwarmGoal, setSwarm } = swarmSlice.actions;
+export const { setSwarmGoal, setSwarm, setIsSpawned } = swarmSlice.actions;
 export default swarmSlice.reducer;

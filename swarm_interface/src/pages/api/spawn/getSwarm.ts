@@ -1,21 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
-export default async function addNewSwarm(req: NextApiRequest, res: NextApiResponse) {
-    const { newSwarmName } = req.body;
+export default async function getSwarm(req: NextApiRequest, res: NextApiResponse) {
+    const { swarm_id } = req.body;
 
     try {
         const response = await fetch(config.create_swarm_url, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ new_swarm_name: newSwarmName }),
+            body: JSON.stringify({ swarm_id }),
         });
 
         if (!response.ok) {
             const errorDetail = await response.text();
-            throw new Error(`Deleting swarm failed with status: ${response.status} and message: ${errorDetail}`);
+            throw new Error(`Getting swarm failed with status: ${response.status} and message: ${errorDetail}`);
         }
 
         const data = await response.json();
