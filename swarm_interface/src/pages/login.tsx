@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useHandleLogin from '@hooks/handleLogin';
+import useHandleLogin from '@/hooks/auth/handleLogin';
 import { useRouter } from 'next/router';
 
 const Login = () => {
@@ -12,8 +12,8 @@ const Login = () => {
   const login = async () => {
     try {
       await handleLogin(username, password);
-      setErrorMessage(''); // Clear error message on successful login
-      router.push('/spawn'); // Route to the spawn page on successful login
+      setErrorMessage('');
+      router.push('/spawn');
     } catch (error: any) {
       setErrorMessage(error.message);
     }
@@ -47,7 +47,7 @@ const Login = () => {
             Login
           </button>
         </div>
-        {errorMessage && ( 
+        {errorMessage && (
           <div className="text-red-500 text-center mt-2">{errorMessage}</div>
         )}
         <div className="flex justify-center items-center">

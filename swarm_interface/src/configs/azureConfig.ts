@@ -1,8 +1,10 @@
 const azureConfig = {
-    login_url: "https://your-azure-function-app.azurewebsites.net/api/login",
-    authentication_url: "https://your-azure-function-app.azurewebsites.net/api/authenticate",
-    get_swarm_blueprint_url: "https://your-azure-function-app.azurewebsites.net/api/getSwarmBlueprint",
-    holderUrl: ''
+    login_url: "http://lvh.me:5000/auth/login",
+    signup_url: "http://lvh.me:5000/auth/signup",
+    authentication_url: "http://lvh.me:5000/auth",
+    create_swarm_url: "http://lvh.me:5000/spawn/create_swarm",
+    delete_swarm_url: "http://lvh.me:5000/spawn/delete_swarm",
+    start_swarm_url: "http://lvh.me:5000/spawn/start_swarm",
 };
 
 export default azureConfig;

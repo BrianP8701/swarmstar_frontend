@@ -2,20 +2,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
-  user_id: string;
-  user_swarms: string[]; 
-  current_goal: string;
-  is_running: boolean;
-  current_swarm: string | null; 
+  swarm_ids: string[];
+  swarm_names: { [swarm_id: string]: string };
+  current_swarm: string | null;
   token: string | null;
 }
 
 // Define the initial state using that type
 const initialState: UserState = {
-  user_id: '',
-  user_swarms: [],
-  current_goal: '',
-  is_running: false,
+  swarm_ids: [],
+  swarm_names: {},
   current_swarm: null,
   token: null
 };
@@ -24,18 +20,12 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserLogin: (state, action: PayloadAction<{ user_id: string; user_swarms: string[] }>) => {
-      state.user_id = action.payload.user_id;
-      state.user_swarms = action.payload.user_swarms;
+    setUserSwarms: (state, action: PayloadAction<{ swarm_ids: string[]; swarm_names: { [swarm_id: string]: string } }>) => {
+      state.swarm_ids = action.payload.swarm_ids;
+      state.swarm_names = action.payload.swarm_names;
     },
     setCurrentSwarm: (state, action: PayloadAction<string>) => {
       state.current_swarm = action.payload;
-    },
-    setCurrentGoal: (state, action: PayloadAction<string>) => {
-      state.current_goal = action.payload;
-    },
-    setIsRunning: (state, action: PayloadAction<boolean>) => {
-      state.is_running = action.payload;
     },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
@@ -43,5 +33,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserLogin, setCurrentSwarm, setCurrentGoal, setIsRunning, setToken } = userSlice.actions;
+export const { setUserSwarms, setCurrentSwarm, setToken } = userSlice.actions;
 export default userSlice.reducer;

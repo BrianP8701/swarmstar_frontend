@@ -1,11 +1,12 @@
 import { useDispatch } from 'react-redux';
-import { setUserLogin, setToken } from '@/redux/userSlice';
+import { setUserSwarms, setToken } from '@/redux/userSlice';
 
 
 const useHandleLogin = () => {
     const dispatch = useDispatch();
-    const handleUserLogin = (user_id: string, user_swarms: string[], token: string) => {
-        dispatch(setUserLogin({ user_id, user_swarms }));
+    
+    const handleUserLogin = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
+        dispatch(setUserSwarms({ swarm_ids, swarm_names }));
         dispatch(setToken(token));
     };
 
@@ -21,7 +22,7 @@ const useHandleLogin = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleUserLogin(data.user_id, data.user_swarms, data.token);
+                handleUserLogin(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
             } else {
                 throw new Error('Login failed due to server error');
             }

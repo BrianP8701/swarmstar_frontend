@@ -1,86 +1,61 @@
 from flask import Flask, jsonify, request, Blueprint
-from flask_jwt_extended import JWTManager, create_access_token
-from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token
+import bcrypt
 from flask_cors import cross_origin
 from datetime import timedelta
-from flask_jwt_extended import jwt_required, get_jwt_identity, set_access_cookies, verify_jwt_in_request
+from flask_jwt_extended import jwt_required
+from dotenv import load_dotenv
+import os
+
+from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
+from utils.security import hash_password, check_password, generate_uuid
+load_dotenv()
 
 app = Flask(__name__)
 routes = Blueprint('auth_routes', __name__)
 
-@routes.route('/login', methods=['POST'])
+@routes.route('/auth/signup', methods=['POST'])
+@cross_origin()
+def signup():
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+    hashed_password = hash_password(password)
+    user_id = generate_uuid(username)
+    
+    expires = timedelta(hours=1)  
+    token = create_access_token(identity=user_id, expires_delta=expires)
+    user_swarms = {
+        'swarm_ids': [],
+        'swarm_names': {}
+    }
+    
+    user_auth_db_path = os.getenv('USER_AUTH_DB_PATH')
+    user_info_db_path = os.getenv('USER_INFO_DB_PATH')
+    add_to_kv_store(user_info_db_path, user_swarms)
+    add_to_kv_store(user_auth_db_path, {'user_id': user_id, 'password': hashed_password})
+    
+    return jsonify({'user_swarms': user_swarms, 'token': token}), 200
+
+@routes.route('/auth/login', methods=['POST'])
 @cross_origin()
 def login():
     username = request.json.get('username', None)
-    # Create JWT token
-    expires = timedelta(hours=24)  # Token valid for 24 hours
-    token = create_access_token(identity=username, expires_delta=expires)
-
-    # User data to be returned
-    user_data = {
-        'currentSwarm': 'exampleSwarm',
-        'username': username,
-        'userSwarms': ['swarm1', 'swarm2'],
-        'currentSection': 'exampleSection',
-        'currentGoal': 'exampleGoal',
-        'isRunning': False,
-    }
+    password = request.json.get('password', None)
+    correct_password = get_from_kv_store(os.getenv('USER_AUTH_DB_PATH'), username)['password']
+    if not check_password(password, correct_password):
+        return jsonify({'error': 'Invalid username or password'}), 401
     
-    response = jsonify({"user": user_data, "token": token})
-    return response
+    user_id = get_from_kv_store(os.getenv('USER_AUTH_DB_PATH'), username)['user_id']
+    expires = timedelta(hours=1)  # Token valid for 24 hours
+    token = create_access_token(identity=user_id, expires_delta=expires)
 
+    user_swarms = get_from_kv_store(os.getenv('USER_INFO_DB_PATH'), user_id)
+    
+    response = jsonify({"user_swarms": user_swarms, "token": token})
+    return response
 
 @routes.route('/auth', methods=['GET'])
 @jwt_required()
 @cross_origin()
 def authenticate_token():
-    print('\n\n\n\nyo what up\n\n\n\n')
-
-    print("Request Headers:")
-    for header, value in request.headers.items():
-        print(f"{header}: {value}")
-
-    print('\n\n\n\n')
-    # current_user = get_jwt_identity()
     return jsonify({}), 200
-
-
-
-
-
-
-
-
-
-# @routes.route('/login', methods=['POST'])
-# @cross_origin(origin='http://localhost:3000')
-# def login():
-#     username = request.json.get('username', None)
-#     password = request.json.get('password', None)
-
-#     # Validate credentials (usually check against database)
-#     # For this example, let's use a dummy check
-#     if username != 'admin' or not check_password_hash('hashed-password', password):
-#         return jsonify({"msg": "Bad username or password"}), 401
-
-#     # Create JWT token
-#     expires = timedelta(hours=24)  # 24 hours
-#     token = create_access_token(identity=username, expires_delta=expires)
-
-#     # User data to be returned
-#     user_data = {
-#         'currentSwarm': 'exampleSwarm',
-#         'username': username,  # Use the actual username from the request
-#         'userSwarms': ['swarm1', 'swarm2'],
-#         'currentSection': 'exampleSection',
-#         'currentGoal': 'exampleGoal',
-#     }
-
-#     # Add user_data to the response
-#     response = jsonify({"token": token, "user": user_data})
-#     response.set_cookie('token', token, httponly=True)
-    
-#     return response
-
-
-

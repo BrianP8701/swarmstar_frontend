@@ -15,6 +15,7 @@ const useAuthCheck = () => {
 
     const checkAuth = async () => {
       try {
+        console.log(token)
         const response = await fetch('/api/authCheck', {
           method: 'GET',
           credentials: 'include',
@@ -34,7 +35,7 @@ const useAuthCheck = () => {
       }
     };
     checkAuth();
-  }, [router.pathname]);
+  }, [router.pathname, token]);
 
   return isAuthenticated;
 };

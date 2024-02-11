@@ -3,13 +3,14 @@
 interface UserState {
     user_id: string;
     user_swarms: string[];
+    swarm_names: { [swarm_id: string]: string };
     current_goal: string;
     is_running: boolean;
     current_swarm: string | null;
     token: string | null;
 }
 
-interface ChatState {
+interface AgentsState {
     active_agents: string[];
     dead_agents: string[];
     agent_names: { [agent_id: string]: string };
@@ -23,7 +24,7 @@ interface ChatState {
 // Define the RootState type which represents the entire Redux state
 interface RootStateType {
     user: UserState;
-    chat: ChatState;
+    agents: AgentsState;
 }
 
-export type { RootStateType, UserState, ChatState };
+export type { RootStateType, UserState, AgentsState };

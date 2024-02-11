@@ -52,6 +52,14 @@ body {
     @apply bg-gray-300 text-gray-600 rounded-10 text-sm appearance-none leading-normal focus:outline-none border border-gray-600 px-1 hover:bg-gray-400 active:bg-gray-500;
   }
 
+  .round_corners {
+    @apply rounded-30;
+  }
+
+  .normalize-text {
+    @apply bg-gray-800 focus:outline-none text-white
+  }
+
   .sidebar-section-icon {
     margin-top: 8px;
     margin-bottom: 8px;

@@ -1,8 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/global_layout/sidebar';
 import HeaderBar from '@/components/global_layout/headerbar';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootStateType } from '@models/rootstate';
+
 
 interface LayoutProps {
   children: React.ReactNode;
