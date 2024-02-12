@@ -53,7 +53,7 @@ def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
     correct_password = get_from_kv_store(os.getenv('USER_AUTH_DB_PATH'), username)['password']
-    if not check_password(password, correct_password):
+    if not check_password(correct_password, password):
         return jsonify({'error': 'Invalid username or password'}), 401
     
     user_id = get_from_kv_store(os.getenv('USER_AUTH_DB_PATH'), username)['user_id']
@@ -61,7 +61,6 @@ def login():
     token = create_access_token(identity=user_id, expires_delta=expires)
 
     user_swarms = get_from_kv_store(os.getenv('USER_INFO_DB_PATH'), user_id)
-    
     response = jsonify({"user_swarms": user_swarms, "token": token})
     return response
 

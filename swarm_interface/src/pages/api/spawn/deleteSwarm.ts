@@ -5,11 +5,9 @@ export default async function deleteSwarm(req: NextApiRequest, res: NextApiRespo
     const { swarm_id } = req.body;
 
     try {
-        const response = await fetch(config.create_swarm_url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(config.delete_swarm_url, {
+            method: 'DELETE',
+            headers: req.headers as HeadersInit,
             body: JSON.stringify({ swarm_id }),
         });
 

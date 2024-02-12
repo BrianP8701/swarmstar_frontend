@@ -2,20 +2,19 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
 export default async function addNewSwarm(req: NextApiRequest, res: NextApiResponse) {
-    const { newSwarmName } = req.body;
-
+    const { swarm_name } = req.body;
+    console.log("newSwarmName: \n\n", swarm_name)
+    console.log("req.headers: \n\n", req.headers)
     try {
         const response = await fetch(config.create_swarm_url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ new_swarm_name: newSwarmName }),
+            headers: req.headers as HeadersInit,
+            body: JSON.stringify({ swarm_name }),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || `Request failed with status: ${response.status}`);
+            return res.status(response.status).json({ error: errorData.error || 'An error occurred' });
         }
 
         const data = await response.json();

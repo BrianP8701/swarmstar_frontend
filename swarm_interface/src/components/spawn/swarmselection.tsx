@@ -4,7 +4,6 @@ import useSetSwarm from '@/hooks/spawn/setSwarm';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 import { setCurrentSwarm } from '@/redux/userSlice';
-import { setSwarm } from '@/redux/swarmSlice';
 
 const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: string, setSelectedSwarm: (swarm: string) => void }) => {
     const dispatch = useDispatch();

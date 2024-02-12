@@ -27,9 +27,9 @@ const useSignUp = () => {
                 const errorData = await response.json();
                 throw new Error(errorData.error);
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            throw new Error(error || 'An unexpected error occurred');
+            throw error;
         }
     };
     return { handleSignUp };

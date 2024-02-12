@@ -5,7 +5,7 @@ import { RootStateType } from '@models/rootstate';
 
 const useAuthCheck = () => {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   if (typeof window === "undefined") {
     return false;
   }
@@ -25,9 +25,12 @@ const useAuthCheck = () => {
           },
         });
         if (response.ok) {
+          console.log('Successful Auth Check');
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
+          console.log('Failed Auth Check');
+          router.push('/login');
         }
       } catch (error) {
         setIsAuthenticated(false);

@@ -23,6 +23,7 @@ const useHandleLogin = () => {
             if (response.ok) {
                 const data = await response.json();
                 handleUserLogin(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
+                console.log("data: ", data)
             } else {
                 throw new Error('Login failed due to server error');
             }

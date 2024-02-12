@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useHandleLogin from '@/hooks/auth/handleLogin';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import useAuthCheck from '@/hooks/auth/authCheck';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +10,14 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const { handleLogin } = useHandleLogin();
   const router = useRouter();
+
+  const isAuthenticated = useAuthCheck();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/spawn');
+    }
+  }, [isAuthenticated, router]);
 
   const login = async () => {
     try {

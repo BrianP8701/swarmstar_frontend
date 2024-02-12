@@ -1,9 +1,10 @@
-import { useDispatch } from 'react-redux';
-import { setSwarm } from '@/redux/swarmSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentSwarm, setUserSwarms } from '@/redux/userSlice';
+import { RootStateType } from '@models/rootstate';
 
 const useDeleteSwarm = () => {
     const dispatch = useDispatch();
+    const token = useSelector((state: RootStateType) => state.user.token);
 
     const handleSwarm = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
         dispatch(setUserSwarms({ swarm_ids, swarm_names }));
@@ -17,6 +18,7 @@ const useDeleteSwarm = () => {
                 body: JSON.stringify({ swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
             });
 

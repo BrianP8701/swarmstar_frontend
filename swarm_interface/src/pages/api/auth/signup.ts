@@ -15,7 +15,6 @@ export default async function handleSignup(req: NextApiRequest, res: NextApiResp
 
         if (!response.ok) {
             const errorData = await response.json();
-            // Instead of throwing here, directly send the error response
             return res.status(response.status).json({ error: errorData.error || 'An error occurred' });
         }
 
@@ -23,7 +22,6 @@ export default async function handleSignup(req: NextApiRequest, res: NextApiResp
         return res.status(200).json(data);
 
     } catch (error) {
-        // This will catch other errors, like network issues, JSON parsing errors, etc.
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
     }

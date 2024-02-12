@@ -7,7 +7,6 @@ import SwarmControls from '@/components/spawn/swarmcontrols';
 const SpawnPage = () => {
     const [selectedSwarm, setSelectedSwarm] = useState<string>('');
 
-    // Add a return statement to render your component
     return (
         <Layout>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%', overflow: 'hidden' }}> {/* Note: Changed overflow: 'none' to 'hidden' */}

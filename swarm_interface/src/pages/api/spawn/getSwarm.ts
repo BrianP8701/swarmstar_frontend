@@ -5,11 +5,9 @@ export default async function getSwarm(req: NextApiRequest, res: NextApiResponse
     const { swarm_id } = req.body;
 
     try {
-        const response = await fetch(config.create_swarm_url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(config.get_swarm_url, {
+            method: 'POST',
+            headers: req.headers as HeadersInit,
             body: JSON.stringify({ swarm_id }),
         });
 

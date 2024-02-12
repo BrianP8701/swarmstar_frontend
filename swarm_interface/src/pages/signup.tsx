@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useSignUp from '@/hooks/auth/signUp';
 import { useRouter } from 'next/router';
+import useAuthCheck from '@/hooks/auth/authCheck';
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -10,6 +11,14 @@ const SignUp = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const { handleSignUp } = useSignUp();
     const router = useRouter();
+
+    const isAuthenticated = useAuthCheck();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/spawn');
+        }
+    }, [isAuthenticated, router]);
 
     const signUp = async () => {
         if (password !== confirmPassword) {
