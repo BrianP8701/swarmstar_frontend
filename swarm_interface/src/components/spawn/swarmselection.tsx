@@ -16,7 +16,7 @@ const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: st
     const { handleSetSwarm } = useSetSwarm();
 
 
-    const chooseSwarm = (swarm_id : string) => {
+    const chooseSwarm = (swarm_id: string) => {
         setSelectedSwarm(swarm_id);
         dispatch(setCurrentSwarm(swarm_id));
         handleSetSwarm(swarm_id);
@@ -31,7 +31,20 @@ const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: st
     };
 
     return (
-        <div className="w-1/5 h-2/5 border border-white overflow-auto text-white round_corners">
+        <div
+            className="border border-white overflow-auto text-white round_corners"
+            style={{
+                width: 'calc(100% - 30px)', // Make the width 20px less than its parent
+                height: '500px', // Set height to 500px
+                margin: 'auto', // Center the component horizontally in its parent
+                top: '50%', // Move the top edge to the middle of the parent
+                left: '50%', // Move the left edge to the middle of the parent
+                display: 'flex', // Use flexbox
+                flexDirection: 'column', // Make the flex direction column
+                justifyContent: 'center', // Align items to the top
+                alignItems: 'center', // Center items horizontally
+            }}
+        >
             <div className="text-lg font-bold border-b border-gray-700 flex items-center h-12 relative">
                 <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); setSelectedSwarm(''); }} style={{ position: 'absolute', right: '12px' }}>
                     <img src="add.png" alt="Add New Swarm" style={{ width: '20px', height: '20px' }} />
@@ -45,8 +58,14 @@ const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: st
                         className="w-full mx-2 normalize-text"
                         placeholder="Enter new swarm name..."
                         value={newSwarm}
-                        onChange={(e) => {setNewSwarm(e.target.value); setSelectedSwarm('');}}
-                        onKeyDown={(e) => e.key === 'Enter' && createSwarm(newSwarm)}
+                        onChange={(e) => { setNewSwarm(e.target.value); setSelectedSwarm(''); }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                createSwarm(newSwarm);
+                            } else if (e.key === 'Escape') {
+                                setShowNewSwarmInput(false);
+                            }
+                        }}
                     />
                 </div>
             )}
@@ -62,7 +81,8 @@ const SwarmSelection = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: st
                 ))}
             </div>
         </div>
-    )
+    );
+
 }
 
 export default SwarmSelection;

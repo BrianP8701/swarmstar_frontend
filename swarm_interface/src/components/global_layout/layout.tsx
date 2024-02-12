@@ -16,8 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isAuthenticated = useAuthCheck();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log('are we in here???')
+    if (isAuthenticated === false) {
       router.push('/login');
     }
   }, [isAuthenticated, router]);

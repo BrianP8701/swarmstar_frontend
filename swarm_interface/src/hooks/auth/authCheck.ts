@@ -5,7 +5,7 @@ import { RootStateType } from '@models/rootstate';
 
 const useAuthCheck = () => {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   if (typeof window === "undefined") {
     return false;
   }

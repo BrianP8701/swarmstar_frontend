@@ -17,6 +17,9 @@ const Login = () => {
     if (isAuthenticated) {
       router.push('/spawn');
     }
+    if (isAuthenticated === null) {
+      router.push('/login');
+    }
   }, [isAuthenticated, router]);
 
   const login = async () => {
@@ -46,6 +49,11 @@ const Login = () => {
           value={password}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && username && password) {
+              login();
+            }
+          }}
           className="text-border-white block w-full"
         />
         <div className="flex items-center justify-center">

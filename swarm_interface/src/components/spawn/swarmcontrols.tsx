@@ -24,49 +24,97 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
     }
 
     return (
-        <div>
-            {selectedSwarm && isSpawned && (
-                <div>
-                    <button
-                        onClick={() => console.log('Resuming swarm:', selectedSwarm)}
-                        className="button-text mt-3.5"
-                    >
-                        Resume
-                    </button>
-                    <button
-                        onClick={() => deleteSwarm(selectedSwarm)}
-                        className="button-text mt-3.5"
-                    >
-                        Delete
-                    </button>
-                </div>
-            )}
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 'calc(100vh - 20px)', // Subtract padding from total height
+            width: 'calc(100% - 20px)', // Subtract padding from total width
+            padding: '10px', // Add padding as specified
+        }}>
+            <div style={{ textAlign: 'center', width: '100%' }}>
+                {selectedSwarm && isSpawned && (
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                        <textarea
+                            placeholder="Enter goal"
+                            value={goal}
+                            readOnly
+                            className="text-1 p-5"
+                            style={{
+                                resize: 'both',
+                                overflow: 'auto',
+                                display: 'block',
+                                margin: '0 auto',
+                                minWidth: '250px',
+                                minHeight: '140px',
+                                width: 'auto', // Allows width to adjust automatically
+                                height: '35%', // Initial height as 35% of parent
+                                maxWidth: '100%', // Allows growing up to the parent width
+                                maxHeight: '100%', // Allows growing up to the parent height
+                            }}
+                        />
+                        <button
+                            className="button-text mt-3.5"
+                            onClick={() => startSwarm(goal)}
+                            disabled={!goal}
+                            style={{ display: 'block', margin: '10px auto' }}
+                        >
+                            Resume
+                        </button>
+                        <button
+                            onClick={() => deleteSwarm(selectedSwarm)}
+                            className="button-text mt-3.5"
+                            style={{ display: 'block', margin: '10px auto' }}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                )}
+            </div>
             {selectedSwarm && !isSpawned && (
-                <>
+                <div style={{ textAlign: 'center', width: '100%' }}>
                     <textarea
                         placeholder="Enter goal"
                         value={goal || ''}
                         onChange={(e) => dispatch(setSwarmGoal(e.target.value))}
-                        className="text-1 min-w-72 w-88 max-w-50% max-h-50% min-h-5 h-37.5 p-5"
-                        style={{ resize: 'both', overflow: 'auto', maxWidth: '90%', maxHeight: '80%', minHeight: '150px', minWidth: '300px' }}
+                        className="text-1 p-5"
+                        style={{
+                            resize: 'both',
+                            overflow: 'auto',
+                            display: 'block',
+                            margin: '0 auto',
+                            minWidth: '250px',
+                            minHeight: '140px',
+                            width: 'auto', // Allows width to adjust automatically
+                            height: '35%', // Initial height as 35% of parent
+                            maxWidth: '100%', // Allows growing up to the parent width
+                            maxHeight: '100%', // Allows growing up to the parent height
+                        }}
                     />
                     <button
                         className="button-text mt-3.5"
                         onClick={() => startSwarm(goal)}
                         disabled={!goal}
+                        style={{ display: 'block', margin: '10px auto' }}
                     >
                         Spawn
                     </button>
                     <button
                         onClick={() => deleteSwarm(selectedSwarm)}
                         className="button-text mt-3.5"
+                        style={{ display: 'block', margin: '10px auto' }}
                     >
                         Delete
                     </button>
-                </>
+                </div>
             )}
         </div>
-    )
+    );
+
+
+
+
 }
 
 export default SwarmContols;
