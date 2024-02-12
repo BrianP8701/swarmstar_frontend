@@ -19,9 +19,8 @@ const useCreateSwarm = () => {
     };
 
     const handleCreateSwarm = async (newSwarmName: string) => {
-        console.log("newSwarmName: \n\n", newSwarmName)
         try {
-            const response = await fetch('/api/spawn/createSwarm', {
+            const response = await fetch('/api/spawn/create_swarm', {
                 method: 'POST',
                 body: JSON.stringify({ swarm_name: newSwarmName }),
                 headers: {

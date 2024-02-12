@@ -13,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.login_url, {
+        const response = await fetch(config.create_swarm_url, {
             method: 'POST',
             headers: headers,
             credentials: 'include',
-            body: JSON.stringify(req.body), 
+            body: JSON.stringify(req.body)
         });
         const data = await response.json();
         if (response.ok) {

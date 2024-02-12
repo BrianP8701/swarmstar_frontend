@@ -1,28 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
-export default async function handleSignup(req: NextApiRequest, res: NextApiResponse) {
-    const { username, password, openai_key } = req.body;
-
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const response = await fetch(config.signup_url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password, openai_key }),
-        });
+        const { authorization, 'content-type': contentType } = req.headers;
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            return res.status(response.status).json({ error: errorData.error || 'An error occurred' });
+        const headers: HeadersInit = {
+            'Content-Type': contentType || 'application/json',
+        };
+
+        if (authorization) {
+            headers['Authorization'] = authorization;
         }
 
+        const response = await fetch(config.signup_url, {
+            method: 'PUT',
+            headers: headers,
+            credentials: 'include',
+            body: JSON.stringify(req.body)
+        });
         const data = await response.json();
-        return res.status(200).json(data);
-
-    } catch (error) {
+        if (response.ok) {
+            return res.status(200).json(data);
+        } else {
+            console.log(req.body)
+            console.log(data.error)
+            return res.status(response.status).json({ error: data.error });
+        }
+    } catch (error: unknown) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
+        let errorMessage: string;
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+        return res.status(500).json({ error: errorMessage });
     }
+
 }

@@ -4,27 +4,32 @@
 */
 import { useDispatch, useSelector } from 'react-redux';
 import { setSwarm } from '@/redux/swarmSlice';
+import { setCurrentSwarm } from '@/redux/userSlice';
+import { RootStateType } from '@models/rootstate';
 
-const useStartSwarm = () => {
+const useSpawnSwarm = () => {
     const dispatch = useDispatch();
+    const token = useSelector((state: RootStateType) => state.user.token);
 
     const handleNewSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean) => {
         dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned }));
+        dispatch(setCurrentSwarm(swarm_id));
     };
 
-    const handleStartSwarm = async (goal: string, swarm_id: string) => {
+    const handleSpawnSwarm = async (goal: string, swarm_id: string) => {
         try {
-            const response = await fetch('/api/spawn/createSwarm', {
-                method: 'POST',
+            const response = await fetch('/api/spawn/spawn_swarm', {
+                method: 'PUT',
                 body: JSON.stringify({ goal, swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
             });
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data.swarm_id, data.name, data.goal, data.spawned);
+                handleNewSwarm(swarm_id, data.name, data.goal, data.spawned);
             } else {
                 throw new Error('Creating swarm failed due to server error');
             }
@@ -34,7 +39,7 @@ const useStartSwarm = () => {
         }
     };
 
-    return { handleStartSwarm };
+    return { handleSpawnSwarm };
 };
 
-export default useStartSwarm;
+export default useSpawnSwarm;

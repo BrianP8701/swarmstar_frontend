@@ -6,15 +6,16 @@ const useDeleteSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.user.token);
 
-    const handleSwarm = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
+    const updateUserSwarms = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
+        console.log('swarm_names:', swarm_names);
         dispatch(setUserSwarms({ swarm_ids, swarm_names }));
         dispatch(setCurrentSwarm(''));
     };
 
     const handleDeleteSwarm = async (swarm_id: string) => {
         try {
-            const response = await fetch('/api/spawn/deleteSwarm', {
-                method: 'POST',
+            const response = await fetch('/api/spawn/delete_swarm', {
+                method: 'DELETE',
                 body: JSON.stringify({ swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,7 +25,7 @@ const useDeleteSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleSwarm(data.user_swarms.swarm_ids, data.user_swarms.swarm_names);
+                updateUserSwarms(data.user_swarms.swarm_ids, data.user_swarms.swarm_names);
             } else {
                 throw new Error('Creating swarm failed due to server error');
             }

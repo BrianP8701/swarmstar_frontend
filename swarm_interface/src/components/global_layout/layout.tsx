@@ -9,7 +9,7 @@ interface LayoutProps {
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import useAuthCheck from '@/hooks/auth/authCheck';
+import useAuthCheck from '@/hooks/auth/auth';
 
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();

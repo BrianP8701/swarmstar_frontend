@@ -141,3 +141,28 @@ frontend api methods:
 - authenticateUser(username, password) -> userId
 - get_swarms(user_id: string) -> List[swarm_id]
 - get_swarm(user_id: string, swarm_id: string) -> Swarm
+
+
+# getting backend integrations and tests
+okay now ive actually got most of the frontend built out. i just need to actually make the backend integrations work. lets make a clear plan for all the parts i need to test and get working.
+
+We can get it working interacting with our local sqlite databases first then we can just swap in the cloud version later on it shouldnt be too hard.
+
+## Login and Setup
+1. Signup
+Let user make an account and make sure this works reliably. after signup make sure the frontend gets the necessary info
+2. Login 
+Make sure the user gets all the initial info they need on the frontend
+
+This is mostly done already. but i really need to clean up the code and standardize the interactions.
+
+## Spawn section
+1. Display swarms
+For testing i need to make sure that the backend and frontend swarms are aligned when we add and create swarms. The goal should display and whether the swarm is spawned or not. I need to create an artificial spawned swarm in the backend database and see if it displays the way i want it to. i should also create a filler spawn backend route that wont actually spawn the swarm but simulate it
+
+## Chat Section
+1. I need to simulate from the backend conversation intiation and agent replies. make sure this aligns with the package schemas. 
+
+
+okay basically ive really just been hacking this frontend together. now i actually understand it and im gonna need to do a cleanup and standardize interactions between the front and backend and make proper testing. cleanup time. uh my brains not ready for this. fuck here we go. i need to do this.
+

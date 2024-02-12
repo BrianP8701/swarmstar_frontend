@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 
-const useAuthCheck = () => {
-  const router = useRouter();
+const useAuthHook = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   if (typeof window === "undefined") {
     return false;
@@ -12,25 +10,23 @@ const useAuthCheck = () => {
   const token = useSelector((state: RootStateType) => state.user.token);
 
   useEffect(() => {
-
     const checkAuth = async () => {
       try {
-        console.log(token)
-        const response = await fetch('/api/auth', {
+        const response = await fetch('/api/auth/auth_token', {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
+            'Type': 'auth'
           },
         });
+        const data = await response.json();
         if (response.ok) {
-          console.log('Successful Auth Check');
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          console.log('Failed Auth Check');
-          router.push('/login');
+          console.log(data.error)
         }
       } catch (error) {
         setIsAuthenticated(false);
@@ -38,9 +34,9 @@ const useAuthCheck = () => {
       }
     };
     checkAuth();
-  }, [router.pathname, token]);
+  }, [token]);
 
   return isAuthenticated;
 };
 
-export default useAuthCheck;
+export default useAuthHook;

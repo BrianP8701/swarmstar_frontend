@@ -13,11 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.login_url, {
-            method: 'POST',
-            headers: headers,
+        const response = await fetch(config.auth_token_url, {
+            method: 'GET',
             credentials: 'include',
-            body: JSON.stringify(req.body), 
+            headers: headers,
         });
         const data = await response.json();
         if (response.ok) {

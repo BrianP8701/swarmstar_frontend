@@ -1,26 +1,36 @@
 import useDeleteSwarm from '@hooks/spawn/deleteSwarm';
-import useStartSwarm from '@hooks/spawn/startSwarm';
+import useSpawnSwarm from '@/hooks/spawn/spawnSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSwarmGoal } from '@/redux/swarmSlice';
+import { setCurrentSwarm } from '@/redux/userSlice';
 
-const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: string, setSelectedSwarm: (swarm: string) => void }) => {
+const SwarmContols = ({ }: { selectedSwarm: string, setSelectedSwarm: (swarm: string) => void }) => {
     const dispatch = useDispatch();
     const { handleDeleteSwarm } = useDeleteSwarm();
-    const { handleStartSwarm } = useStartSwarm();
+    const { handleSpawnSwarm } = useSpawnSwarm();
     const goal = useSelector((state: RootStateType) => state.swarm.goal);
+    const state = useSelector((state: RootStateType) => state);
+    console.log(state);
     const isSpawned = useSelector((state: RootStateType) => state.swarm.spawned);
-
+    console.log('isSpawned:', isSpawned);
+    const current_swarm = useSelector((state: RootStateType) => state.user.current_swarm);
 
     const deleteSwarm = (swarmId: string) => {
         if (window.confirm('Are you sure you want to delete this swarm? This action is irreversible.')) {
             handleDeleteSwarm(swarmId);
-            setSelectedSwarm('');
+            dispatch(setCurrentSwarm(''));
         }
     }
 
-    const startSwarm = (goal: string) => {
-        handleStartSwarm(goal, selectedSwarm);
+    const spawnSwarm = (goal: string) => {
+        if (current_swarm) {
+            handleSpawnSwarm(goal, current_swarm);
+        }
+    }
+
+    const resumeSwarm = () => {
+
     }
 
     return (
@@ -34,7 +44,7 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
             padding: '10px', // Add padding as specified
         }}>
             <div style={{ textAlign: 'center', width: '100%' }}>
-                {selectedSwarm && isSpawned && (
+                {current_swarm && isSpawned && (
                     <div style={{ textAlign: 'center', width: '100%' }}>
                         <textarea
                             placeholder="Enter goal"
@@ -56,14 +66,14 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
                         />
                         <button
                             className="button-text mt-3.5"
-                            onClick={() => startSwarm(goal)}
+                            onClick={() => resumeSwarm()}
                             disabled={!goal}
                             style={{ display: 'block', margin: '10px auto' }}
                         >
                             Resume
                         </button>
                         <button
-                            onClick={() => deleteSwarm(selectedSwarm)}
+                            onClick={() => deleteSwarm(current_swarm)}
                             className="button-text mt-3.5"
                             style={{ display: 'block', margin: '10px auto' }}
                         >
@@ -72,7 +82,7 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
                     </div>
                 )}
             </div>
-            {selectedSwarm && !isSpawned && (
+            {current_swarm && !isSpawned && (
                 <div style={{ textAlign: 'center', width: '100%' }}>
                     <textarea
                         placeholder="Enter goal"
@@ -94,14 +104,14 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
                     />
                     <button
                         className="button-text mt-3.5"
-                        onClick={() => startSwarm(goal)}
+                        onClick={() => spawnSwarm(goal)}
                         disabled={!goal}
                         style={{ display: 'block', margin: '10px auto' }}
                     >
                         Spawn
                     </button>
                     <button
-                        onClick={() => deleteSwarm(selectedSwarm)}
+                        onClick={() => deleteSwarm(current_swarm)}
                         className="button-text mt-3.5"
                         style={{ display: 'block', margin: '10px auto' }}
                     >
@@ -111,10 +121,6 @@ const SwarmContols = ({ selectedSwarm, setSelectedSwarm }: { selectedSwarm: stri
             )}
         </div>
     );
-
-
-
-
 }
 
 export default SwarmContols;

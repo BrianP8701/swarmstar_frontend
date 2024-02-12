@@ -5,7 +5,7 @@ import { setUserSwarms, setToken } from '@/redux/userSlice';
 const useSignUp = () => {
     const dispatch = useDispatch();
 
-    const handleUserSignUp = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
+    const handleUserData = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
         dispatch(setUserSwarms({ swarm_ids, swarm_names }));
         dispatch(setToken(token));
     };
@@ -14,7 +14,7 @@ const useSignUp = () => {
         try {
             console.log("username: ", username)
             const response = await fetch('/api/auth/signup', {
-                method: 'POST',
+                method: 'PUT',
                 body: JSON.stringify({ username, password, openai_key }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const useSignUp = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                handleUserSignUp(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
+                handleUserData(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.error);

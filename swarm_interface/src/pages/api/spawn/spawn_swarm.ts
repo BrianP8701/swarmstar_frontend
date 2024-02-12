@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { authorization, 'content-type': contentType } = req.headers;
@@ -13,11 +14,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.login_url, {
-            method: 'POST',
+        const response = await fetch(config.spawn_swarm_url, {
+            method: 'PUT',
             headers: headers,
             credentials: 'include',
-            body: JSON.stringify(req.body), 
+            body: JSON.stringify(req.body)
         });
         const data = await response.json();
         if (response.ok) {
@@ -37,4 +38,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ error: errorMessage });
     }
+
 }

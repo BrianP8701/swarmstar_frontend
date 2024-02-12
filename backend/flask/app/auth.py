@@ -64,7 +64,7 @@ def login():
     response = jsonify({"user_swarms": user_swarms, "token": token})
     return response
 
-@routes.route('/auth', methods=['GET'])
+@routes.route('/auth/auth_token', methods=['GET'])
 @jwt_required()
 @cross_origin()
 def authenticate_token():

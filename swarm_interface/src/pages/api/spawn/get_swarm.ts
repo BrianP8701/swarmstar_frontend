@@ -3,6 +3,13 @@ import config from '@configs/configLoader';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+        const { swarm_id } = req.query;
+        if (!swarm_id) {
+            return res.status(400).json({ error: 'Missing swarm_id parameter' });
+        }
+
+        const url = `${config.get_swarm_url}?swarm_id=${swarm_id}`;
+
         const { authorization, 'content-type': contentType } = req.headers;
 
         const headers: HeadersInit = {
@@ -13,11 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.login_url, {
-            method: 'POST',
+        const response = await fetch(url, {
+            method: 'GET',
             headers: headers,
-            credentials: 'include',
-            body: JSON.stringify(req.body), 
+            credentials: 'include'
         });
         const data = await response.json();
         if (response.ok) {

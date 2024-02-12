@@ -13,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.login_url, {
-            method: 'POST',
+        const response = await fetch(config.delete_swarm_url, {
+            method: 'DELETE',
             headers: headers,
             credentials: 'include',
-            body: JSON.stringify(req.body), 
+            body: JSON.stringify(req.body)
         });
         const data = await response.json();
         if (response.ok) {
@@ -37,4 +37,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ error: errorMessage });
     }
+
 }

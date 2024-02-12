@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import useHandleLogin from '@/hooks/auth/handleLogin';
+import useHandleLogin from '@/hooks/auth/login';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import useAuthCheck from '@/hooks/auth/authCheck';
+import useAuthCheck from '@/hooks/auth/auth';
 
 const Login = () => {
   const [username, setUsername] = useState('');

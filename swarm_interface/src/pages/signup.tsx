@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useSignUp from '@/hooks/auth/signUp';
 import { useRouter } from 'next/router';
-import useAuthCheck from '@/hooks/auth/authCheck';
+import useAuthCheck from '@/hooks/auth/auth';
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
