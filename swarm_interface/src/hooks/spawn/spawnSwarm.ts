@@ -3,17 +3,17 @@
     addition of the new swarm's information.
 */
 import { useDispatch, useSelector } from 'react-redux';
-import { setSwarm } from '@/redux/swarmSlice';
-import { setCurrentSwarm } from '@/redux/userSlice';
+import { setSwarm, SwarmState } from '@/redux/swarmSlice';
 import { RootStateType } from '@models/rootstate';
+import { clearMessages } from '@/redux/conversationSlice';
 
 const useSpawnSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.user.token);
 
-    const handleNewSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean) => {
-        dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned }));
-        dispatch(setCurrentSwarm(swarm_id));
+    const handleNewSwarm = (swarm: SwarmState) => {
+        dispatch(setSwarm(swarm));
+        dispatch(clearMessages());
     };
 
     const handleSpawnSwarm = async (goal: string, swarm_id: string) => {
@@ -29,16 +29,15 @@ const useSpawnSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(swarm_id, data.name, data.goal, data.spawned);
+                handleNewSwarm(data.swarm);
             } else {
-                throw new Error('Creating swarm failed due to server error');
+                throw new Error('Spawning swarm failed due to server error');
             }
         } catch (error) {
             console.error("Error creating swarm:", error);
             throw error;
         }
     };
-
     return { handleSpawnSwarm };
 };
 

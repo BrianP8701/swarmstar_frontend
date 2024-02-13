@@ -33,21 +33,22 @@ const swarmSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setSwarm: (state, action: PayloadAction<{ swarm_data: SwarmState }>) => {
-      state.name = action.payload.swarm_data.name;
-      state.goal = action.payload.swarm_data.goal;
-      state.spawned = action.payload.swarm_data.spawned;
-      state.active = action.payload.swarm_data.active;
-      state.conversation_ids = action.payload.swarm_data.conversation_ids;
-      state.conversation_names = action.payload.swarm_data.conversation_names;
-      state.live_conversations_ids = action.payload.swarm_data.live_conversations_ids;
-      state.terminated_conversations_ids = action.payload.swarm_data.terminated_conversations_ids;
-      state.nodes = action.payload.swarm_data.nodes;
-      state.root_node_id = action.payload.swarm_data.root_node_id;
-      state.frames = action.payload.swarm_data.frames;
+    setSwarm: (state, action: PayloadAction<SwarmState>) => {
+      state.name = action.payload.name;
+      state.goal = action.payload.goal;
+      state.spawned = action.payload.spawned;
+      state.active = action.payload.active;
+      state.conversation_ids = action.payload.conversation_ids;
+      state.conversation_names = action.payload.conversation_names;
+      state.live_conversations_ids = action.payload.live_conversations_ids;
+      state.terminated_conversations_ids = action.payload.terminated_conversations_ids;
+      state.nodes = action.payload.nodes;
+      state.root_node_id = action.payload.root_node_id;
+      state.frames = action.payload.frames;
     }
   },
 });
 
 export const { setSwarm } = swarmSlice.actions;
 export default swarmSlice.reducer;
+export type { SwarmState };

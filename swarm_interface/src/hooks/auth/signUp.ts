@@ -1,18 +1,18 @@
 import { useDispatch } from 'react-redux';
-import { setUserSwarms, setToken } from '@/redux/userSlice';
+import { setToken } from '@/redux/tokenSlice';
+import { setUser, UserState } from '@/redux/userSlice';
 
 
 const useSignUp = () => {
     const dispatch = useDispatch();
 
-    const handleUserData = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }, token: string) => {
-        dispatch(setUserSwarms({ swarm_ids, swarm_names }));
+    const handleUserData = (user: UserState, token: string) => {
+        dispatch(setUser(user));
         dispatch(setToken(token));
     };
 
     const handleSignUp = async (username: string, password: string, openai_key: string) => {
         try {
-            console.log("username: ", username)
             const response = await fetch('/api/auth/signup', {
                 method: 'PUT',
                 body: JSON.stringify({ username, password, openai_key }),
@@ -20,15 +20,14 @@ const useSignUp = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            const data = await response.json();
             if (response.ok) {
-                const data = await response.json();
-                handleUserData(data.user_swarms.swarm_ids, data.user_swarms.swarm_names, data.token);
+                handleUserData(data.user, data.token);
             } else {
-                const errorData = await response.json();
-                throw new Error(errorData.error);
+                throw new Error(data.error);
             }
         } catch (error) {
-            console.error(error);
             throw error;
         }
     };

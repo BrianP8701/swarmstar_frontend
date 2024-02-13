@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setSwarm } from '@/redux/swarmSlice';
-import { setCurrentSwarm } from '@/redux/userSlice';
+import { setSwarm, SwarmState } from '@/redux/swarmSlice';
+import { setUser, UserState } from '@/redux/userSlice';
 import { RootStateType } from '@models/rootstate';
 
 const useGetSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.user.token);
 
-    const handleSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean) => {
-        dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned })); 1
-        dispatch(setCurrentSwarm(swarm_id));
+    const handleSwarm = (swarm: SwarmState, user: UserState) => {
+        dispatch(setSwarm(swarm));
+        dispatch(setUser(user));
     };
 
     const handleGetSwarm = async (swarm_id: string) => {
@@ -26,7 +26,7 @@ const useGetSwarm = () => {
 
             if (response.ok) {
                 console.log('data:', data);
-                handleSwarm(swarm_id, data.name, data.goal, data.spawned);
+                handleSwarm(data.swarm, data.user);
             } else {
                 return data.error;
             }

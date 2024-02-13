@@ -2,10 +2,9 @@ from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import get_jwt_identity
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
-import os
 import traceback
 
-from utils.mongodb import add_kv, get_kv, update_kv
+from utils.mongodb import get_kv, update_kv
 
 app = Flask(__name__)
 routes = Blueprint('spawn_swarm_route', __name__)

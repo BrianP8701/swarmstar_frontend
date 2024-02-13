@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 import os
 import traceback
 
-from utils.mongodb import get_kv
+from utils.mongodb import get_kv, update_kv
 
 app = Flask(__name__)
 routes = Blueprint('get_swarm_route', __name__)
@@ -28,8 +28,11 @@ def get_swarm():
             return jsonify({"error": "User is not part of the swarm"}), 403
 
         swarm = get_kv('swarms', swarm_id)
+        user = get_kv('users', user_id)
+        user['current_swarm'] = swarm_id
+        update_kv('users', user_id, user)
         
-        return jsonify(swarm), 200
+        return jsonify({'swarm': swarm, 'user': user}), 200
     
     except Exception as e:
         print(traceback.format_exc())

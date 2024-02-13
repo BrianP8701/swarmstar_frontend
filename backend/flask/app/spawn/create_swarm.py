@@ -47,7 +47,7 @@ def create_swarm():
         }
         
         add_kv('swarms', swarm_id, new_swarm)
-        return jsonify(new_swarm), 200
+        return jsonify({'swarm': new_swarm, 'user': user}), 200
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500

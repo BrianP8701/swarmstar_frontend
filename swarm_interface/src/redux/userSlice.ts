@@ -30,14 +30,15 @@ const userSlice = createSlice({
     setCurrentConversationID: (state, action: PayloadAction<string>) => {
       state.current_conversation_id = action.payload;
     },
-    setUser: (state, action: PayloadAction<{ user: UserState }>) => {
-      state.swarm_ids = action.payload.user.swarm_ids;
-      state.swarm_names = action.payload.user.swarm_names;
-      state.current_swarm_id = action.payload.user.current_swarm_id;
-      state.current_conversation_id = action.payload.user.current_conversation_id;
+    setUser: (state, action: PayloadAction<UserState>) => {
+      state.swarm_ids = action.payload.swarm_ids;
+      state.swarm_names = action.payload.swarm_names;
+      state.current_swarm_id = action.payload.current_swarm_id;
+      state.current_conversation_id = action.payload.current_conversation_id;
     },
   },
 });
 
-export const { setUserSwarms, setCurrentSwarmID, setCurrentConversationID } = userSlice.actions;
+export const { setUserSwarms, setCurrentSwarmID, setCurrentConversationID, setUser } = userSlice.actions;
 export default userSlice.reducer;
+export type { UserState };

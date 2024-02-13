@@ -1,20 +1,21 @@
 import { useDispatch } from 'react-redux';
-import { setUserSwarms, setToken } from '@/redux/userSlice';
+import { setToken } from '@/redux/tokenSlice';
+import { setUser, UserState } from '@/redux/userSlice';
+
 
 const useLoginHook = () => {
     const dispatch = useDispatch();
 
-    const handleUserData = (data: { user_swarms: { swarm_ids: string[], swarm_names: { [swarm_id: string]: string } }, token: string }) => {
-        dispatch(setUserSwarms({ swarm_ids: data.user_swarms.swarm_ids, swarm_names: data.user_swarms.swarm_names }));
-        dispatch(setToken(data.token));
+    const handleUserData = (user: UserState, token: string) => {
+        dispatch(setUser(user));
+        dispatch(setToken(token));
     };
 
     const handleLogin = async (username: string, password: string) => {
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
-                body: JSON.stringify({ username, password, type: 'login' }),
-                credentials: 'include',
+                body: JSON.stringify({ username, password }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -22,7 +23,7 @@ const useLoginHook = () => {
 
             const data = await response.json();
             if (response.ok) {
-                handleUserData(data);
+                handleUserData(data.user, data.token);
             } else {
                 throw new Error(data.error);
             }

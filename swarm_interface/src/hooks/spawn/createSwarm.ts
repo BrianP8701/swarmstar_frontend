@@ -3,19 +3,20 @@
     addition of the new swarm's information.
 */
 import { useDispatch } from 'react-redux';
-import { setSwarm } from '@/redux/swarmSlice';
-import { setCurrentSwarm, setUserSwarms } from '@/redux/userSlice';
+import { setSwarm, SwarmState } from '@/redux/swarmSlice';
+import { setUser, UserState } from '@/redux/userSlice';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
+import { clearMessages } from '@/redux/conversationSlice';
 
 const useCreateSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.user.token);
 
-    const handleNewSwarm = (swarm_id: string, swarm_name: string, goal: string, spawned: boolean, swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
-        dispatch(setSwarm({ swarm_id, swarm_name, goal, spawned }));
-        dispatch(setUserSwarms({ swarm_ids, swarm_names }))
-        dispatch(setCurrentSwarm(swarm_id));
+    const handleNewSwarm = (swarm: SwarmState, user: UserState) => {
+        dispatch(setSwarm(swarm));
+        dispatch(setUser(user));
+        dispatch(clearMessages());
     };
 
     const handleCreateSwarm = async (newSwarmName: string) => {
@@ -31,7 +32,7 @@ const useCreateSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data.swarm_id, data.name, data.goal, data.spawned, data.user_swarms.swarm_ids, data.user_swarms.swarm_names);
+                handleNewSwarm(data.swarm, data.user);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.error);

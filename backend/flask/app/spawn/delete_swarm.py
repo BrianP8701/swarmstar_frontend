@@ -46,7 +46,21 @@ def delete_swarm():
         user['swarm_names'].pop(swarm_id)
         update_kv('users', user_id, user)
         
-        return jsonify({'user': backend_user_to_frontend_user(user)}), 200
+        empty_swarm = {
+            'name': '',
+            'goal': '',
+            'spawned': False,
+            'active': False,
+            'conversation_ids': [],
+            'conversation_names': {},
+            'live_conversation_ids': [],
+            'terminated_conversation_ids': [],
+            'nodes': [],
+            'root_node_id': None,
+            'frames': 0
+        }
+        
+        return jsonify({'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}, ), 200
     except Exception as e:
         print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500

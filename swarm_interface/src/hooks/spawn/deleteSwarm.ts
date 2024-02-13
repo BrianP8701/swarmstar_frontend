@@ -1,15 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentSwarm, setUserSwarms } from '@/redux/userSlice';
+import { setSwarm, SwarmState } from '@/redux/swarmSlice';
+import { setUser, UserState } from '@/redux/userSlice';
+import { clearMessages } from '@/redux/conversationSlice';
 import { RootStateType } from '@models/rootstate';
 
 const useDeleteSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.user.token);
 
-    const updateUserSwarms = (swarm_ids: string[], swarm_names: { [swarm_id: string]: string }) => {
-        console.log('swarm_names:', swarm_names);
-        dispatch(setUserSwarms({ swarm_ids, swarm_names }));
-        dispatch(setCurrentSwarm(''));
+    const updateUserSwarms = (swarm: SwarmState, user: UserState) => {
+        dispatch(setSwarm(swarm));
+        dispatch(setUser(user));
+        dispatch(clearMessages());
     };
 
     const handleDeleteSwarm = async (swarm_id: string) => {
@@ -25,7 +27,7 @@ const useDeleteSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                updateUserSwarms(data.user_swarms.swarm_ids, data.user_swarms.swarm_names);
+                updateUserSwarms(data.swarm, data.user);
             } else {
                 throw new Error('Creating swarm failed due to server error');
             }
