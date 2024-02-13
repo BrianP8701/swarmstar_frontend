@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 import os
 import traceback
 
-from utils.database import get_from_kv_store
+from utils.mongodb import get_kv
 
 app = Flask(__name__)
 routes = Blueprint('get_swarm_route', __name__)
@@ -14,42 +14,24 @@ routes = Blueprint('get_swarm_route', __name__)
 @jwt_required()
 @cross_origin()
 def get_swarm():
-    try:
-        print('At least we made it inside the get function in the backend')
-        
-        # Use request.args for query parameters
+    try:        
         swarm_id = request.args.get('swarm_id', None)
         user_id = get_jwt_identity()
 
         if not swarm_id:
-            empty_swarm_info = {
-                'name': '',
-                'goal': '',
-                'spawned': False,
-                'swarm_users': [],
-                'swarm_id': ''
-            }
-            return jsonify(empty_swarm_info), 200
+            return jsonify({"error": "Swarm ID is required"}), 400
 
-        # Your existing logic for database paths and swarm info retrieval
-        user_info_db_path = os.getenv('USER_INFO_DB_PATH')
-        swarms_db_path = os.getenv('SWARMS_DB_PATH')
+        user = get_kv('users', user_id)
+        swarm_ids = user['swarm_ids']
         
-        if not user_info_db_path or not swarms_db_path:
-            return jsonify({"error": "Database paths are not configured"}), 500
-
-        user_info = get_from_kv_store(user_info_db_path, user_id)
-        user_swarms = user_info['swarm_ids']
-        
-        if swarm_id not in user_swarms:
+        if swarm_id not in swarm_ids:
             return jsonify({"error": "User is not part of the swarm"}), 403
 
-        swarm_info = get_from_kv_store(swarms_db_path, swarm_id)
+        swarm = get_kv('swarms', swarm_id)
         
-        return jsonify(swarm_info), 200
+        return jsonify(swarm), 200
     
     except Exception as e:
         print(traceback.format_exc())
         print(e)
-        print('wtf')
         return jsonify({"error": str(e)}), 500

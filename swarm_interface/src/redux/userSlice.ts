@@ -6,7 +6,6 @@ interface UserState {
   swarm_names: { [swarm_id: string]: string };
   current_swarm_id: string | null;
   current_conversation_id: string | null;
-  token: string | null;
 }
 
 // Define the initial state using that type
@@ -15,7 +14,6 @@ const initialState: UserState = {
   swarm_names: {},
   current_swarm_id: null,
   current_conversation_id: null,
-  token: null
 };
 
 const userSlice = createSlice({
@@ -32,11 +30,14 @@ const userSlice = createSlice({
     setCurrentConversationID: (state, action: PayloadAction<string>) => {
       state.current_conversation_id = action.payload;
     },
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-    }
+    setUser: (state, action: PayloadAction<{ user: UserState }>) => {
+      state.swarm_ids = action.payload.user.swarm_ids;
+      state.swarm_names = action.payload.user.swarm_names;
+      state.current_swarm_id = action.payload.user.current_swarm_id;
+      state.current_conversation_id = action.payload.user.current_conversation_id;
+    },
   },
 });
 
-export const { setUserSwarms, setCurrentSwarmID, setCurrentConversationID, setToken } = userSlice.actions;
+export const { setUserSwarms, setCurrentSwarmID, setCurrentConversationID } = userSlice.actions;
 export default userSlice.reducer;

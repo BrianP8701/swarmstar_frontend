@@ -13,13 +13,13 @@ def create_client(uri: str) -> MongoClient:
     except Exception as e:
         raise ValueError(f'Failed to create MongoDB client: {str(e)}')
     
-def create_collection_with_unique_index(db_name: str, collection_name: str) -> None:
+def create_collection(db_name: str, collection_name: str) -> None:
     client = create_client(uri)
     db = client[db_name]
     collection = db[collection_name]
     collection.create_index([('key', pymongo.ASCENDING)], unique=True)
 
-def add_key_value(collection_name: str, key: str, value: dict) -> None:
+def add_kv(collection_name: str, key: str, value: dict) -> None:
     try:
         client = create_client(uri)
         db = client['swarm_interface']
@@ -31,7 +31,7 @@ def add_key_value(collection_name: str, key: str, value: dict) -> None:
     except Exception as e:
         raise ValueError(f'Failed to add to MongoDB collection: {str(e)}')
 
-def get_by_key(collection_name: str, key: str) -> dict:
+def get_kv(collection_name: str, key: str) -> dict:
     try:    
         client = create_client(uri)
         db = client['swarm_interface']
@@ -43,7 +43,7 @@ def get_by_key(collection_name: str, key: str) -> dict:
     except Exception as e:
         raise ValueError(f'Failed to get from MongoDB collection: {str(e)}')
 
-def delete_by_key(collection_name: str, key: str) -> None:
+def delete_kv(collection_name: str, key: str) -> None:
     try:
         client = create_client(uri)
         db = client['swarm_interface']
@@ -54,7 +54,7 @@ def delete_by_key(collection_name: str, key: str) -> None:
     except Exception as e:
         raise ValueError(f'Failed to delete from MongoDB collection: {str(e)}')
 
-def update_by_key(collection_name: str, key: str, update_value: dict) -> None:
+def update_kv(collection_name: str, key: str, update_value: dict) -> None:
     try:
         client = create_client(uri)
         db = client['swarm_interface']
@@ -64,5 +64,3 @@ def update_by_key(collection_name: str, key: str, update_value: dict) -> None:
             raise ValueError(f'Key {key} not found in MongoDB collection.')
     except Exception as e:
         raise ValueError(f'Failed to update MongoDB collection: {str(e)}')
-
-create_collection_with_unique_index('swarm_interface', 'swarm_messages')

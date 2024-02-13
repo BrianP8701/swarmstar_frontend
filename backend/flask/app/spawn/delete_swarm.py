@@ -2,10 +2,10 @@ from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import get_jwt_identity
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
-import os
 import traceback
 
-from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
+from utils.mongodb import get_kv, delete_kv, update_kv
+from utils.type_operations import backend_user_to_frontend_user
 
 app = Flask(__name__)
 routes = Blueprint('delete_swarm_route', __name__)
@@ -20,25 +20,33 @@ def delete_swarm():
         
         if not swarm_id:
             return jsonify({"error": "Swarm ID is required"}), 400
-        
-        user_info_db_path = os.getenv('USER_INFO_DB_PATH')
-        swarms_db_path = os.getenv('SWARMS_DB_PATH')
-        
-        if not user_info_db_path or not swarms_db_path:
-            return jsonify({"error": "Database paths are not configured"}), 500
 
-        user_swarms = get_from_kv_store(user_info_db_path, user_id)
-        if swarm_id not in user_swarms['swarm_ids']:
+        user = get_kv('users', user_id)
+        if swarm_id not in user['swarm_ids']:
             return jsonify({"error": "User is not part of the swarm"}), 403
+                
+        swarm = get_kv('swarms', swarm_id)
+        conversation_ids = swarm['conversation_ids']
         
-        user_swarms['swarm_ids'].remove(swarm_id)
-        user_swarms['swarm_names'].pop(swarm_id)
-        delete_from_kv_store(user_info_db_path, user_id)
-        add_to_kv_store(user_info_db_path, user_id, user_swarms)
+        for conversation_id in conversation_ids:
+            conversation = get_kv('conversations', conversation_id)
+            for message_id in conversation['message_ids']:
+                delete_kv('swarm_messages', message_id)
+            delete_kv('conversations', conversation_id)
+            
+        for node_id in swarm['nodes']:
+            delete_kv('nodes', node_id)
+            
+        for i in range (swarm['frames']):
+            delete_kv('swarm_events', f'{swarm_id}_history_{i}')
         
-        delete_from_kv_store(swarms_db_path, swarm_id)
+        delete_kv('swarms', swarm_id)
         
-        return jsonify({'user_swarms': user_swarms}), 200
+        user['swarm_ids'].remove(swarm_id)
+        user['swarm_names'].pop(swarm_id)
+        update_kv('users', user_id, user)
+        
+        return jsonify({'user': backend_user_to_frontend_user(user)}), 200
     except Exception as e:
         print(traceback.format_exc())
         return jsonify({"error": str(e)}), 500

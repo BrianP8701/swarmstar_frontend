@@ -18,11 +18,7 @@ load_dotenv('/Users/brianprzezdziecki/Code/agent_swarm_interface/backend/flask/.
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-
-
 jwt = JWTManager(app)
-
-# Simplify the CORS origin to match your frontend access method
 CORS(app, origins=['http://lvh.me:3000', 'http://app.lvh.me:3000', 'lvh.me:3000', 'http://auth.localhost:3000', 'http://app.localhost:3000'], supports_credentials=True)
 
 app.register_blueprint(login_route)

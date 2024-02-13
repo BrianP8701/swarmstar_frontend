@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 import os
 import traceback
 
-from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
+from utils.mongodb import add_kv, get_kv, update_kv
 
 app = Flask(__name__)
 routes = Blueprint('spawn_swarm_route', __name__)
@@ -24,28 +24,23 @@ def spawn_swarm():
         
         if not goal:
             return jsonify({"error": "Swarm goal is required"}), 400
-        
-        user_info_db_path = os.getenv('USER_INFO_DB_PATH')
-        swarms_db_path = os.getenv('SWARMS_DB_PATH')
-        
-        if not user_info_db_path or not swarms_db_path:
-            return jsonify({"error": "Database paths are not configured"}), 500
 
-        user_info = get_from_kv_store(user_info_db_path, user_id)
-        user_swarms = user_info['swarm_ids']
-        if swarm_id not in user_swarms:
+        user = get_kv('users', user_id)
+        swarm_ids = user['swarm_ids']
+        
+        if swarm_id not in swarm_ids:
             return jsonify({"error": "User is not part of the swarm"}), 403
         
-        swarm_info = get_from_kv_store(swarms_db_path, swarm_id)
-        swarm_info['spawned'] = True
-        swarm_info['goal'] = goal
+        swarm = get_kv('swarms', swarm_id)
+        swarm['spawned'] = True
+        swarm['goal'] = goal
+        swarm['active'] = True
         
         # TODO Actually spawn the swarm
         
-        delete_from_kv_store(swarms_db_path, swarm_id)
-        add_to_kv_store(swarms_db_path, swarm_id, swarm_info)
+        update_kv('swarms', swarm_id, swarm)
         
-        return jsonify(swarm_info), 200
+        return jsonify(swarm), 200
     
     except Exception as e:
         print(e)

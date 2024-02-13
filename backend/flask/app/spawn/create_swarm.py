@@ -2,9 +2,8 @@ from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import get_jwt_identity
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
-import os
 
-from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
+from utils.mongodb import add_kv, get_kv, delete_kv, update_kv
 from utils.security import generate_uuid
 
 app = Flask(__name__)
@@ -22,39 +21,33 @@ def create_swarm():
             print('swarm name is required')
             return jsonify({"error": "Swarm name is required"}), 400
         
-        user_info_db_path = os.getenv('USER_INFO_DB_PATH')
-        swarms_db_path = os.getenv('SWARMS_DB_PATH')
+        user = get_kv('users', user_id)
         
-        if not user_info_db_path or not swarms_db_path:
-            return jsonify({"error": "Database paths are not configured"}), 500
-        
-        user_swarms = get_from_kv_store(user_info_db_path, user_id)
-        if not user_swarms:
+        if not user:
             return jsonify({"error": "User not found"}), 404
         
         swarm_id = generate_uuid(new_swarm_name)
         
-        user_swarms['swarm_ids'].append(swarm_id)
-        user_swarms['swarm_names'][swarm_id] = new_swarm_name
-        delete_from_kv_store(user_info_db_path, user_id)
-        add_to_kv_store(user_info_db_path, user_id, user_swarms)
+        user['swarm_ids'].append(swarm_id)
+        user['swarm_names'][swarm_id] = new_swarm_name
+        update_kv('users', user_id, user)
          
-        swarm_info = {
+        new_swarm = {
             'name': new_swarm_name,
             'goal': '',
             'spawned': False,
-            'swarm_users': [user_id]
+            'active': False,
+            'conversation_ids': [],
+            'conversation_names': {},
+            'live_conversation_ids': [],
+            'terminated_conversation_ids': [],
+            'nodes': [],
+            'root_node_id': None,
+            'frames': 0
         }
         
-        add_to_kv_store(swarms_db_path, swarm_id, swarm_info)
-        swarm_info['swarm_id'] = swarm_id
-        swarm_info['user_swarms'] = user_swarms
-        print(swarm_info)
-        return jsonify(swarm_info), 200
+        add_kv('swarms', swarm_id, new_swarm)
+        return jsonify(new_swarm), 200
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
-
-
-
-    
