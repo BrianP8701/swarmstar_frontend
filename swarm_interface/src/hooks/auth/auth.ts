@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 
 const useAuthHook = () => {
+  console.log('auth hook')
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   if (typeof window === "undefined") {
     return false;
@@ -22,6 +23,7 @@ const useAuthHook = () => {
           },
         });
         const data = await response.json();
+        console.log('data:', data)
         if (response.ok) {
           setIsAuthenticated(true);
         } else {

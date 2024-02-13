@@ -13,6 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
+
+        console.log('lego man')
         const response = await fetch(config.auth_token_url, {
             method: 'GET',
             credentials: 'include',
@@ -22,9 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (response.ok) {
             return res.status(200).json(data);
         } else {
-            console.log(req.body)
-            console.log(data.error)
-            return res.status(response.status).json({ error: data.error });
+            throw new Error(data.error);
         }
     } catch (error: unknown) {
         console.error(error);
@@ -34,6 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else {
             errorMessage = String(error);
         }
-        return res.status(500).json({ error: errorMessage });
+        throw new Error(errorMessage);
     }
 }
