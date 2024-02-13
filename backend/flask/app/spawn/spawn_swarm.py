@@ -8,7 +8,7 @@ import traceback
 from utils.database import add_to_kv_store, get_from_kv_store, delete_from_kv_store
 
 app = Flask(__name__)
-routes = Blueprint('spawn_Swarm_route', __name__)
+routes = Blueprint('spawn_swarm_route', __name__)
 
 @routes.route('/spawn/spawn_swarm', methods=['PUT'])
 @jwt_required()
