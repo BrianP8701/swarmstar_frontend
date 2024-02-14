@@ -9,7 +9,7 @@ import { clearMessages } from '@/redux/conversationSlice';
 
 const useSpawnSwarm = () => {
     const dispatch = useDispatch();
-    const token = useSelector((state: RootStateType) => state.user.token);
+    const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleNewSwarm = (swarm: SwarmState) => {
         dispatch(setSwarm(swarm));
@@ -29,7 +29,7 @@ const useSpawnSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data.swarm);
+                handleNewSwarm(data);
             } else {
                 throw new Error('Spawning swarm failed due to server error');
             }

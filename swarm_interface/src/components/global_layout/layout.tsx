@@ -14,9 +14,8 @@ import useAuthCheck from '@/hooks/auth/auth';
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const isAuthenticated = useAuthCheck();
-  console.log('isAuthenticated:', isAuthenticated)
+
   useEffect(() => {
-    console.log('isAuthenticated:', isAuthenticated)
     if (isAuthenticated === false) {
       router.push('/login');
     }

@@ -11,7 +11,7 @@ import { clearMessages } from '@/redux/conversationSlice';
 
 const useCreateSwarm = () => {
     const dispatch = useDispatch();
-    const token = useSelector((state: RootStateType) => state.user.token);
+    const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleNewSwarm = (swarm: SwarmState, user: UserState) => {
         dispatch(setSwarm(swarm));

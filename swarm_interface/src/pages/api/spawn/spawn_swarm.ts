@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const headers: HeadersInit = {
             'Content-Type': contentType || 'application/json',
+            'credentials': 'include',
         };
 
         if (authorization) {

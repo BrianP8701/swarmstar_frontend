@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token
 from flask_cors import cross_origin
 from datetime import timedelta
 
-from utils.mongodb import get_kv
+from utils.mongodb import get_kv, clean
 from utils.security import check_password
 from utils.type_operations import backend_user_to_frontend_user
 
@@ -21,7 +21,8 @@ def login():
     
     user = get_kv('users', username)
     expires = timedelta(hours=1)  # Token valid for 24 hours
-    token = create_access_token(identity=user['user_id'], expires_delta=expires)
+    token = create_access_token(identity=username, expires_delta=expires)
 
+    clean(user)
     response = jsonify({'user': backend_user_to_frontend_user(user), 'token': token})
     return response

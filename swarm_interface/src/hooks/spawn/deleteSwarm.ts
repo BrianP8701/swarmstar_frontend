@@ -6,7 +6,7 @@ import { RootStateType } from '@models/rootstate';
 
 const useDeleteSwarm = () => {
     const dispatch = useDispatch();
-    const token = useSelector((state: RootStateType) => state.user.token);
+    const token = useSelector((state: RootStateType) => state.token.token);
 
     const updateUserSwarms = (swarm: SwarmState, user: UserState) => {
         dispatch(setSwarm(swarm));

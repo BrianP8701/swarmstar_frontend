@@ -3,7 +3,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
 
-from utils.mongodb import add_kv, get_kv, delete_kv, update_kv
+from utils.mongodb import add_kv, get_kv, update_kv, clean
 from utils.security import generate_uuid
 
 app = Flask(__name__)
@@ -30,6 +30,7 @@ def create_swarm():
         
         user['swarm_ids'].append(swarm_id)
         user['swarm_names'][swarm_id] = new_swarm_name
+        user['current_swarm_id'] = swarm_id
         update_kv('users', user_id, user)
          
         new_swarm = {
@@ -47,6 +48,8 @@ def create_swarm():
         }
         
         add_kv('swarms', swarm_id, new_swarm)
+        clean(new_swarm)
+        clean(user)
         return jsonify({'swarm': new_swarm, 'user': user}), 200
     except Exception as e:
         print(e)

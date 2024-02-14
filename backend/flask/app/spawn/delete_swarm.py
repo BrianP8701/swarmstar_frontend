@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
 import traceback
 
-from utils.mongodb import get_kv, delete_kv, update_kv
+from utils.mongodb import get_kv, delete_kv, update_kv, clean
 from utils.type_operations import backend_user_to_frontend_user
 
 app = Flask(__name__)
@@ -59,7 +59,8 @@ def delete_swarm():
             'root_node_id': None,
             'frames': 0
         }
-        
+        clean(user)
+        clean(empty_swarm)
         return jsonify({'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}, ), 200
     except Exception as e:
         print(traceback.format_exc())

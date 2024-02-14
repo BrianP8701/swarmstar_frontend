@@ -10,7 +10,7 @@ from utils.security import hash_password, generate_uuid
 app = Flask(__name__)
 routes = Blueprint('signup_route', __name__)
 
-@routes.route('/auth/signup', methods=['POST'])
+@routes.route('/auth/signup', methods=['PUT'])
 @cross_origin()
 def signup():
     username = request.json.get('username', None)
@@ -32,7 +32,7 @@ def signup():
     hashed_password = hash_password(password)
     user_id = generate_uuid(username)
     expires = timedelta(hours=1)  
-    token = create_access_token(identity=user_id, expires_delta=expires)
+    token = create_access_token(identity=username, expires_delta=expires)
     
     add_kv('users', username, {'user_id': user_id, 
                                'password': hashed_password, 

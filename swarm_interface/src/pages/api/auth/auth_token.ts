@@ -7,14 +7,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const headers: HeadersInit = {
             'Content-Type': contentType || 'application/json',
+            'credentials': 'include',
         };
 
         if (authorization) {
             headers['Authorization'] = authorization;
         }
 
-
-        console.log('lego man')
         const response = await fetch(config.auth_token_url, {
             method: 'GET',
             credentials: 'include',

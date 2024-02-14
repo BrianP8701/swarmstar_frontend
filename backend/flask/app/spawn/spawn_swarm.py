@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
 import traceback
 
-from utils.mongodb import get_kv, update_kv
+from utils.mongodb import get_kv, update_kv, clean
 
 app = Flask(__name__)
 routes = Blueprint('spawn_swarm_route', __name__)
@@ -35,10 +35,23 @@ def spawn_swarm():
         swarm['goal'] = goal
         swarm['active'] = True
         
+        print(swarm)
+        
         # TODO Actually spawn the swarm
+        
+        '''
+            we can simulate something here.
+            call something in swarm folder.
+            have a random timer. 
+            then create a new conversation with an initial message.
+            then update the swarm and conversations in the frontend
+            then we need to handle the user reply in the frontend and backend
+            and we can simulate another message and termination of the conversation
+        '''
         
         update_kv('swarms', swarm_id, swarm)
         
+        clean(swarm)
         return jsonify(swarm), 200
     
     except Exception as e:

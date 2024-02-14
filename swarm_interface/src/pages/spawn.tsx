@@ -5,7 +5,6 @@ import SwarmSelection from '@/components/spawn/swarmselection';
 import SwarmControls from '@/components/spawn/swarmcontrols';
 
 const SpawnPage = () => {
-    const [selectedSwarm, setSelectedSwarm] = useState<string>('');
 
     return (
         <Layout>
@@ -23,7 +22,7 @@ const SpawnPage = () => {
                     alignItems: 'center',
                     height: '100%', // Make sure it takes the full height of its parent
                 }}>
-                    <SwarmSelection selectedSwarm={selectedSwarm} setSelectedSwarm={setSelectedSwarm} />
+                    <SwarmSelection />
                 </div>
                 <div style={{
                     display: 'flex',
@@ -32,7 +31,7 @@ const SpawnPage = () => {
                     alignItems: 'center',
                     height: '100%', // Ensure it also takes full height
                 }}>
-                    <SwarmControls selectedSwarm={selectedSwarm} setSelectedSwarm={setSelectedSwarm} />
+                    <SwarmControls />
                 </div>
             </div>
         </Layout>

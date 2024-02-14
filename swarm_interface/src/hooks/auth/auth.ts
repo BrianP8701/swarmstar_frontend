@@ -3,13 +3,11 @@ import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 
 const useAuthHook = () => {
-  console.log('auth hook')
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   if (typeof window === "undefined") {
     return false;
   }
-  const token = useSelector((state: RootStateType) => state.user.token);
-
+  const token = useSelector((state: RootStateType) => state.token.token);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -19,7 +17,7 @@ const useAuthHook = () => {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
-            'Type': 'auth'
+            'credentials': 'include'
           },
         });
         const data = await response.json();

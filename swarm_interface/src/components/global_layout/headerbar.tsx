@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 
 const HeaderBar = () => {
-    const is_running = useSelector((state: RootStateType) => state.user.is_running);
+    const is_running = useSelector((state: RootStateType) => state.swarm.active);
 
 
     return (

@@ -64,3 +64,9 @@ def update_kv(collection_name: str, key: str, update_value: dict) -> None:
             raise ValueError(f'Key {key} not found in MongoDB collection.')
     except Exception as e:
         raise ValueError(f'Failed to update MongoDB collection: {str(e)}')
+
+def clean(value: dict) -> dict:
+    value.pop('key', None) 
+    value.pop('_id', None)
+    return value
+
