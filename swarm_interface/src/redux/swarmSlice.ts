@@ -6,10 +6,10 @@ interface SwarmState {
   goal: string;
   spawned: boolean;
   active: boolean;
-  conversation_ids: string[];
-  conversation_names: { [conversation_id: string]: string };
-  live_conversation_ids: string[];
-  terminated_conversation_ids: string[];
+  chat_ids: string[];
+  chat_names: { [chat_id: string]: string };
+  live_chat_ids: string[];
+  terminated_chat_ids: string[];
   nodes: string[];
   root_node_id: string;
   frames: number;
@@ -20,10 +20,10 @@ const initialState: SwarmState = {
   goal: '',
   spawned: false,
   active: false,
-  conversation_ids: [],
-  conversation_names: {},
-  live_conversation_ids: [],
-  terminated_conversation_ids: [],
+  chat_ids: [],
+  chat_names: {},
+  live_chat_ids: [],
+  terminated_chat_ids: [],
   nodes: [],
   root_node_id: '',
   frames: 0
@@ -38,10 +38,10 @@ const swarmSlice = createSlice({
       state.goal = action.payload.goal;
       state.spawned = action.payload.spawned;
       state.active = action.payload.active;
-      state.conversation_ids = action.payload.conversation_ids;
-      state.conversation_names = action.payload.conversation_names;
-      state.live_conversation_ids = action.payload.live_conversation_ids;
-      state.terminated_conversation_ids = action.payload.terminated_conversation_ids;
+      state.chat_ids = action.payload.chat_ids;
+      state.chat_names = action.payload.chat_names;
+      state.live_chat_ids = action.payload.live_chat_ids;
+      state.terminated_chat_ids = action.payload.terminated_chat_ids;
       state.nodes = action.payload.nodes;
       state.root_node_id = action.payload.root_node_id;
       state.frames = action.payload.frames;

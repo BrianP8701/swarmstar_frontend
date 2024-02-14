@@ -1,20 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, UserState } from '@/redux/userSlice';
-import { RootStateType, ConversationState } from '@models/rootstate';
-import { setConversation } from '@/redux/conversationSlice';
+import { RootStateType, ChatState } from '@models/rootstate';
+import { setChat } from '@/redux/chatSlice';
 
-const useSetConversation = () => {
+const useSetChat = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleConversation = (conversation: ConversationState, user: UserState) => {
-        dispatch(setConversation(conversation));
+    const handleChat = (chat: ChatState, user: UserState) => {
+        dispatch(setChat(chat));
         dispatch(setUser(user));
     };
 
-    const handleSetConversation = async (conversation_id: string) => {
+    const handleSetChat = async (chat_id: string) => {
         try {
-            const response = await fetch(`/api/spawn/set_conversation?conversation_id=${conversation_id}`, {
+            const response = await fetch(`/api/chat/set_chat?chat_id=${chat_id}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -25,17 +25,17 @@ const useSetConversation = () => {
             const data = await response.json();
 
             if (response.ok) {
-                handleConversation(data.conversation, data.user);
+                handleChat(data.chat, data.user);
             } else {
                 return data.error;
             }
         } catch (error) {
-            console.error("Error setting conversation:", error);
+            console.error("Error setting chat:", error);
             throw error;
         }
     };
 
-    return { handleSetConversation };
+    return { handleSetChat };
 };
 
-export default useSetConversation;
+export default useSetChat;

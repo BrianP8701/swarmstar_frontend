@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/global_layout/sidebar';
 import HeaderBar from '@/components/global_layout/headerbar';
-
+import useCreateChat from '@/hooks/chat/createChat'; // Import your hook
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ import useAuthCheck from '@/hooks/auth/auth';
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const isAuthenticated = useAuthCheck();
+  useCreateChat();
 
   useEffect(() => {
     if (isAuthenticated === false) {

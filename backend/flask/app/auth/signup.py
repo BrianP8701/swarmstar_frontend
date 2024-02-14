@@ -40,7 +40,7 @@ def signup():
                                'swarm_ids': [],
                                'swarm_names': {},
                                'current_swarm_id': '',
-                               'current_conversation_id': '',
+                               'current_chat_id': '',
                                })
     
     return jsonify({'token': token}), 200

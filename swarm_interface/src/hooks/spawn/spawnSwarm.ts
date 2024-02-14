@@ -5,7 +5,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setSwarm, SwarmState } from '@/redux/swarmSlice';
 import { RootStateType } from '@models/rootstate';
-import { clearMessages } from '@/redux/conversationSlice';
+import { clearMessages } from '@/redux/chatSlice';
 
 const useSpawnSwarm = () => {
     const dispatch = useDispatch();

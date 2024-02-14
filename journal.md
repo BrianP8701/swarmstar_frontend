@@ -6,7 +6,7 @@ if we want a slider to like change the time of the visualization we can request 
 
 Everytime an agent from the backend needs user input, lets think step by step what happens. A user interaction action cannot be embedded inside another action. Every user interaction needs to be a standalone action, because of the nature of user interactions. serverless functions cant be left to sit and wait for user responses. a user interaction node needs to send a request for user input, and each response back to the user must also be decoupled. 
 
-Backend -> Initiate conversation: Node, FirstMessage
+Backend -> Initiate chat: Node, FirstMessage
 loop
     Frontend -> User response
     Backend -> (if answer is not sufficient) SecondMessage
@@ -55,7 +55,7 @@ Every user needs to have a user profile. We ought to define the database schema 
                     agent: {
                         agentID: {
                             alive: boolean,
-                            conversation: Conversation,
+                            chat: chat,
                             node_id: string
                         }
                     }
@@ -100,7 +100,7 @@ CosmoDB: Partition Key[user_id]
                 agent: {
                     agentID: {
                         alive: boolean,
-                        conversation: conversation_id,
+                        chat: chat_id,
                         node_id: string
                     }
                 }
@@ -124,8 +124,8 @@ SwarmSpace in the cosmodb above contains pointers to these in blob storage. this
             memory_space: {
 
             },
-            conversations: {
-                conversation_id: {
+            chats: {
+                chat_id: {
                     messages: List[Message]
                 }
             }
@@ -161,8 +161,10 @@ This is mostly done already. but i really need to clean up the code and standard
 For testing i need to make sure that the backend and frontend swarms are aligned when we add and create swarms. The goal should display and whether the swarm is spawned or not. I need to create an artificial spawned swarm in the backend database and see if it displays the way i want it to. i should also create a filler spawn backend route that wont actually spawn the swarm but simulate it
 
 ## Chat Section
-1. I need to simulate from the backend conversation intiation and agent replies. make sure this aligns with the package schemas. 
+1. I need to simulate from the backend chat intiation and agent replies. make sure this aligns with the package schemas. 
 
 
 okay basically ive really just been hacking this frontend together. now i actually understand it and im gonna need to do a cleanup and standardize interactions between the front and backend and make proper testing. cleanup time. uh my brains not ready for this. fuck here we go. i need to do this.
 
+# Websockets
+okay im gonna continue to use traditional request response from client->server for what exists now. but for chat, state and history updates im going to use websockets. on flask this uses the socketio lib. on azure this will be a little more complex, using azure web pubsub + azure functions. anyway it needs to be done so lets implement the flask websocket communication first. websocket begins when swarm spawns or resumes and dies when it pauses or when all nodes are at a user blocking operation for like lets say 10 minutes with no response. then when the user does say something we'll open up the websocket connection again i guess.

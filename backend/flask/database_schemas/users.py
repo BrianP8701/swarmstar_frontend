@@ -9,5 +9,5 @@ class User(BaseModel):
     swarm_ids: List[str] # List of swarm_ids
     swarm_names: Dict[str, str] # Dict of swarm_id: swarm_name
     current_swarm_id: str
-    current_conversation_id: str
+    current_chat_id: str
     

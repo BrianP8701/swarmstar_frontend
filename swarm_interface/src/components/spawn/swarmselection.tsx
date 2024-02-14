@@ -16,11 +16,6 @@ const SwarmSelection = () => {
     const { handleCreateSwarm } = useCreateSwarm();
     const { handleSetSwarm } = useSetSwarm();
 
-    const chooseSwarm = async (swarm_id: string) => {
-        dispatch(setCurrentSwarmID(swarm_id));
-        handleSetSwarm(swarm_id);
-    }
-
     const createSwarm = (newSwarm: string) => {
         if (newSwarm != '') {
             handleCreateSwarm(newSwarm);
@@ -43,7 +38,7 @@ const SwarmSelection = () => {
             {/* Header Section */}
             <div className="text-lg font-bold bg-gray-900 flex justify-between items-center h-12 relative" style={{ width: '100%' }}>
                 <div style={{ textAlign: 'center', width: '100%' }}>Swarms</div>
-                <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); chooseSwarm(''); }} style={{ position: 'absolute', right: '15px' }}>
+                <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); handleSetSwarm(''); }} style={{ position: 'absolute', right: '15px' }}>
                     <img src="add.png" alt="Add New Swarm" style={{ width: '20px', height: '20px' }} />
                 </button>
             </div>
@@ -72,7 +67,7 @@ const SwarmSelection = () => {
                     {swarms.map(([swarm_id, swarm_name], index) => (
                         <button
                             key={index}
-                            onClick={() => { chooseSwarm(swarm_id); }}
+                            onClick={() => { handleSetSwarm(swarm_id); }}
                             className={`p-2 border-b border-gray-600 w-full text-left ${current_swarm_id === swarm_id ? 'bg-gray-700' : ''}`}
                         >
                             {swarm_name}

@@ -11,7 +11,7 @@ brew tap mongodb/brew
 brew install mongodb-community
 brew services start mongodb/brew/mongodb-community
 create_collection_with_unique_index('swarm_interface', 'swarm_messages')
-create_collection_with_unique_index('swarm_interface', 'swarm_conversations')
+create_collection_with_unique_index('swarm_interface', 'swarm_chats')
 create_collection_with_unique_index('swarm_interface', 'swarms')
 create_collection_with_unique_index('swarm_interface', 'user_auth')
 create_collection_with_unique_index('swarm_interface', 'user_info')

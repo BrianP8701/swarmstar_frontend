@@ -26,13 +26,13 @@ def delete_swarm():
             return jsonify({"error": "User is not part of the swarm"}), 403
                 
         swarm = get_kv('swarms', swarm_id)
-        conversation_ids = swarm['conversation_ids']
+        chat_ids = swarm['chat_ids']
         
-        for conversation_id in conversation_ids:
-            conversation = get_kv('conversations', conversation_id)
-            for message_id in conversation['message_ids']:
+        for chat_id in chat_ids:
+            chat = get_kv('chats', chat_id)
+            for message_id in chat['message_ids']:
                 delete_kv('swarm_messages', message_id)
-            delete_kv('conversations', conversation_id)
+            delete_kv('chats', chat_id)
             
         for node_id in swarm['nodes']:
             delete_kv('nodes', node_id)
@@ -51,10 +51,10 @@ def delete_swarm():
             'goal': '',
             'spawned': False,
             'active': False,
-            'conversation_ids': [],
-            'conversation_names': {},
-            'live_conversation_ids': [],
-            'terminated_conversation_ids': [],
+            'chat_ids': [],
+            'chat_names': {},
+            'live_chat_ids': [],
+            'terminated_chat_ids': [],
             'nodes': [],
             'root_node_id': None,
             'frames': 0

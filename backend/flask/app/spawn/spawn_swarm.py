@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 import traceback
 
 from utils.mongodb import get_kv, update_kv, clean
+from swarm.spawn_swarn import spawn_swarm
 
 app = Flask(__name__)
 routes = Blueprint('spawn_swarm_route', __name__)
@@ -38,15 +39,16 @@ def spawn_swarm():
         print(swarm)
         
         # TODO Actually spawn the swarm
+        spawn_swarm(swarm_id)
         
         '''
             we can simulate something here.
             call something in swarm folder.
             have a random timer. 
-            then create a new conversation with an initial message.
-            then update the swarm and conversations in the frontend
+            then create a new chat with an initial message.
+            then update the swarm and chats in the frontend
             then we need to handle the user reply in the frontend and backend
-            and we can simulate another message and termination of the conversation
+            and we can simulate another message and termination of the chat
         '''
         
         update_kv('swarms', swarm_id, swarm)

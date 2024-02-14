@@ -3,12 +3,12 @@ import config from '@configs/configLoader';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { swarm_id } = req.query;
-        if (!swarm_id) {
-            return res.status(400).json({ error: 'Missing swarm_id parameter' });
+        const { chat_id } = req.query;
+        if (!chat_id) {
+            return res.status(400).json({ error: 'Missing chat_id parameter' });
         }
 
-        const url = `${config.set_swarm_url}?swarm_id=${swarm_id}`;
+        const url = `${config.set_chat_url}?chat_id=${chat_id}`;
 
         const { authorization, 'content-type': contentType } = req.headers;
 

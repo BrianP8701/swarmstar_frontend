@@ -9,7 +9,7 @@ const ChatSection = () => {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [messageAreaHeight, setMessageAreaHeight] = useState('auto');
 
-    const messages = useSelector((state: RootStateType) => state.conversation.messages);
+    const messages = useSelector((state: RootStateType) => state.chat.messages);
 
     // Add more messages as needed for testing
 

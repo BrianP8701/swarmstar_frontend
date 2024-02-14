@@ -1,17 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { setSwarm, SwarmState } from '@/redux/swarmSlice';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import { clearMessages } from '@/redux/conversationSlice';
 
 const useSendUserMessage = () => {
-    const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleSendUserMessage = async (message: string, conversation_id: string, swarm_id: string) => {
+    const handleSendUserMessage = async (message: string, chat_id: string, swarm_id: string) => {
         try {
-            const response = await fetch('/api/spawn/send_user_message', {
+            const response = await fetch('/api/chat/send_user_message', {
                 method: 'PUT',
-                body: JSON.stringify({ message, conversation_id, swarm_id }),
+                body: JSON.stringify({ message, chat_id, swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
