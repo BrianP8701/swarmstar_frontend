@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/global_layout/sidebar';
 import HeaderBar from '@/components/global_layout/headerbar';
-import useCreateChat from '@/hooks/chat/createChat'; // Import your hook
+import useCreateChat from '@/hooks/chat/receiveNewChat'; // Import your hook
 
 interface LayoutProps {
   children: React.ReactNode;

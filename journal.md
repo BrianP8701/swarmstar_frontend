@@ -168,3 +168,15 @@ okay basically ive really just been hacking this frontend together. now i actual
 
 # Websockets
 okay im gonna continue to use traditional request response from client->server for what exists now. but for chat, state and history updates im going to use websockets. on flask this uses the socketio lib. on azure this will be a little more complex, using azure web pubsub + azure functions. anyway it needs to be done so lets implement the flask websocket communication first. websocket begins when swarm spawns or resumes and dies when it pauses or when all nodes are at a user blocking operation for like lets say 10 minutes with no response. then when the user does say something we'll open up the websocket connection again i guess.
+
+okay websockets are only used for sending server->client. Client->server is always http. okay lets get this done.
+
+omg. okay listen up here. right when we finish this - the chat section - we're fucking done and can get away from frontend dev for a while. we can actually go back to working on the package which we really really fucking need to do.
+
+we'll eventually come back to change the frontend for a few things in the future:
+- add visualization of state, history, action and memory space
+- add node info for each conversation
+- add images/files to messages. add codeblocks markdown, latex etc.
+
+and then even farther in the future we can even imagine adding more stuff but for now lets not overwhelm ourselves. lets just get this chat done. then we can go back to the package.
+

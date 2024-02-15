@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "agent-swarm-backend"
+version = "0.1.0"
+description = ""
+authors = ["BrianP8701 <brianp8701@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bcrypt = "^4.1.2"
+python-dotenv = "^1.0.1"
+pydantic = "^2.6.1"
+openai = "^1.12.0"
+pymongo = "^4.6.1"
+requests = "^2.31.0"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.1"
+python-multipart = "^0.0.9"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+aiohttp = "^3.9.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
