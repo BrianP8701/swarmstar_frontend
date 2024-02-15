@@ -4,7 +4,7 @@ from jose import JWTError, jwt
 from pydantic import BaseModel
 
 from app.utils.mongodb import get_kv, add_kv, update_kv, clean
-from app.utils.security import generate_uuid
+from backend.local.app.utils.security.security import generate_uuid
 
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

@@ -2,10 +2,11 @@ from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Depends
 from datetime import datetime, timedelta
 import jwt
-from app.utils.mongodb import get_kv, clean
-from app.utils.security import check_password
-from app.utils.type_operations import backend_user_to_frontend_user
 import os
+
+from app.utils.mongodb import get_kv, clean
+from backend.local.app.utils.security.security import check_password
+from app.utils.type_operations import backend_user_to_frontend_user
 
 class LoginSchema(BaseModel):
     username: str
@@ -30,6 +31,5 @@ async def login(login_data: LoginSchema):
     token_data = {"sub": username, "exp": expire}
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
 
-    clean(user_record)
-    return {"user": backend_user_to_frontend_user(user_record), "token": token}
+    return {"user": clean(backend_user_to_frontend_user(user_record)), "token": token}
 

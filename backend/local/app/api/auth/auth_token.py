@@ -1,12 +1,10 @@
-from flask import Flask, jsonify, Blueprint
-from flask_cors import cross_origin
-from flask_jwt_extended import jwt_required
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 
-app = Flask(__name__)
-auth_token_route = Blueprint('auth_token', __name__)
+from app.utils.security.validate_token import validate_token
 
-@auth_token_route.route('/auth/auth_token', methods=['GET'])
-@jwt_required()
-@cross_origin()
-def authenticate_token():
-    return jsonify({}), 200
+router = APIRouter()
+
+@router.get("/auth/auth_token")
+async def authenticate_token(token_data: dict = Depends(validate_token)):
+    return {"message": "Token is valid", "username": token_data["username"]}
