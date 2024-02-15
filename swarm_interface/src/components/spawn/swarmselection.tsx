@@ -3,10 +3,8 @@ import useCreateSwarm from '@/hooks/spawn/createSwarm';
 import useSetSwarm from '@/hooks/spawn/setSwarm';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import { setCurrentSwarmID } from '@/redux/userSlice';
 
 const SwarmSelection = () => {
-    const dispatch = useDispatch();
     const swarm_ids = useSelector((state: RootStateType) => state.user.swarm_ids);
     const swarm_names = useSelector((state: RootStateType) => state.user.swarm_names);
     const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);

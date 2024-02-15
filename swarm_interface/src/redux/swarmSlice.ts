@@ -52,6 +52,6 @@ const swarmSlice = createSlice({
   },
 });
 
-export const { setSwarm } = swarmSlice.actions;
+export const { setSwarm, setGoal } = swarmSlice.actions;
 export default swarmSlice.reducer;
 export type { SwarmState };

@@ -1,29 +1,22 @@
-from fastapi import FastAPI, Depends, APIRouter, HTTPException
+from fastapi import FastAPI, Depends, APIRouter, HTTPException, Query
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from app.utils.security.validate_token import validate_token
-from app.utils.mongodb import get_kv, delete_kv, update_kv, clean
+from app.utils.mongodb import get_kv, update_kv, clean
 from app.utils.type_operations import backend_user_to_frontend_user
 
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
-# Define your Pydantic models (schemas) for request and response data
-class SwarmSetRequest(BaseModel):
-    swarm_id: str
-
 class SwarmSetResponse(BaseModel):
     swarm: dict
     user: dict
 
-
-@router.post('/spawn/set_swarm', response_model=SwarmSetResponse)
-async def set_swarm(swarm_set_request: SwarmSetRequest, username: str = Depends(validate_token)):
+@router.get('/spawn/set_swarm', response_model=SwarmSetResponse)
+async def set_swarm(swarm_id: str = Query(None, description="The ID of the swarm to set"), username: str = Depends(validate_token)):
     try:        
-        swarm_id = swarm_set_request.swarm_id
-
         if not swarm_id:
             raise HTTPException(status_code=400, detail="Swarm ID is required")
 
@@ -55,7 +48,7 @@ async def set_swarm(swarm_set_request: SwarmSetRequest, username: str = Depends(
         clean(user)
         user = backend_user_to_frontend_user(user)
         user['username'] = username
-        return {'swarm': swarm, 'user': user}, 200
+        return {'swarm': swarm, 'user': user}
     
     except Exception as e:
         print(e)

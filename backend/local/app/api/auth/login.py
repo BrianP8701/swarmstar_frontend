@@ -5,7 +5,7 @@ import jwt
 import os
 
 from app.utils.mongodb import get_kv, clean
-from app.utils.security import check_password
+from app.utils.security.passwords import check_password
 from app.utils.type_operations import backend_user_to_frontend_user
 
 class LoginRequest(BaseModel):
@@ -32,9 +32,9 @@ async def login(login_request: LoginRequest):
     
     expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     expire = datetime.utcnow() + expires_delta
-    token_data = {"sub": username, "exp": expire}
+    token_data = {"sub": username, "exp": expire.timestamp()}
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
 
     user_record['username'] = username
-    return {"user": clean(backend_user_to_frontend_user(user_record)), "token": token}, 200
-
+    cleaned_user = clean(backend_user_to_frontend_user(user_record))
+    return {"user": cleaned_user, "token": token}

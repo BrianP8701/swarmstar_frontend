@@ -1,29 +1,44 @@
 import { useEffect } from 'react';
-import io from 'socket.io-client';
-import config from '@configs/configLoader';
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
+import config from '@configs/configLoader';
 
-const useWebSocket = (postMessages: (messages: string[]) => void) => {
-
+const useWebSocket = () => {
   const username = useSelector((state: RootStateType) => state.user.username);
-  useEffect(() => {
-    const socket = io(`${config.backend_ws_url}/${username}`, {
-      transports: ['websocket'],
-    });
 
-    socket.on('message', (data) => {
+  useEffect(() => {
+    const wsUrl = `${config.backend_ws_url}/${username}`;
+    const socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
       console.log('Received data from server:', data);
 
+
       if (data.event === 'new_ai_message') {
+        console.log('if we are in here... TURN THE FUCK UP BOY LETS GOOOOOOOOOOOOOO')
         const newMessage = data.data.message.content;
+        console.log('New message:', newMessage);
       }
-    });
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
 
     return () => {
-      socket.disconnect();
+      socket.close();
     };
-  }, [username, postMessages]);
+  }, [username]);
+
 };
 
 export default useWebSocket;

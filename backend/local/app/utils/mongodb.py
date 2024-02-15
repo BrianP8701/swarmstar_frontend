@@ -69,4 +69,3 @@ def clean(value: dict) -> dict:
     value.pop('key', None) 
     value.pop('_id', None)
     return value
-

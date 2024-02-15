@@ -6,7 +6,7 @@ def configure_routes(app):
     from .auth.signup import signup_route
     from .auth.auth_token import auth_token_route
     from .spawn.delete_swarm import delete_swarm_route
-    from .spawn.set_swarm import set_swarm_route
+    from .spawn.get_swarm import set_swarm_route
     from .spawn.spawn_swarm import spawn_swarm_route
     from .spawn.create_swarm import create_swarm_route
 

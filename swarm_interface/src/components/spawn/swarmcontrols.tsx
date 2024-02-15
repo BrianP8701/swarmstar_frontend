@@ -3,6 +3,7 @@ import useSpawnSwarm from '@/hooks/spawn/spawnSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
+import { setGoal } from '@/redux/swarmSlice';
 
 const SwarmContols = () => {
     const dispatch = useDispatch();
@@ -14,18 +15,16 @@ const SwarmContols = () => {
     const isSpawned = useSelector((state: RootStateType) => state.swarm.spawned);
     const isActive = useSelector((state: RootStateType) => state.swarm.active);
     const goal = useSelector((state: RootStateType) => state.swarm.goal);
-    const current_swarm = useSelector((state: RootStateType) => state.user.current_swarm_id);
-    const [goalDraft, setGoalDraft] = useState(goal);
 
     const deleteSwarm = (swarmId: string) => {
         if (window.confirm('Are you sure you want to delete this swarm? This action is irreversible.')) {
             handleDeleteSwarm(swarmId);
         }
     }
-
-    const spawnSwarm = (goal: string) => {
-        if (current_swarm) {
-            handleSpawnSwarm(goalDraft, current_swarm);
+    console.log('the goal is:', goal)
+    const spawnSwarm = () => {
+        if (current_swarm_id) {
+            handleSpawnSwarm(goal, current_swarm_id);
         }
     }
 
@@ -37,11 +36,6 @@ const SwarmContols = () => {
 
     }
 
-    useEffect(() => {
-        setGoalDraft(goal);
-
-    }, [goal, current_swarm_id]);
-
     return (
         <div style={{
             display: 'flex',
@@ -52,7 +46,7 @@ const SwarmContols = () => {
             width: 'calc(100% - 20px)', // Subtract padding from total width
             padding: '10px', // Add padding as specified
         }}>
-            {current_swarm && isSpawned && !isActive && (
+            {current_swarm_id && isSpawned && !isActive && (
                 <div style={{ textAlign: 'center', width: '100%' }}>
                     <div style={{ textAlign: 'center', width: '100%' }}>
                         <textarea
@@ -81,7 +75,7 @@ const SwarmContols = () => {
                             Resume
                         </button>
                         <button
-                            onClick={() => deleteSwarm(current_swarm)}
+                            onClick={() => deleteSwarm(current_swarm_id)}
                             className="button-text mt-3.5"
                             style={{ display: 'block', margin: '10px auto' }}
                         >
@@ -90,7 +84,7 @@ const SwarmContols = () => {
                     </div>
                 </div>
             )}
-            {current_swarm && isSpawned && isActive && (
+            {current_swarm_id && isSpawned && isActive && (
                 <div style={{ textAlign: 'center', width: '100%' }}>
                     <div style={{ textAlign: 'center', width: '100%' }}>
                         <textarea
@@ -119,7 +113,7 @@ const SwarmContols = () => {
                             Pause
                         </button>
                         <button
-                            onClick={() => deleteSwarm(current_swarm)}
+                            onClick={() => deleteSwarm(current_swarm_id)}
                             className="button-text mt-3.5"
                             style={{ display: 'block', margin: '10px auto' }}
                         >
@@ -128,12 +122,12 @@ const SwarmContols = () => {
                     </div>
                 </div>
             )}
-            {current_swarm && !isSpawned && (
+            {current_swarm_id && !isSpawned && (
                 <div style={{ textAlign: 'center', width: '100%' }}>
                     <textarea
                         placeholder="Enter goal"
-                        value={goalDraft || ''}
-                        onChange={(e) => setGoalDraft(e.target.value)}
+                        value={goal || ''}
+                        onChange={(e) => dispatch(setGoal(e.target.value))}
                         className="text-1 p-5"
                         style={{
                             resize: 'both',
@@ -150,14 +144,14 @@ const SwarmContols = () => {
                     />
                     <button
                         className="button-text mt-3.5"
-                        onClick={() => spawnSwarm(goal)}
-                        disabled={!goalDraft}
+                        onClick={() => spawnSwarm()}
+                        disabled={!goal}
                         style={{ display: 'block', margin: '10px auto' }}
                     >
                         Spawn
                     </button>
                     <button
-                        onClick={() => deleteSwarm(current_swarm)}
+                        onClick={() => deleteSwarm(current_swarm_id)}
                         className="button-text mt-3.5"
                         style={{ display: 'block', margin: '10px auto' }}
                     >

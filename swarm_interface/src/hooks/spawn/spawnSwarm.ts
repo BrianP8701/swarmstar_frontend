@@ -12,6 +12,7 @@ const useSpawnSwarm = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleNewSwarm = (swarm: SwarmState) => {
+        console.log('so im assuming this comes before change of goal?')
         dispatch(setSwarm(swarm));
         dispatch(clearMessages());
     };

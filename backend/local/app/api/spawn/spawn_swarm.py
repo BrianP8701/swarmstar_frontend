@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
-from swarm.simulate_swarm_spawn import simulate_swarm_spawn
+from app.swarm.simulate_swarm_spawn import simulate_swarm_spawn
 from app.utils.mongodb import get_kv, update_kv, clean
 from app.utils.security.validate_token import validate_token
 
@@ -18,7 +18,7 @@ class SpawnSwarmResponse(BaseModel):
     swarm: dict
 
 
-@router.post('/spawn/spawn_swarm', response_model=SpawnSwarmResponse)
+@router.put('/spawn/spawn_swarm', response_model=SpawnSwarmResponse)
 async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: SpawnSwarmRequest, username: str = Depends(validate_token)):
     try:
         swarm_id = spawn_swarm_request.swarm_id
@@ -43,9 +43,8 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         update_kv('swarms', swarm_id, swarm)
         
         background_tasks.add_task(simulate_swarm_spawn, swarm_id, username)
-        
         clean(swarm)
-        return {"swarm": swarm}, 200
+        return {"swarm": swarm}
     
     except Exception as e:
         print(e)

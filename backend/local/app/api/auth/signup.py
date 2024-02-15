@@ -6,9 +6,10 @@ from pydantic import BaseModel
 import os
 
 from app.utils.mongodb import add_kv, get_kv
-from backend.local.app.utils.security.security import hash_password, generate_uuid
+from app.utils.security.passwords import hash_password
+from app.utils.security.uuid import generate_uuid
 from app.utils.type_operations import backend_user_to_frontend_user
-from app.utils.type_operations import clean
+from app.utils.mongodb import clean
 
 SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 ALGORITHM = "HS256"
@@ -61,4 +62,4 @@ async def signup(signup_data: SignupRequest):
     add_kv('users', username, user)
     
     user['username'] = username
-    return {"user": clean(backend_user_to_frontend_user(user)), "token": token}, 200
+    return {"user": clean(backend_user_to_frontend_user(user)), "token": token}

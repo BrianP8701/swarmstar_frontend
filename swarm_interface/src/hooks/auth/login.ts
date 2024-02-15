@@ -8,6 +8,8 @@ const useLoginHook = () => {
 
     const handleUserData = (user: UserState, token: string) => {
         dispatch(setUser(user));
+        console.log('user', user);
+        console.log('token', token);
         dispatch(setToken(token));
     };
 

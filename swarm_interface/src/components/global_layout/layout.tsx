@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/global_layout/sidebar';
 import HeaderBar from '@/components/global_layout/headerbar';
-import useCreateChat from '@/hooks/chat/receiveNewChat'; // Import your hook
+import useWebSocket from '@/hooks/websocket';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ import useAuthCheck from '@/hooks/auth/auth';
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const isAuthenticated = useAuthCheck();
-  useCreateChat();
+  const webSocket = useWebSocket();
 
   useEffect(() => {
     if (isAuthenticated === false) {

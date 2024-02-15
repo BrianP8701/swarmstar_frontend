@@ -8,6 +8,7 @@ const useAuthHook = () => {
     return false;
   }
   const token = useSelector((state: RootStateType) => state.token.token);
+  console.log('used token in useAuthHook:', token)
   useEffect(() => {
     const checkAuth = async () => {
       try {

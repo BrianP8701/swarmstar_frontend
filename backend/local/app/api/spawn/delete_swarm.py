@@ -18,7 +18,7 @@ class SwarmDeleteResponse(BaseModel):
     swarm: dict
     user: dict
 
-@app.post('/spawn/delete_swarm', response_model=SwarmDeleteResponse)
+@router.delete('/spawn/delete_swarm', response_model=SwarmDeleteResponse)
 async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, username: str = Depends(validate_token)):
     try:
         swarm_id = swarm_delete_request.swarm_id
@@ -68,7 +68,7 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, username: str =
         clean(user)
         clean(empty_swarm)
         user['username'] = username
-        return {'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}, 200
+        return {'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

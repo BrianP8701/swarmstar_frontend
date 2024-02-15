@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from app.utils.mongodb import get_kv, add_kv, update_kv, clean
-from app.utils.security.security import generate_uuid
+from app.utils.security.uuid import generate_uuid
 from app.utils.security.validate_token import validate_token
 
 app = FastAPI()
@@ -18,7 +18,7 @@ class SwarmCreateResponse(BaseModel):
     swarm: dict
     user: dict
 
-@app.post('/spawn/create_swarm', response_model=SwarmCreateResponse)
+@router.post('/spawn/create_swarm', response_model=SwarmCreateResponse)
 async def create_swarm(swarm_create_request: SwarmCreateRequest, username: str = Depends(validate_token)):
     try:
         new_swarm_name = swarm_create_request.swarm_name
@@ -56,7 +56,7 @@ async def create_swarm(swarm_create_request: SwarmCreateRequest, username: str =
         clean(new_swarm)
         clean(user)
         user['username'] = username
-        return {'swarm': new_swarm, 'user': user}, 200
+        return {'swarm': new_swarm, 'user': user}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
