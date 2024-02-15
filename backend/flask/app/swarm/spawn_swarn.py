@@ -4,10 +4,10 @@ creating a chat id and sending messages
 '''
 import time
 
-from app.chat.create_chat import create_chat
+from app.api.chat.create_new_chat import create_chat
+from app.api.chat.send_ai_message import send_ai_message
 # from app.chat.send_message import send_message
 from utils.mongodb import get_kv, update_kv, clean
-from app import socketio
 
 
 def spawn_swarm(swarm_id):
@@ -21,8 +21,8 @@ def spawn_swarm(swarm_id):
         'content': first_message
     }
     
-    create_chat(swarm_id, node_id, message, 'testinggg boom. chat name')
-    
+    create_chat(swarm_id, node_id, 'testinggg boom. chat name')
+    send_ai_message(message, swarm_id, node_id)
     pass
 
 

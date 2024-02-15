@@ -12,7 +12,6 @@ from app.spawn.delete_swarm import routes as delete_swarm_route
 from app.spawn.set_swarm import routes as set_swarm_route
 from app.spawn.spawn_swarm import routes as spawn_swarm_route
 from app.spawn.create_swarm import routes as create_swarm_route
-from app.chat.receive_user_message import handle_message
 
 load_dotenv('/Users/brianprzezdziecki/Code/agent_swarm_interface/backend/flask/.env')
 
@@ -28,9 +27,11 @@ app.register_blueprint(create_swarm_route)
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", )
 # CORS(app, origins=['http://lvh.me:3000', 'http://app.lvh.me:3000', 'lvh.me:3000', 'http://auth.localhost:3000', 'http://app.localhost:3000'], supports_credentials=True)
 CORS(app, supports_credentials=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+
+socketio.emit()
