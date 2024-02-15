@@ -1,24 +1,31 @@
-from flask import Flask, jsonify, request, Blueprint
-from flask_jwt_extended import get_jwt_identity
-from flask_cors import cross_origin
-from flask_jwt_extended import jwt_required
-import traceback
+from fastapi import FastAPI, Depends, APIRouter, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import BaseModel
 
-from app.utils.mongodb import get_kv, update_kv, clean
+from app.utils.security.validate_token import validate_token
+from app.utils.mongodb import get_kv, delete_kv, update_kv, clean
+from app.utils.type_operations import backend_user_to_frontend_user
 
-app = Flask(__name__)
-set_swarm_route = Blueprint('set_swarm', __name__)
+app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+router = APIRouter()
 
-@set_swarm_route.route('/spawn/set_swarm', methods=['GET'])
-@jwt_required()
-@cross_origin()
-def set_swarm():
+# Define your Pydantic models (schemas) for request and response data
+class SwarmSetRequest(BaseModel):
+    swarm_id: str
+
+class SwarmSetResponse(BaseModel):
+    swarm: dict
+    user: dict
+
+
+@router.post('/spawn/set_swarm', response_model=SwarmSetResponse)
+async def set_swarm(swarm_set_request: SwarmSetRequest, username: str = Depends(validate_token)):
     try:        
-        swarm_id = request.args.get('swarm_id', None)
-        username = get_jwt_identity()
+        swarm_id = swarm_set_request.swarm_id
 
         if not swarm_id:
-            return jsonify({"error": "Swarm ID is required"}), 400
+            raise HTTPException(status_code=400, detail="Swarm ID is required")
 
         user = get_kv('users', username)
         swarm_ids = user['swarm_ids']
@@ -39,16 +46,18 @@ def set_swarm():
             }
         else:
             if swarm_id not in swarm_ids:
-                return jsonify({"error": "User is not part of the swarm"}), 403
+                raise HTTPException(status_code=403, detail="User is not part of the swarm")
             swarm = get_kv('swarms', swarm_id)
             
         user['current_swarm_id'] = swarm_id
         update_kv('users', username, user)
         clean(swarm)
         clean(user)
-        return jsonify({'swarm': swarm, 'user': user}), 200
+        user = backend_user_to_frontend_user(user)
+        user['username'] = username
+        return {'swarm': swarm, 'user': user}, 200
     
     except Exception as e:
-        print(traceback.format_exc())
         print(e)
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
+

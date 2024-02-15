@@ -14,15 +14,19 @@ SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-class SignupSchema(BaseModel):
+class SignupRequest(BaseModel):
     username: str
     password: str
     openai_key: str
+    
+class SignupResponse(BaseModel):
+    user: dict
+    token: str
 
 router = APIRouter()
 
-@router.put("/auth/signup")
-async def signup(signup_data: SignupSchema):
+@router.put("/auth/signup", response_model=SignupResponse)
+async def signup(signup_data: SignupRequest):
     username = signup_data.username
     password = signup_data.password
     openai_key = signup_data.openai_key
@@ -56,4 +60,5 @@ async def signup(signup_data: SignupSchema):
             }
     add_kv('users', username, user)
     
-    return {"user": clean(backend_user_to_frontend_user(user)), "token": token}
+    user['username'] = username
+    return {"user": clean(backend_user_to_frontend_user(user)), "token": token}, 200

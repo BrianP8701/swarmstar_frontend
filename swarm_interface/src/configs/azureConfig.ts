@@ -8,6 +8,7 @@ const azureConfig = {
     set_chat_url: "http://lvh.me:5000/chat/set_chat",
     set_swarm_url: "http://lvh.me:5000/spawn/set_swarm",
     send_user_message_url: "http://lvh.me:5000/chat/send_user_message",
+    backend_ws_url: "ws://lvh.me:5000/ws",
     backend_url: "http://lvh.me:5000",
 };
 

@@ -1,6 +1,7 @@
 // Define interfaces for each slice's state based on your existing code
 
 interface UserState {
+  username: string;
   swarm_ids: string[];
   swarm_names: { [swarm_id: string]: string };
   current_swarm_id: string | null;

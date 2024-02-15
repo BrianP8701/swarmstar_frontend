@@ -1,42 +1,47 @@
-from flask import Flask, jsonify, request, Blueprint
-from flask_jwt_extended import get_jwt_identity
-from flask_cors import cross_origin
-from flask_jwt_extended import jwt_required
-import traceback
+from fastapi import FastAPI, Depends, APIRouter, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import BaseModel
 
+from app.utils.security.validate_token import validate_token
 from app.utils.mongodb import get_kv, delete_kv, update_kv, clean
 from app.utils.type_operations import backend_user_to_frontend_user
 
-app = Flask(__name__)
-delete_swarm_route = Blueprint('delete_swarm', __name__)
+app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+router = APIRouter()
 
-@delete_swarm_route.route('/spawn/delete_swarm', methods=['DELETE'])
-@jwt_required()
-@cross_origin()
-def delete_swarm():
+# Define your Pydantic models (schemas) for request and response data
+class SwarmDeleteRequest(BaseModel):
+    swarm_id: str
+
+class SwarmDeleteResponse(BaseModel):
+    swarm: dict
+    user: dict
+
+@app.post('/spawn/delete_swarm', response_model=SwarmDeleteResponse)
+async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, username: str = Depends(validate_token)):
     try:
-        username = get_jwt_identity()
-        swarm_id = request.json.get('swarm_id', None)
+        swarm_id = swarm_delete_request.swarm_id
         
         if not swarm_id:
-            return jsonify({"error": "Swarm ID is required"}), 400
+            raise HTTPException(status_code=400, detail="Swarm ID is required")
 
         user = get_kv('users', username)
         if swarm_id not in user['swarm_ids']:
-            return jsonify({"error": "User is not part of the swarm"}), 403
+            raise HTTPException(status_code=403, detail="User is not part of the swarm")
                 
         swarm = get_kv('swarms', swarm_id)
         print(swarm)
         chat_ids = swarm['chat_ids']
         
         for chat_id in chat_ids:
-            chat = get_kv('chats', chat_id)
-            for message_id in chat['message_ids']:
+            chat = get_kv('swarm_chats', chat_id)
+            for message_id in chat['messages']:
                 delete_kv('swarm_messages', message_id)
-            delete_kv('chats', chat_id)
+            delete_kv('swarm_chats', chat_id)
             
         for node_id in swarm['nodes']:
-            delete_kv('nodes', node_id)
+            delete_kv('swarm_nodes', node_id)
             
         for i in range (swarm['frames']):
             delete_kv('swarm_events', f'{swarm_id}_history_{i}')
@@ -62,7 +67,8 @@ def delete_swarm():
         }
         clean(user)
         clean(empty_swarm)
-        return jsonify({'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}, ), 200
+        user['username'] = username
+        return {'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}, 200
     except Exception as e:
-        print(traceback.format_exc())
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
+

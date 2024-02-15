@@ -1,27 +1,29 @@
 import { useEffect } from 'react';
 import io from 'socket.io-client';
 import config from '@configs/configLoader';
+import { useSelector } from 'react-redux';
+import { RootStateType } from '@models/rootstate';
 
-const socket = io(config.backend_url);
+const useWebSocket = (postMessages: (messages: string[]) => void) => {
 
-useEffect(() => {
-  socket.on('new_chat', (data) => {
-    const chat_id = data.chat_id;
-    const swarm = data.swarm;
-    console.log('New chat:', chat_id, swarm);
-  });
+  const username = useSelector((state: RootStateType) => state.user.username);
+  useEffect(() => {
+    const socket = io(`${config.backend_ws_url}/${username}`, {
+      transports: ['websocket'],
+    });
 
-  socket.on('new_ai_message', (data) => {
-    const chat_id = data.chat_id;
-    const message = data.message;
-    console.log('New AI message:', chat_id, message);
-  });
+    socket.on('message', (data) => {
+      console.log('Received data from server:', data);
 
-  // Cleanup on unmount
-  return () => {
-    socket.disconnect();
-    return undefined; // Explicitly return undefined
-  };
-}, []);
+      if (data.event === 'new_ai_message') {
+        const newMessage = data.data.message.content;
+      }
+    });
 
+    return () => {
+      socket.disconnect();
+    };
+  }, [username, postMessages]);
+};
 
+export default useWebSocket;

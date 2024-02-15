@@ -5,12 +5,16 @@ import jwt
 import os
 
 from app.utils.mongodb import get_kv, clean
-from backend.local.app.utils.security.security import check_password
+from app.utils.security import check_password
 from app.utils.type_operations import backend_user_to_frontend_user
 
-class LoginSchema(BaseModel):
+class LoginRequest(BaseModel):
     username: str
     password: str
+
+class LoginResponse(BaseModel):
+    user: dict
+    token: str
 
 SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 ALGORITHM = "HS256"
@@ -18,10 +22,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 router = APIRouter()
 
-@router.post("/auth/login")
-async def login(login_data: LoginSchema):
-    username = login_data.username
-    password = login_data.password
+@router.post("/auth/login", response_model=LoginResponse)
+async def login(login_request: LoginRequest):
+    username = login_request.username
+    password = login_request.password
     user_record = get_kv('users', username)
     if not user_record or not check_password(user_record['password'], password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
@@ -31,5 +35,6 @@ async def login(login_data: LoginSchema):
     token_data = {"sub": username, "exp": expire}
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
 
-    return {"user": clean(backend_user_to_frontend_user(user_record)), "token": token}
+    user_record['username'] = username
+    return {"user": clean(backend_user_to_frontend_user(user_record)), "token": token}, 200
 
