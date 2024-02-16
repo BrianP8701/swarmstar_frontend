@@ -5,8 +5,8 @@ interface UserState {
   username: string;
   swarm_ids: string[];
   swarm_names: { [swarm_id: string]: string };
-  current_swarm_id: string | null;
-  current_chat_id: string | null;
+  current_swarm_id: string;
+  current_chat_id: string;
 }
 
 // Define the initial state using that type
@@ -14,8 +14,8 @@ const initialState: UserState = {
   username: '',
   swarm_ids: [],
   swarm_names: {},
-  current_swarm_id: null,
-  current_chat_id: null,
+  current_swarm_id: '',
+  current_chat_id: '',
 };
 
 const userSlice = createSlice({

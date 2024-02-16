@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException
 from pydantic import BaseModel
-
+import traceback
 from app.utils.security.validate_token import validate_token
 from app.utils.mongodb import get_kv, delete_kv, update_kv, clean
 from app.utils.type_operations import backend_user_to_frontend_user
@@ -37,7 +37,7 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, username: str =
                 delete_kv('swarm_messages', message_id)
             delete_kv('swarm_chats', chat_id)
             
-        for node_id in swarm['nodes']:
+        for node_id in swarm['node_ids']:
             delete_kv('swarm_nodes', node_id)
             
         for i in range (swarm['frames']):
@@ -67,5 +67,7 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, username: str =
         user['username'] = username
         return {'user': backend_user_to_frontend_user(user), 'swarm': empty_swarm}
     except Exception as e:
+        print(e)
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 

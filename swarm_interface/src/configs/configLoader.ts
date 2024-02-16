@@ -1,5 +1,5 @@
 import azureConfig from './azureConfig';
-import flaskConfig from './fastApiConfig';
+import fastApiConfig from './fastApiConfig';
 
 const getConfig = () => {
     const runtimeEnv = process.env.REACT_APP_RUNTIME_ENV; // Set this in your .env file
@@ -8,9 +8,9 @@ const getConfig = () => {
         case 'AZURE':
             return azureConfig;
         case 'FLASK':
-            return flaskConfig;
+            return fastApiConfig;
         default:
-            return flaskConfig; // Default to Flask or any other preferred default
+            return fastApiConfig; // Default to Flask or any other preferred default
     }
 };
 

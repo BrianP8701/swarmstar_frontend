@@ -1,14 +1,17 @@
 // chat.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface Message {
+    role: string;
+    content: string;
+}
+
 interface ChatState {
-    messages: [string, string][];
+    messages: Message[];
     alive: boolean;
     owner: string;
 };
 
-
-// Define the initial state using that type
 const initialState: ChatState = {
     messages: [],
     alive: false,
@@ -24,7 +27,7 @@ const chatSlice = createSlice({
             state.alive = action.payload.alive;
             state.owner = action.payload.owner;
         },
-        addMessage: (state, action: PayloadAction<[string, string]>) => {
+        addMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
         },
         clearMessages: (state) => {

@@ -18,7 +18,7 @@ class UserMessageRequest(BaseModel):
     chat_id: str
     message: Message
 
-@router.post('/chat/user_message')
+@router.put('/chat/user_message')
 async def user_message(user_message_request: UserMessageRequest, username: str = Depends(validate_token)):
     try:
         chat_id = user_message_request.chat_id

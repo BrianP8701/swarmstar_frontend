@@ -9,9 +9,12 @@ const ChatSection = () => {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [messageAreaHeight, setMessageAreaHeight] = useState('auto');
 
-    const messages = useSelector((state: RootStateType) => state.chat.messages);
+    let messages = useSelector((state: RootStateType) => state.chat.messages);
+    if (!messages) {
+        messages = [];
+    }
+    console.log('messages', messages);
 
-    // Add more messages as needed for testing
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -40,7 +43,7 @@ const ChatSection = () => {
             <div ref={messagesContainerRef} className="overflow-auto py-6 px-64" style={{ marginBottom: '0px' }}> {/* Adjust marginBottom to '0px' */}
                 {messages.map((message, index) => (
                     <div key={index} className="mb-4 last:mb-0">
-                        <Message text={message[1]} role={message[0]} />
+                        <Message text={message.content} role={message.role} />
                     </div>
                 ))}
             </div>

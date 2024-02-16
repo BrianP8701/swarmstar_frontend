@@ -1,8 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/backend/flask/.env
-/backend/flask/notes.md
-/backend/flask/database/user_auth.sqlite3
+/backend/local/.env
 swarm_interface/.vercel/
 swarm_interface/.next/
 

@@ -7,7 +7,7 @@ const useReceiveAiMessage = () => {
     const dispatch = useDispatch();
     const currentchatId = useSelector((state: RootStateType) => state.user.current_chat_id);
 
-    const handleMessage = async (data: any) => {
+    const handleAIMessage = async (data: any) => {
         try {
             const chat_id = data.chat_id;
             const message = data.message;
@@ -22,8 +22,7 @@ const useReceiveAiMessage = () => {
         }
     };
 
-    return { handleMessage };
+    return { handleAIMessage };
 };
 
 export default useReceiveAiMessage;
-

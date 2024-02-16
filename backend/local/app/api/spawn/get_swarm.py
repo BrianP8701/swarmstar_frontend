@@ -12,7 +12,7 @@ class SwarmSetResponse(BaseModel):
     swarm: dict
     user: dict
 
-@router.get('/spawn/set_swarm', response_model=SwarmSetResponse)
+@router.get('/spawn/get_swarm', response_model=SwarmSetResponse)
 async def set_swarm(swarm_id: str = Query(None, description="The ID of the swarm to set"), username: str = Depends(validate_token)):
     try:        
         if not swarm_id:

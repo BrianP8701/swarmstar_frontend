@@ -22,7 +22,6 @@ const useAuthHook = () => {
           },
         });
         const data = await response.json();
-        console.log('data:', data)
         if (response.ok) {
           setIsAuthenticated(true);
         } else {

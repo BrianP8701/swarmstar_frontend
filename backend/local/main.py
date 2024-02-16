@@ -10,6 +10,9 @@ from app.api.spawn.delete_swarm import router as delete_swarm_router
 from app.api.spawn.get_swarm import router as get_swarm_router
 from app.api.spawn.spawn_swarm import router as spawn_swarm_router
 
+from app.api.chat.get_chat import router as get_chat_router
+from app.api.chat.user_message import router as user_message_router
+
 from app.api.websocket_manager import manager
 
 app = FastAPI()
@@ -42,5 +45,8 @@ app.include_router(create_swarm_router)
 app.include_router(delete_swarm_router)
 app.include_router(get_swarm_router)
 app.include_router(spawn_swarm_router)
+app.include_router(get_chat_router)
+app.include_router(user_message_router)
+
 
 

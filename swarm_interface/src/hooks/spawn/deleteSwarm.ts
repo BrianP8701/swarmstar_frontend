@@ -29,7 +29,7 @@ const useDeleteSwarm = () => {
                 const data = await response.json();
                 updateUserSwarms(data.swarm, data.user);
             } else {
-                throw new Error('Creating swarm failed due to server error');
+                throw new Error('Deleting swarm failed due to server error');
             }
         } catch (error) {
             console.error("Error creating swarm:", error);

@@ -40,7 +40,7 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         swarm['active'] = True
         update_kv('swarms', swarm_id, swarm)
         
-        background_tasks.add_task(simulate_swarm_spawn, swarm_id, username)
+        background_tasks.add_task(simulate_swarm_spawn, swarm_id)
         clean(swarm)
         return {"swarm": swarm}
     

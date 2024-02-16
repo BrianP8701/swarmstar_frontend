@@ -18,5 +18,6 @@ def ai_message(node_id, message):
         'data': {'chat_id': node_id, 'message': message}
     }
     
+    print('sending ai message event')
     asyncio.run(manager.send_personal_message(websocket_event, username))
     

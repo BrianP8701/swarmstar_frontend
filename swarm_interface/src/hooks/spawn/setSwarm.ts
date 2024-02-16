@@ -9,6 +9,7 @@ const useSetSwarm = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleSwarm = (swarm: SwarmState, user: UserState) => {
+        console.log('Setting swarm:', swarm, user)
         dispatch(setSwarm(swarm));
         dispatch(setUser(user));
         dispatch(clearMessages());
@@ -16,7 +17,7 @@ const useSetSwarm = () => {
 
     const handleSetSwarm = async (swarm_id: string) => {
         try {
-            const response = await fetch(`/api/spawn/set_swarm?swarm_id=${swarm_id}`, {
+            const response = await fetch(`/api/spawn/get_swarm?swarm_id=${swarm_id}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

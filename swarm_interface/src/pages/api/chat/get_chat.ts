@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'Missing chat_id parameter' });
         }
 
-        const url = `${config.set_chat_url}?chat_id=${chat_id}`;
+        const url = `${config.get_chat_url}?chat_id=${chat_id}`;
 
         const { authorization, 'content-type': contentType } = req.headers;
 

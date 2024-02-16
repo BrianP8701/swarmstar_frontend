@@ -2,7 +2,6 @@ import useDeleteSwarm from '@hooks/spawn/deleteSwarm';
 import useSpawnSwarm from '@/hooks/spawn/spawnSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
 import { setGoal } from '@/redux/swarmSlice';
 
 const SwarmContols = () => {
@@ -50,8 +49,8 @@ const SwarmContols = () => {
                                 overflow: 'auto',
                                 display: 'block',
                                 margin: '0 auto',
-                                minWidth: '250px',
-                                minHeight: '140px',
+                                minWidth: '450px',
+                                minHeight: '240px',
                                 width: 'auto', // Allows width to adjust automatically
                                 height: '35%', // Initial height as 35% of parent
                                 maxWidth: '100%', // Allows growing up to the parent width
@@ -81,8 +80,8 @@ const SwarmContols = () => {
                                 overflow: 'auto',
                                 display: 'block',
                                 margin: '0 auto',
-                                minWidth: '250px',
-                                minHeight: '140px',
+                                minWidth: '450px',
+                                minHeight: '240px',
                                 width: 'auto', // Allows width to adjust automatically
                                 height: '35%', // Initial height as 35% of parent
                                 maxWidth: '100%', // Allows growing up to the parent width
@@ -111,8 +110,8 @@ const SwarmContols = () => {
                             overflow: 'auto',
                             display: 'block',
                             margin: '0 auto',
-                            minWidth: '250px',
-                            minHeight: '140px',
+                            minWidth: '450px',
+                            minHeight: '240px',
                             width: 'auto', // Allows width to adjust automatically
                             height: '35%', // Initial height as 35% of parent
                             maxWidth: '100%', // Allows growing up to the parent width

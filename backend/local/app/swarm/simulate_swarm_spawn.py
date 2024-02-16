@@ -11,8 +11,8 @@ from app.api.chat.ai_message import ai_message
 from app.api.chat.create_chat import create_chat
 from app.api.chat.ai_message import ai_message
 
-def simulate_swarm_spawn(swarm_id: str, username: str):
-    time.sleep(5)  # Consider replacing with async sleep if this becomes async
+def simulate_swarm_spawn(swarm_id: str):
+    print('we are in the simulation')
     swarm = get_kv('swarms', swarm_id)
     goal = swarm['goal']
     node_id = '1234'
@@ -23,6 +23,5 @@ def simulate_swarm_spawn(swarm_id: str, username: str):
 
     # Assuming you have the client_id or if broadcasting to all connected clients
     create_chat(swarm_id, node_id, 'first conversation')    
-    time.sleep(5)
     ai_message(node_id, first_message)    
     
