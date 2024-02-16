@@ -15,7 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(config.spawn_swarm_url, {
+        console.log('Sending user message:', req.body);
+        console.log('bottom')
+        const response = await fetch(config.user_message_url, {
             method: 'PUT',
             headers: headers,
             credentials: 'include',

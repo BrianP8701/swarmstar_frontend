@@ -3,12 +3,18 @@ import { RootStateType } from '@models/rootstate';
 
 const useSendUserMessage = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
+    const current_chat_id = useSelector((state: RootStateType) => state.user.current_chat_id);
+    const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);
 
-    const handleSendUserMessage = async (message: string, chat_id: string, swarm_id: string) => {
+    const handleSendUserMessage = async (message: string) => {
+        const messageObject = {
+            role: 'user',
+            content: message,
+        };
         try {
-            const response = await fetch('/api/chat/send_user_message', {
+            const response = await fetch('/api/chat/user_message', {
                 method: 'PUT',
-                body: JSON.stringify({ message, chat_id, swarm_id }),
+                body: JSON.stringify({ message: messageObject, chat_id: current_chat_id }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

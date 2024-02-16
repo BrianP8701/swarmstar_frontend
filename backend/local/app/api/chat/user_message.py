@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, APIRouter, HTTPException
+from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
@@ -19,10 +19,15 @@ class UserMessageRequest(BaseModel):
     message: Message
 
 @router.put('/chat/user_message')
-async def user_message(user_message_request: UserMessageRequest, username: str = Depends(validate_token)):
+async def user_message(background_tasks: BackgroundTasks, user_message_request: UserMessageRequest, username: str = Depends(validate_token)):
     try:
         chat_id = user_message_request.chat_id
         message = user_message_request.message
+        
+        print(f"Chat ID: {chat_id}")
+        print(f"Message: {message}")
+        
+        message = message.model_dump()
         
         if not chat_id:
             raise HTTPException(status_code=400, detail="Chat ID is required")
@@ -32,7 +37,7 @@ async def user_message(user_message_request: UserMessageRequest, username: str =
         if not chat:
             raise HTTPException(status_code=404, detail="Chat not found")
         
-        handle_user_response(chat_id, message)
+        background_tasks.add_task(handle_user_response, chat_id, message)
         
     except Exception as e:
         print(e)

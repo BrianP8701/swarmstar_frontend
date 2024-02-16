@@ -7,7 +7,7 @@ const flaskConfig = {
     spawn_swarm_url: "http://lvh.me:5000/spawn/spawn_swarm",
     get_chat_url: "http://lvh.me:5000/chat/get_chat",
     set_swarm_url: "http://lvh.me:5000/spawn/get_swarm",
-    send_user_message_url: "http://lvh.me:5000/chat/send_user_message",
+    user_message_url: "http://lvh.me:5000/chat/user_message",
     backend_url: "http://lvh.me:5000",
     backend_ws_url: "ws://lvh.me:5000/ws",
     create_chat_url: "http://lvh.me:5000/chat/create_chat",

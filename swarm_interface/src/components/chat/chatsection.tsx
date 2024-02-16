@@ -2,12 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import Message from '@components/chat/message';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
+import useSendUserMessage from '@/hooks/chat/sendUserMessage';
 
 const ChatSection = () => {
     const [text, setText] = useState('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const { handleSendUserMessage } = useSendUserMessage();
     const [messageAreaHeight, setMessageAreaHeight] = useState('auto');
+    const [currentMessage, setCurrentMessage] = useState('');
 
     let messages = useSelector((state: RootStateType) => state.chat.messages);
     if (!messages) {
@@ -53,14 +56,15 @@ const ChatSection = () => {
                 </button>
                 <textarea
                     ref={textareaRef}
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
                     className="resize-none border border-gray-300 p-2 rounded-20"
                     style={{ width: 'calc(100% - 320px)', minHeight: '40px', maxHeight: '200px', overflowY: 'auto', background: 'transparent', outline: 'none' }} // Remove mb-3 and adjust style here if needed
                     placeholder="Type your message here..."
                 />
                 <button className="absolute right-0 mr-32 mb-1.5"
-                    style={{ bottom: '10px', width: '30px', height: '30px', backgroundImage: 'url(/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    style={{ bottom: '10px', width: '30px', height: '30px', backgroundImage: 'url(/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    onClick={() => handleSendUserMessage(currentMessage)}>
                 </button>
             </div>
         </div>
