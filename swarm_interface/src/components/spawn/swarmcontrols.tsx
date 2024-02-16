@@ -21,19 +21,10 @@ const SwarmContols = () => {
             handleDeleteSwarm(swarmId);
         }
     }
-    console.log('the goal is:', goal)
     const spawnSwarm = () => {
         if (current_swarm_id) {
             handleSpawnSwarm(goal, current_swarm_id);
         }
-    }
-
-    const resumeSwarm = () => {
-
-    }
-
-    const pauseSwarm = () => {
-
     }
 
     return (
@@ -68,13 +59,6 @@ const SwarmContols = () => {
                             }}
                         />
                         <button
-                            className="button-text mt-3.5"
-                            onClick={() => resumeSwarm()}
-                            style={{ display: 'block', margin: '10px auto' }}
-                        >
-                            Resume
-                        </button>
-                        <button
                             onClick={() => deleteSwarm(current_swarm_id)}
                             className="button-text mt-3.5"
                             style={{ display: 'block', margin: '10px auto' }}
@@ -105,13 +89,6 @@ const SwarmContols = () => {
                                 maxHeight: '100%', // Allows growing up to the parent height
                             }}
                         />
-                        <button
-                            className="button-text mt-3.5"
-                            onClick={() => pauseSwarm()}
-                            style={{ display: 'block', margin: '10px auto' }}
-                        >
-                            Pause
-                        </button>
                         <button
                             onClick={() => deleteSwarm(current_swarm_id)}
                             className="button-text mt-3.5"

@@ -24,3 +24,4 @@ const tokenSlice = createSlice({
 
 export const { setToken, deleteToken } = tokenSlice.actions;
 export default tokenSlice.reducer;
+export type { TokenState };

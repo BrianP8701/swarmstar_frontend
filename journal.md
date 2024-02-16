@@ -180,3 +180,7 @@ we'll eventually come back to change the frontend for a few things in the future
 
 and then even farther in the future we can even imagine adding more stuff but for now lets not overwhelm ourselves. lets just get this chat done. then we can go back to the package.
 
+
+
+
+A question to ask is does every node have a single unique chat??? Based off how complex the chat with the user action was... yeah bro lets just say yes tbh.

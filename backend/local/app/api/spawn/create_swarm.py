@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException
-from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from app.utils.mongodb import get_kv, add_kv, update_kv, clean
@@ -7,10 +6,8 @@ from app.utils.security.uuid import generate_uuid
 from app.utils.security.validate_token import validate_token
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
-# Define your Pydantic models (schemas) for request and response data
 class SwarmCreateRequest(BaseModel):
     swarm_name: str
 
@@ -47,9 +44,10 @@ async def create_swarm(swarm_create_request: SwarmCreateRequest, username: str =
             'chat_names': {},
             'live_chat_ids': [],
             'terminated_chat_ids': [],
-            'nodes': [],
+            'node_ids': [],
             'root_node_id': None,
-            'frames': 0
+            'frames': 0,
+            'owner': username
         }
         
         add_kv('swarms', swarm_id, new_swarm)

@@ -1,6 +1,5 @@
 // pages/spawn.tsx
 import Layout from '@/components/global_layout/layout';
-import { useState } from 'react';
 import SwarmSelection from '@/components/spawn/swarmselection';
 import SwarmControls from '@/components/spawn/swarmcontrols';
 

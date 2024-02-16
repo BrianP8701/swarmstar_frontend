@@ -10,9 +10,10 @@ interface SwarmState {
   chat_names: { [chat_id: string]: string };
   live_chat_ids: string[];
   terminated_chat_ids: string[];
-  nodes: string[];
+  node_ids: string[];
   root_node_id: string;
   frames: number;
+  owner: string;
 }
 
 const initialState: SwarmState = {
@@ -24,9 +25,10 @@ const initialState: SwarmState = {
   chat_names: {},
   live_chat_ids: [],
   terminated_chat_ids: [],
-  nodes: [],
+  node_ids: [],
   root_node_id: '',
-  frames: 0
+  frames: 0,
+  owner: ''
 };
 
 const swarmSlice = createSlice({
@@ -42,9 +44,10 @@ const swarmSlice = createSlice({
       state.chat_names = action.payload.chat_names;
       state.live_chat_ids = action.payload.live_chat_ids;
       state.terminated_chat_ids = action.payload.terminated_chat_ids;
-      state.nodes = action.payload.nodes;
+      state.node_ids = action.payload.node_ids;
       state.root_node_id = action.payload.root_node_id;
       state.frames = action.payload.frames;
+      state.owner = action.payload.owner;
     },
     setGoal: (state, action: PayloadAction<string>) => {
       state.goal = action.payload;

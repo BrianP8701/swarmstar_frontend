@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException, Query
-from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from app.utils.security.validate_token import validate_token
@@ -7,7 +6,6 @@ from app.utils.mongodb import get_kv, update_kv, clean
 from app.utils.type_operations import backend_user_to_frontend_user
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 class SwarmSetResponse(BaseModel):

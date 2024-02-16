@@ -12,7 +12,6 @@ const useSpawnSwarm = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleNewSwarm = (swarm: SwarmState) => {
-        console.log('so im assuming this comes before change of goal?')
         dispatch(setSwarm(swarm));
         dispatch(clearMessages());
     };
@@ -30,7 +29,7 @@ const useSpawnSwarm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data);
+                handleNewSwarm(data.swarm);
             } else {
                 throw new Error('Spawning swarm failed due to server error');
             }

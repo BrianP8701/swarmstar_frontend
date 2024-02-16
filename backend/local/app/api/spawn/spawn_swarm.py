@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
-from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 from app.swarm.simulate_swarm_spawn import simulate_swarm_spawn
@@ -7,7 +6,6 @@ from app.utils.mongodb import get_kv, update_kv, clean
 from app.utils.security.validate_token import validate_token
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 class SpawnSwarmRequest(BaseModel):

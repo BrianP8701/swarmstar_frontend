@@ -1,42 +1,14 @@
-// Define interfaces for each slice's state based on your existing code
+import UserState from '@redux/userSlice';
+import ChatState from '@redux/chatSlice';
+import SwarmState from '@redux/swarmSlice';
+import TokenState from '@redux/tokenSlice';
 
-interface UserState {
-  username: string;
-  swarm_ids: string[];
-  swarm_names: { [swarm_id: string]: string };
-  current_swarm_id: string | null;
-  current_chat_id: string | null;
-}
-
-interface SwarmState {
-  name: string;
-  goal: string;
-  spawned: boolean;
-  active: boolean;
-  chat_ids: string[];
-  chat_names: { [chat_id: string]: string };
-  live_chat_ids: string[];
-  terminated_chat_ids: string[];
-  nodes: string[];
-  root_node_id: string;
-  frames: number;
-}
-
-interface TokenState {
-  token: string | null;
-}
-
-interface ChatState {
-  messages: [string, string][];
-  alive: boolean;
-};
-
-// Define the RootState type which represents the entire Redux state
 interface RootStateType {
-  user: UserState;
-  chat: ChatState;
-  swarm: SwarmState;
-  token: TokenState;
+  user: typeof UserState;
+  chat: typeof ChatState;
+  swarm: typeof SwarmState;
+  token: typeof TokenState;
 }
 
-export type { RootStateType, UserState, TokenState, ChatState };
+export type { RootStateType, UserState, TokenState, ChatState, SwarmState };
+
