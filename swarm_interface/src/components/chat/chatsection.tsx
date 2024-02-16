@@ -64,7 +64,7 @@ const ChatSection = () => {
                 />
                 <button className="absolute right-0 mr-32 mb-1.5"
                     style={{ bottom: '10px', width: '30px', height: '30px', backgroundImage: 'url(/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    onClick={() => handleSendUserMessage(currentMessage)}>
+                    onClick={() => { handleSendUserMessage(currentMessage); setCurrentMessage(''); }}>
                 </button>
             </div>
         </div>

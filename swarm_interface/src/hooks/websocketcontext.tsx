@@ -31,9 +31,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     socket.onopen = () => console.log('WebSocket connected');
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.event === 'new_ai_message') handleAIMessage(data.data);
+      if (data.event === 'ai_message') handleAIMessage(data.data);
       else if (data.event === 'create_chat') receiveNewChat(data.data.chat_id, data.data.swarm_id, data.data.swarm, data.data.chat);
-      else console.log('Unknown event:', data.event);
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);
     socket.onclose = () => console.log('WebSocket disconnected');

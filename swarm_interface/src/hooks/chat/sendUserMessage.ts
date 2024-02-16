@@ -1,16 +1,19 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
+import { addMessage } from '@/redux/chatSlice';
 
 const useSendUserMessage = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
     const current_chat_id = useSelector((state: RootStateType) => state.user.current_chat_id);
-    const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);
+    const dispatch = useDispatch();
 
     const handleSendUserMessage = async (message: string) => {
         const messageObject = {
             role: 'user',
             content: message,
         };
+        dispatch(addMessage(messageObject));
+        
         try {
             const response = await fetch('/api/chat/user_message', {
                 method: 'PUT',

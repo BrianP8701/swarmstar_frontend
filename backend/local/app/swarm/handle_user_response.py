@@ -10,6 +10,6 @@ def handle_user_response(node_id: str, message: str):
         'content': 'I am a fake AI response'
     }
     
-    ai_message(node_id, message)
+    ai_message(node_id, fake_ai_response)
     
     
