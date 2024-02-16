@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, UserState, setCurrentChatID } from '@/redux/userSlice';
 import { RootStateType, ChatState } from '@models/rootstate';
-import { setChat } from '@/redux/chatSlice';
+import { setMessages } from '@/redux/chatSlice';
 
 const useSetChat = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleChat = (chat: ChatState) => {
-        dispatch(setChat(chat));
+    const handleChat = (messages: { role: string; content: string }[]) => {
+        dispatch(setMessages( messages ));
     };
 
     const handleSetChat = async (chat_id: string) => {
@@ -26,7 +26,7 @@ const useSetChat = () => {
 
             if (response.ok) {
                 console.log('Setting chat:', data.chat)
-                handleChat(data.chat);
+                handleChat(data.messages);
             } else {
                 return data.error;
             }

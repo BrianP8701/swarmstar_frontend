@@ -4,14 +4,15 @@ import { setChat } from '@/redux/chatSlice';
 import { setSwarm } from '@/redux/swarmSlice';
 
 const receiveNewChat = (
-    dispatch: any,
     chat_id: string,
     swarm_id: string,
     swarm: SwarmState,
     chat: ChatState,
-    current_swarm_id: string,
-    current_chat_id: string
 ) => {
+    const dispatch = useDispatch();
+    const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);
+    const current_chat_id = useSelector((state: RootStateType) => state.user.current_chat_id);
+
     console.log('Received new chat:', chat_id, swarm_id, swarm, chat, current_swarm_id, current_chat_id);
     console.log('swarm_id:', swarm_id);
     console.log('current_swarm_id:', current_swarm_id);

@@ -1,11 +1,8 @@
-import { useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import { setCurrentChatID } from '@/redux/userSlice';
 import useSetChat from '@/hooks/chat/setChat';
 
 const ChatNavigation = () => {
-    const dispatch = useDispatch();
     const live_chat_ids = useSelector((state: RootStateType) => state.swarm.live_chat_ids);
     const terminated_chat_ids = useSelector((state: RootStateType) => state.swarm.terminated_chat_ids);
     const chat_names = useSelector((state: RootStateType) => state.swarm.chat_names);
