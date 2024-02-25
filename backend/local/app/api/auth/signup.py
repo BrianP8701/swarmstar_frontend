@@ -48,7 +48,7 @@ async def signup(signup_data: SignupRequest):
     user_id = generate_uuid(username)
     expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     expire = datetime.utcnow() + expires_delta
-    token_data = {"sub": username, "exp": expire}
+    token_data = {"sub": username, "exp": expire.timestamp()}
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
     
     user = {'user_id': user_id, 
@@ -58,7 +58,7 @@ async def signup(signup_data: SignupRequest):
             'swarm_names': {},
             'current_swarm_id': '',
             'current_chat_id': '',
-            }
+    }
     add_kv('users', username, user)
     
     user['username'] = username

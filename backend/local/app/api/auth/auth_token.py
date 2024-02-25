@@ -6,4 +6,5 @@ router = APIRouter()
 
 @router.get("/auth/auth_token")
 async def authenticate_token(username: str = Depends(validate_token)):
+    print('we getting in here?')
     return {"message": "Token is valid", "username": username}
