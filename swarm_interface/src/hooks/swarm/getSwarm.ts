@@ -17,7 +17,7 @@ const useSetSwarm = () => {
 
     const handleSetSwarm = async (swarm_id: string) => {
         try {
-            const response = await fetch(`/api/spawn/get_swarm?swarm_id=${swarm_id}`, {
+            const response = await fetch(`/api/swarm/get_swarm?swarm_id=${swarm_id}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

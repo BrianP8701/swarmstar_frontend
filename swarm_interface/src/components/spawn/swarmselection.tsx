@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import useCreateSwarm from '@/hooks/spawn/createSwarm';
-import useSetSwarm from '@/hooks/spawn/setSwarm';
+import useCreateSwarm from '@/hooks/swarm/createSwarm';
+import useSetSwarm from '@/hooks/swarm/getSwarm';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 

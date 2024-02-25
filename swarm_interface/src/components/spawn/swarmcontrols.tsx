@@ -1,5 +1,5 @@
-import useDeleteSwarm from '@hooks/spawn/deleteSwarm';
-import useSpawnSwarm from '@/hooks/spawn/spawnSwarm';
+import useDeleteSwarm from '@/hooks/swarm/deleteSwarm';
+import useSpawnSwarm from '@/hooks/swarm/spawnSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
 import { setGoal } from '@/redux/swarmSlice';

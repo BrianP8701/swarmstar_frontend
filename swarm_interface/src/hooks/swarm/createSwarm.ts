@@ -2,43 +2,49 @@
     This hook will create a new empty swarm in the backend and update the redux store with the 
     addition of the new swarm's information.
 */
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setSwarm, SwarmState } from '@/redux/swarmSlice';
+import { setUser, UserState } from '@/redux/userSlice';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 import { clearMessages } from '@/redux/chatSlice';
 
-const useSpawnSwarm = () => {
+const useCreateSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleNewSwarm = (swarm: SwarmState) => {
+    const handleNewSwarm = (swarm: SwarmState, user: UserState) => {
         dispatch(setSwarm(swarm));
+        dispatch(setUser(user));
         dispatch(clearMessages());
     };
 
-    const handleSpawnSwarm = async (goal: string, swarm_id: string) => {
+    const handleCreateSwarm = async (newSwarmName: string) => {
         try {
-            const response = await fetch('/api/spawn/spawn_swarm', {
-                method: 'PUT',
-                body: JSON.stringify({ goal, swarm_id }),
+            const response = await fetch('/api/swarm/create_swarm', {
+                method: 'POST',
+                body: JSON.stringify({ swarm_name: newSwarmName }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                    'Authorization': `Bearer ${token}`,
+                }
             });
 
             if (response.ok) {
                 const data = await response.json();
-                handleNewSwarm(data.swarm);
+                handleNewSwarm(data.swarm, data.user);
             } else {
-                throw new Error('Spawning swarm failed due to server error');
+                const errorData = await response.json();
+                throw new Error(errorData.error);
             }
         } catch (error) {
             console.error("Error creating swarm:", error);
             throw error;
         }
     };
-    return { handleSpawnSwarm };
+
+    return { handleCreateSwarm };
 };
 
-export default useSpawnSwarm;
+export default useCreateSwarm;
+

@@ -11,6 +11,7 @@ const azureConfig = {
     backend_ws_url: "ws://lvh.me:5000/ws",
     backend_url: "http://lvh.me:5000",
     get_messages_url: "http://lvh.me:5000/chat/get_messages",
+    update_swarm_url: "http://lvh.me:5000/spawn/update_swarm",
 };
 
 export default azureConfig;

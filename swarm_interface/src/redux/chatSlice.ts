@@ -9,12 +9,14 @@ interface Message {
 interface ChatState {
     messages: Message[];
     alive: boolean;
+    node_id: string;
     owner: string;
 };
 
 const initialState: ChatState = {
     messages: [],
     alive: false,
+    node_id: '',
     owner: ''
 };
 
@@ -25,6 +27,7 @@ const chatSlice = createSlice({
         setChat: (state, action: PayloadAction<ChatState>) => {
             state.messages = action.payload.messages;
             state.alive = action.payload.alive;
+            state.node_id = action.payload.node_id;
             state.owner = action.payload.owner;
         },
         addMessage: (state, action: PayloadAction<Message>) => {

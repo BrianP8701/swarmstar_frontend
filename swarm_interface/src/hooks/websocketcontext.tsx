@@ -1,10 +1,9 @@
-// Assuming you have @models, @configs, and @hooks set up correctly in your tsconfig paths
 import React, { createContext, useContext, useEffect, ReactNode } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 import config from '@configs/configLoader';
 import useReceiveAiMessage from '@hooks/chat/receiveAiMessage';
-import receiveNewChat from '@/hooks/chat/receiveNewChat';
+import { setSwarm } from '@/redux/swarmSlice';
 
 interface WebSocketContextType {
   // Define the shape of your context here, for now it's empty since you're not providing any value
@@ -20,6 +19,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
   // Ensure your RootStateType correctly types `state.user.username` and others
   const { handleAIMessage } = useReceiveAiMessage();
   const username = useSelector((state: RootStateType) => state.user.username);
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
@@ -31,8 +31,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     socket.onopen = () => console.log('WebSocket connected');
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.event === 'ai_message') handleAIMessage(data.data);
-      else if (data.event === 'create_chat') receiveNewChat(data.data.chat_id, data.data.swarm_id, data.data.swarm, data.data.chat);
+      if (data.event === 'ai_message')
+        handleAIMessage(data.data);
+      else if (data.event === 'create_chat')
+        dispatch(setSwarm(data.data.swarm));
+
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);
     socket.onclose = () => console.log('WebSocket disconnected');
