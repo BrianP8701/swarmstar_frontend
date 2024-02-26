@@ -15,7 +15,7 @@ class CreateSwarmResponse(BaseModel):
     swarm: dict
     user: dict
 
-@router.post('/spawn/create_swarm', response_model=CreateSwarmResponse)
+@router.post('/swarm/create_swarm', response_model=CreateSwarmResponse)
 async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = Depends(validate_token)):
     try:
         new_swarm_name = create_swarm_request.swarm_name

@@ -13,7 +13,7 @@ const useSignUp = () => {
 
     const handleSignUp = async (username: string, password: string) => {
         try {
-            const response = await fetch('/api/auth/signup', {
+            const response = await fetch('/api/authentication/signup', {
                 method: 'PUT',
                 body: JSON.stringify({ username, password }),
                 headers: {

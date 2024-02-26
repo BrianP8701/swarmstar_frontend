@@ -10,7 +10,7 @@ router = APIRouter()
 class SetCurrentSwarmRequest(BaseModel):
     swarm_id: str
 
-@router.put('/spawn/set_current_swarm')
+@router.put('/swarm/set_current_swarm')
 async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, user_id: str = Depends(validate_token)):
     try:        
         swarm_id = set_current_swarm_request.swarm_id

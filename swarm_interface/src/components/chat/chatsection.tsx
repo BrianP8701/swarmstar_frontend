@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Message from '@components/chat/message';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import useSendUserMessage from '@/hooks/chat/sendUserMessage';
+import useSendUserMessage from '@/hooks/chat/handleUserMessage';
 
 const ChatSection = () => {
     const [text, setText] = useState('');

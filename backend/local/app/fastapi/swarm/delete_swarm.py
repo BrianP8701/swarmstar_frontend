@@ -14,7 +14,7 @@ class SwarmDeleteResponse(BaseModel):
     swarm: dict
     user: dict
 
-@router.delete('/spawn/delete_swarm', response_model=SwarmDeleteResponse)
+@router.delete('/swarm/delete_swarm', response_model=SwarmDeleteResponse)
 async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = Depends(validate_token)):
     try:
         swarm_id = swarm_delete_request.swarm_id

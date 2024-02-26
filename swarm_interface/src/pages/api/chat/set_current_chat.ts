@@ -1,15 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import config from '@configs/configLoader';
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { chat_id } = req.query;
-        if (!chat_id) {
-            return res.status(400).json({ error: 'Missing chat_id parameter' });
-        }
-
-        const url = `${config.get_chat_url}?chat_id=${chat_id}`;
-
         const { authorization, 'content-type': contentType } = req.headers;
 
         const headers: HeadersInit = {
@@ -21,15 +15,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        const response = await fetch(url, {
-            method: 'GET',
+        const response = await fetch(config.set_current_chat_url, {
+            method: 'PUT',
             headers: headers,
-            credentials: 'include'
+            credentials: 'include',
+            body: JSON.stringify(req.body)
         });
         const data = await response.json();
         if (response.ok) {
             return res.status(200).json(data);
         } else {
+            console.log(req.body)
+            console.log(data.error)
             return res.status(response.status).json({ error: data.error });
         }
     } catch (error: unknown) {
@@ -42,4 +39,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ error: errorMessage });
     }
+
 }

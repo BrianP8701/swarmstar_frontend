@@ -12,19 +12,19 @@ const useUpdateSwarm = () => {
     const currentSwarm = useSelector((state: RootStateType) => state.swarm);
 
     const handleUpdateSwarm = async (updates: Partial<SwarmState>) => {
-        const updatedSwarm = { ...currentSwarm, ...updates };
         try {
             const response = await fetch('/api/swarm/update_swarm', {
                 method: 'PUT',
-                body: JSON.stringify({swarm: updatedSwarm}),
+                body: JSON.stringify({ swarm_updates: updates }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
             });
+            const data = await response.json();
 
             if (response.ok) {
-                dispatch(setSwarm(updatedSwarm));
+                dispatch(setSwarm(data.swarm));
             } else {
                 throw new Error('Updating swarm failed due to server error');
             }

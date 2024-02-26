@@ -15,9 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             headers['Authorization'] = authorization;
         }
 
-        console.log('Sending user message:', req.body);
-        console.log('bottom')
-        const response = await fetch(config.user_message_url, {
+        const response = await fetch(config.handle_user_message_url, {
             method: 'PUT',
             headers: headers,
             credentials: 'include',

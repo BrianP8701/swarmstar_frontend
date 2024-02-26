@@ -8,13 +8,11 @@ app = FastAPI()
 router = APIRouter()
 
 class UpdateUserRequest(BaseModel):
-    user_id: str
     user_updates: Dict
 
 @router.put('/user/update_user')
-async def update_user(update_user_request: UpdateUserRequest, auth_user_id: str = Depends(validate_token)):
+async def update_user(update_user_request: UpdateUserRequest, user_id: str = Depends(validate_token)):
     try:        
-        user_id = update_user_request.user_id
         user_updates = update_user_request.user_updates
 
         if not user_updates or not user_id:

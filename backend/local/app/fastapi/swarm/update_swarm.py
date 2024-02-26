@@ -10,11 +10,14 @@ router = APIRouter()
 class UpdateSwarmRequest(BaseModel):
     swarm_id: str
     swarm_updates: Dict
+    
+class UpdateSwarmResponse(BaseModel):
+    swarm: dict
 
-@router.put('/spawn/update_swarm')
+@router.put('/swarm/update_swarm', response_model=UpdateSwarmResponse)
 async def update_swarm(update_swarm_request: UpdateSwarmRequest, user_id: str = Depends(validate_token)):
     try:        
-        swarm_id = update_swarm_request.swarm_id
+        swarm_id = get_kv("user_profiles", user_id)["current_swarm_id"]
         swarm_updates = update_swarm_request.swarm_updates
 
         if not swarm_updates or not swarm_id:

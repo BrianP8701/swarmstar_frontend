@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import useAuthCheck from '@/hooks/auth/auth';
+import useAuthCheck from '@/hooks/authentication/auth';
 
 const Index = () => {
     const router = useRouter();

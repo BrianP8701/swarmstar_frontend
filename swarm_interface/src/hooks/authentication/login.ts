@@ -13,7 +13,7 @@ const useLoginHook = () => {
 
     const handleLogin = async (username: string, password: string) => {
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch('/api/authentication/login', {
                 method: 'POST',
                 body: JSON.stringify({ username, password }),
                 headers: {

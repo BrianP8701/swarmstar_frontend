@@ -1,25 +1,23 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setSwarm, SwarmState } from '@/redux/swarmSlice';
 import { setUser, UserState } from '@/redux/userSlice';
 import { RootStateType } from '@models/rootstate';
-import { clearChat } from '@/redux/chatSlice';
+import { setChat, ChatState } from '@/redux/chatSlice';
 
-const useSetCurrentSwarm = () => {
+const useSetCurrentChat = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleResponse = (swarm: SwarmState, user: UserState) => {
-        dispatch(setSwarm(swarm));
+    const handleResponse = (chat: ChatState, user: UserState) => {
+        dispatch(setChat( chat ));
         dispatch(setUser(user));
-        dispatch(clearChat());
     };
 
-    const handleSetCurrentSwarm = async (swarm_id: string) => {
+    const handleSetCurrentChat = async (chat_id: string) => {
         try {
-            const response = await fetch('/api/swarm/set_current_swarm', {
+            const response = await fetch(`/api/chat/set_current_chat`, {
                 method: 'PUT',
                 credentials: 'include',
-                body: JSON.stringify({ swarm_id }),
+                body: JSON.stringify({ chat_id }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -28,17 +26,17 @@ const useSetCurrentSwarm = () => {
             const data = await response.json();
 
             if (response.ok) {
-                handleResponse(data.swarm, data.user);
+                handleResponse(data.chat, data.users);
             } else {
                 return data.error;
             }
         } catch (error) {
-            console.error("Error setting swarm:", error);
+            console.error("Error setting chat:", error);
             throw error;
         }
     };
 
-    return { handleSetCurrentSwarm };
+    return { handleSetCurrentChat };
 };
 
-export default useSetCurrentSwarm;
+export default useSetCurrentChat;

@@ -5,16 +5,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setSwarm, SwarmState } from '@/redux/swarmSlice';
 import { RootStateType } from '@models/rootstate';
-import { clearMessages } from '@/redux/chatSlice';
+import { clearChat } from '@/redux/chatSlice';
 
 const useSpawnSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
-
-    const handleNewSwarm = (swarm: SwarmState) => {
-        dispatch(setSwarm(swarm));
-        dispatch(clearMessages());
-    };
 
     const handleSpawnSwarm = async (goal: string, swarm_id: string) => {
         try {
@@ -26,10 +21,10 @@ const useSpawnSwarm = () => {
                     'Authorization': `Bearer ${token}`
                 },
             });
+            const data = await response.json();
 
             if (response.ok) {
-                const data = await response.json();
-                handleNewSwarm(data.swarm);
+                dispatch(setSwarm(data.swarm));
             } else {
                 throw new Error('Spawning swarm failed due to server error');
             }

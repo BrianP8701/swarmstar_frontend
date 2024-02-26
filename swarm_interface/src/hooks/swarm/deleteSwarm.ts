@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setSwarm, SwarmState } from '@/redux/swarmSlice';
 import { setUser, UserState } from '@/redux/userSlice';
-import { clearMessages } from '@/redux/chatSlice';
+import { clearChat } from '@/redux/chatSlice';
 import { RootStateType } from '@models/rootstate';
 
 const useDeleteSwarm = () => {
@@ -11,7 +11,7 @@ const useDeleteSwarm = () => {
     const updateUserSwarms = (swarm: SwarmState, user: UserState) => {
         dispatch(setSwarm(swarm));
         dispatch(setUser(user));
-        dispatch(clearMessages());
+        dispatch(clearChat());
     };
 
     const handleDeleteSwarm = async (swarm_id: string) => {

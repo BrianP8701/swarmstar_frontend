@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import useSetChat from '@/hooks/chat/setChat';
+import useSetChat from '@/hooks/chat/setCurrentChat';
 
 const ChatNavigation = () => {
     const live_chat_ids = useSelector((state: RootStateType) => state.swarm.live_chat_ids);

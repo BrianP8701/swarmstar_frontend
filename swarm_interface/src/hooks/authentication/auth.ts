@@ -12,7 +12,7 @@ const useAuthHook = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/auth/auth_token', {
+        const response = await fetch('/api/authentication/auth_token', {
           method: 'GET',
           credentials: 'include',
           headers: {
