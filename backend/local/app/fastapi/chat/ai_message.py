@@ -1,7 +1,7 @@
 import asyncio
 
 from app.utils.mongodb import get_kv, update_kv, add_kv
-from app.api.websocket_manager import manager
+from app.fastapi.websocket_manager import manager
 from app.utils.security.uuid import generate_uuid
 
 def ai_message(node_id, message):

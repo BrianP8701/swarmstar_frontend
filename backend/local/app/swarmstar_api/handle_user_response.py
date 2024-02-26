@@ -1,6 +1,6 @@
 import time
 
-from app.api.chat.ai_message import ai_message
+from app.fastapi.chat.ai_message import ai_message
 
 def handle_user_response(node_id: str, message: str):
     time.sleep(1)

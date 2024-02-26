@@ -22,7 +22,10 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
         if not swarm_id:
             raise HTTPException(status_code=400, detail="Swarm ID is required")
 
-        user_profile = get_kv('user_profiles', user_id)
+        try:
+            user_profile = get_kv('user_profiles', user_id)
+        except:
+            raise HTTPException(status_code=404, detail="User not found")
         if swarm_id not in user_profile['swarm_ids']:
             raise HTTPException(status_code=403, detail="User is not part of the swarm")
                 
@@ -30,6 +33,9 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
         chat_ids = swarm['chat_ids']
         
         for chat_id in chat_ids:
+            chat = get_kv('swarm_chats', chat_id)
+            for message_id in chat['message_ids']:
+                delete_kv('swarm_messages', message_id)
             delete_kv('swarm_chats', chat_id)
             
         for node_id in swarm['node_ids']:
@@ -41,6 +47,8 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
         delete_kv('swarms', swarm_id)
         
         user_profile['swarm_ids'].pop(swarm_id)
+        user_profile['current_swarm_id'] = ''
+        user_profile['current_chat_id'] = ''
         update_kv('user_profiles', user_id, user_profile)
         
         empty_swarm = {

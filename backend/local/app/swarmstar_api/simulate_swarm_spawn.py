@@ -5,11 +5,11 @@ creating a chat id and sending messages
 import time
 import asyncio
 
-from app.api.websocket_manager import manager
+from app.fastapi.websocket_manager import manager
 from app.utils.mongodb import get_kv
-from app.api.chat.ai_message import ai_message
-from app.api.chat.create_chat import create_chat
-from app.api.chat.ai_message import ai_message
+from app.fastapi.chat.ai_message import ai_message
+from app.fastapi.chat.create_chat import create_chat
+from app.fastapi.chat.ai_message import ai_message
 
 def simulate_swarm_spawn(swarm_id: str):
     print('we are in the simulation')

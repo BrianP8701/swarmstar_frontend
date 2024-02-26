@@ -8,25 +8,30 @@ from app.utils.security.validate_token import validate_token
 app = FastAPI()
 router = APIRouter()
 
-class SwarmCreateRequest(BaseModel):
+class CreateSwarmRequest(BaseModel):
     swarm_name: str
 
-class SwarmCreateResponse(BaseModel):
+class CreateSwarmResponse(BaseModel):
     swarm: dict
     user: dict
 
-@router.post('/spawn/create_swarm', response_model=SwarmCreateResponse)
-async def create_swarm(swarm_create_request: SwarmCreateRequest, user_id: str = Depends(validate_token)):
+@router.post('/spawn/create_swarm', response_model=CreateSwarmResponse)
+async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = Depends(validate_token)):
     try:
-        new_swarm_name = swarm_create_request.swarm_name
+        new_swarm_name = create_swarm_request.swarm_name
         
         if not new_swarm_name:
             raise HTTPException(status_code=400, detail="Swarm name is required")
         
-        user_profile = get_kv('user_profiles', user_id)
-        
+        try:
+            user_profile = get_kv('user_profiles', user_id)
+        except:
+            raise HTTPException(status_code=404, detail="User not found")
         if not user_profile:
             raise HTTPException(status_code=404, detail="User not found")
+        
+        if new_swarm_name in user_profile['swarm_ids'].values():
+            raise HTTPException(status_code=400, detail="Swarm name already exists")
         
         clean_swarm_name = "".join(e for e in new_swarm_name if e.isalnum())
         swarm_id = generate_uuid(clean_swarm_name)
@@ -34,9 +39,9 @@ async def create_swarm(swarm_create_request: SwarmCreateRequest, user_id: str = 
         user_profile['swarm_ids'][swarm_id] = new_swarm_name
         user_profile['current_swarm_id'] = swarm_id
         user_profile['current_chat_id'] = ''
-        username = get_kv('users', user_id)['username']
         update_kv('users', user_id, user_profile)
          
+        username = get_kv('users', user_id)['username']
         new_swarm = {
             'swarm_id': swarm_id,
             'name': new_swarm_name,

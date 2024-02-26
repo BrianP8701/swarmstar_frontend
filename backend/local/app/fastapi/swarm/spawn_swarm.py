@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 
-from app.swarm.simulate_swarm_spawn import simulate_swarm_spawn
-from app.utils.mongodb import get_kv, update_kv, clean
+from app.swarmstar_api.simulate_swarm_spawn import simulate_swarm_spawn
+from app.utils.mongodb import get_kv, update_kv
 from app.utils.security.validate_token import validate_token
 
 app = FastAPI()
@@ -28,7 +28,7 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         if not goal:
             raise HTTPException(status_code=400, detail="Swarm goal is required")
 
-        user = get_kv('users', username)
+        user = get_kv('user_profiles', username)
         swarm_ids = user['swarm_ids']
         
         if swarm_id not in swarm_ids:
@@ -41,7 +41,6 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         update_kv('swarms', swarm_id, swarm)
         
         background_tasks.add_task(simulate_swarm_spawn, swarm_id)
-        clean(swarm)
         return {"swarm": swarm}
     
     except Exception as e:

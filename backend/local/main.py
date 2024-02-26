@@ -1,19 +1,19 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.authentication.login import router as login_router
-from app.api.authentication.auth_token import router as auth_token_router
-from app.api.authentication.signup import router as signup_router
+from app.fastapi.authentication.login import router as login_router
+from app.fastapi.authentication.auth_token import router as auth_token_router
+from app.fastapi.authentication.signup import router as signup_router
 
-from backend.local.app.api.swarm.create_swarm import router as create_swarm_router
-from backend.local.app.api.swarm.delete_swarm import router as delete_swarm_router
+from backend.local.app.fastapi.swarm.create_swarm import router as create_swarm_router
+from backend.local.app.fastapi.swarm.delete_swarm import router as delete_swarm_router
 from app.api.spawn.get_swarm import router as get_swarm_router
-from backend.local.app.api.swarm.spawn_swarm import router as spawn_swarm_router
+from backend.local.app.fastapi.swarm.spawn_swarm import router as spawn_swarm_router
 
-from app.api.chat.get_chat import router as get_chat_router
-from app.api.chat.user_message import router as user_message_router
+from backend.local.app.fastapi.chat.set_current_chat import router as get_chat_router
+from backend.local.app.fastapi.chat.receive_user_message import router as user_message_router
 
-from app.api.websocket_manager import manager
+from app.fastapi.websocket_manager import manager
 
 app = FastAPI()
 

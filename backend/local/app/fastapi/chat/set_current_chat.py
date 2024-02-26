@@ -3,30 +3,33 @@ from pydantic import BaseModel
 from typing import List
 
 from app.utils.security.validate_token import validate_token
-from app.utils.mongodb import get_kv, clean
+from app.utils.mongodb import get_kv
 
 app = FastAPI()
 router = APIRouter()
 
-class GetChatResponse(BaseModel):
+class SetCurrentChatRequest(BaseModel):
+    chat_id: str
+
+class SetCurrentChatResponse(BaseModel):
     messages: List[dict]
 
-@router.get('/chat/get_chat', response_model=GetChatResponse)
-async def get_chat(chat_id: str = Query(None, description="The chat/node id"), user_id: str = Depends(validate_token)):
+@router.get('/chat/get_chat', response_model=SetCurrentChatResponse)
+async def set_current_chat(request: SetCurrentChatRequest, user_id: str = Depends(validate_token)):
     try:        
-        node_id = chat_id
+        node_id = request.chat_id
         if not node_id:
             raise HTTPException(status_code=400, detail="Node ID is required")
 
-        chat = get_kv('swarm_chats', node_id)
-        
-        if not chat:
+        try:
+            chat = get_kv('swarm_chats', node_id)
+        except:
             raise HTTPException(status_code=404, detail="Chat not found")
             
         messages = []
-        for message_id in chat['messages']:
+        for message_id in chat['message_ids']:
             message = get_kv('swarm_messages', message_id)
-            messages.append(clean(message))
+            messages.append(message)
 
         return {'messages': messages}
     except Exception as e:

@@ -1,7 +1,7 @@
 import asyncio
 
 from app.utils.mongodb import get_kv, update_kv, add_kv, clean
-from app.api.websocket_manager import manager
+from app.fastapi.websocket_manager import manager
 
 def create_chat(swarm_id, node_id, chat_name):
     swarm = get_kv('swarms', swarm_id)
