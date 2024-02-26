@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from app.utils.mongodb import get_kv, add_kv, update_kv
 from app.utils.security.validate_token import validate_token
-from app.swarmapi.handle_user_response import handle_user_response
+from app.swarmstar_api.handle_user_response import handle_user_response
 from app.utils.security.uuid import generate_uuid
 
 app = FastAPI()
@@ -45,6 +45,13 @@ async def handle_user_message(background_tasks: BackgroundTasks, user_message_re
         
         background_tasks.add_task(handle_user_response, chat_id, message)
         
+
+        messages = []
+        for message_id in chat['message_ids']:
+            message = get_kv('swarm_messages', message_id)
+            messages.append(message)
+        chat.pop('message_ids', None)
+        chat['messages'] = messages
         return {'chat': chat}
         
     except Exception as e:

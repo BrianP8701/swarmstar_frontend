@@ -26,7 +26,7 @@ async def login(login_request: LoginRequest):
     username = login_request.username
     password = login_request.password
     user_record = get_kv('users', username)
-    if not user_record or not check_password(user_record['password'], password):
+    if not user_record or not check_password(user_record['hashed_password'], password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     
     expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

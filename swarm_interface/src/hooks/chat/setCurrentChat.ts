@@ -8,8 +8,10 @@ const useSetCurrentChat = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleResponse = (chat: ChatState, user: UserState) => {
+        console.log('user', user)
+        console.log('chat', chat)
         dispatch(setChat( chat ));
-        dispatch(setUser(user));
+        dispatch(setUser( user ));
     };
 
     const handleSetCurrentChat = async (chat_id: string) => {
@@ -26,7 +28,7 @@ const useSetCurrentChat = () => {
             const data = await response.json();
 
             if (response.ok) {
-                handleResponse(data.chat, data.users);
+                handleResponse(data.chat, data.user);
             } else {
                 return data.error;
             }

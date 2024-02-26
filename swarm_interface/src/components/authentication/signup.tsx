@@ -37,6 +37,7 @@ const SignUp = () => {
             setErrorMessage('');
             router.push('/spawn');
         } catch (error: any) {
+            console.log('Error signing up:', error);
             setErrorMessage(error.message);
         }
     };

@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else {
             console.log(req.body)
             console.log(data.error)
-            return res.status(response.status).json({ error: data.error });
+            return res.status(response.status).json({ error: data.detail });
         }
     } catch (error: unknown) {
         console.error(error);

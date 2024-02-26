@@ -23,7 +23,7 @@ def simulate_swarm_spawn(swarm_id: str):
 
     # Assuming you have the client_id or if broadcasting to all connected clients
     create_chat(swarm_id, node_id, 'first conversation')    
-    ai_message(node_id, first_message)   
+    ai_message(swarm_id, node_id, first_message)   
     
     node_id = '5678'
     second_message = {

@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Message from '@components/chat/message';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
-import useSendUserMessage from '@/hooks/chat/handleUserMessage';
+import useHandleUserMessage from '@/hooks/chat/handleUserMessage';
 
 const ChatSection = () => {
     const [text, setText] = useState('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const { handleSendUserMessage } = useSendUserMessage();
+    const { handleUserMessage } = useHandleUserMessage();
     const [messageAreaHeight, setMessageAreaHeight] = useState('auto');
     const [currentMessage, setCurrentMessage] = useState('');
 
@@ -64,7 +64,7 @@ const ChatSection = () => {
                 />
                 <button className="absolute right-0 mr-32 mb-1.5"
                     style={{ bottom: '10px', width: '30px', height: '30px', backgroundImage: 'url(/play.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    onClick={() => { handleSendUserMessage(currentMessage); setCurrentMessage(''); }}>
+                    onClick={() => { handleUserMessage(currentMessage); setCurrentMessage(''); }}>
                 </button>
             </div>
         </div>

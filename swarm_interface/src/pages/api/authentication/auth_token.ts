@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (response.ok) {
             return res.status(200).json(data);
         } else {
-            throw new Error(data.error);
+            throw new Error();
         }
     } catch (error: unknown) {
         console.error(error);

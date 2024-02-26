@@ -14,11 +14,26 @@ class SetCurrentSwarmRequest(BaseModel):
 async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, user_id: str = Depends(validate_token)):
     try:        
         swarm_id = set_current_swarm_request.swarm_id
+        user_profile = get_kv('user_profiles', user_id)
         if not swarm_id:
-            raise HTTPException(status_code=400, detail="Swarm ID is required")
+            swarm_id = ''
+            empty_swarm = {
+                'swarm_id': '',
+                'name': '',
+                'goal': '',
+                'spawned': False,
+                'active': False,
+                'chat_ids': {},
+                'live_chat_ids': [],
+                'terminated_chat_ids': [],
+                'node_ids': [],
+                'frames': 0,
+                'owner': ''
+            }
+            user_profile['current_swarm_id'] = swarm_id
+            return {'swarm': empty_swarm, 'user': user_profile}
 
         swarm = get_kv("swarms", swarm_id)
-        user_profile = get_kv('user_profiles', user_id)
         user_profile['current_swarm_id'] = swarm_id
         update_kv("user_profiles", user_id, user_profile)
         return {'swarm': swarm, 'user': user_profile}

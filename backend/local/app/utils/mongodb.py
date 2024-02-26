@@ -38,7 +38,7 @@ def get_kv(collection_name: str, key: str) -> dict:
         collection = db[collection_name]
         result = collection.find_one({"key": key})
         if result is None:
-            raise ValueError(f'Key {key} not found in MongoDB collection.')
+            raise ValueError(f'Key {key} not found in MongoDB collection {collection_name}.')
         return clean(result)
     except Exception as e:
         raise ValueError(f'Failed to get from MongoDB collection: {str(e)}')
@@ -62,7 +62,7 @@ def update_kv(collection_name: str, key: str, update_value: dict) -> None:
         # Fetch the document to retain its _id
         existing_document = collection.find_one({"key": key})
         if existing_document is None:
-            raise ValueError(f'Key {key} not found in MongoDB collection.')
+            raise ValueError(f'Key {key} not found in MongoDB collection {collection_name}.')
         # Ensure the update retains the original _id and key
         update_value_with_id = {"_id": existing_document["_id"], "key": key, **update_value}
         result = collection.replace_one({"_id": existing_document["_id"]}, update_value_with_id)

@@ -25,9 +25,11 @@ const useSignUp = () => {
             if (response.ok) {
                 handleUserData(data.user, data.token);
             } else {
+                console.log('Error signing up1:', data);
                 throw new Error(data.error);
             }
         } catch (error) {
+            console.error('Error signing up2:', error);
             throw error;
         }
     };

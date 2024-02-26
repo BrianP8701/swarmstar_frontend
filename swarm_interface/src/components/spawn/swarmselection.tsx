@@ -13,7 +13,6 @@ const SwarmSelection = () => {
     const { handleCreateSwarm } = useCreateSwarm();
     const { handleSetCurrentSwarm } = useSetCurrentSwarm();
 
-    console.log('swarm_ids:', swarm_ids);
 
     const createSwarm = (newSwarm: string) => {
         if (newSwarm != '') {

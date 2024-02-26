@@ -39,9 +39,9 @@ async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = 
         user_profile['swarm_ids'][swarm_id] = new_swarm_name
         user_profile['current_swarm_id'] = swarm_id
         user_profile['current_chat_id'] = ''
-        update_kv('users', user_id, user_profile)
+        update_kv('user_profiles', user_id, user_profile)
          
-        username = get_kv('users', user_id)['username']
+        username = user_profile['username']
         new_swarm = {
             'swarm_id': swarm_id,
             'name': new_swarm_name,

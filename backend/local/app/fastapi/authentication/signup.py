@@ -29,8 +29,9 @@ async def signup(signup_data: SignupRequest):
     
     try:
         get_kv('users', username)
+        print(f"Username {username} already exists")
         raise HTTPException(status_code=401, detail="Username already exists")
-    except:
+    except ValueError:
         pass
     
     hashed_password = hash_password(password)
@@ -38,7 +39,7 @@ async def signup(signup_data: SignupRequest):
     user_id = generate_uuid(clean_username)
     expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     expire = datetime.utcnow() + expires_delta
-    token_data = {"sub": user_id, "exp": expire.timestamp()}
+    token_data = {"user_id": user_id, "exp": expire.timestamp()}
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
     
     user = {'user_id': user_id, 

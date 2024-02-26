@@ -6,4 +6,4 @@ class Swarmchat(BaseModel):
     message_ids: List[str] # List of message ids
     alive: bool
     node_id: str
-    owner: str
+    owner: str # user_id of chat owner
