@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'Missing swarm_id parameter' });
         }
 
-        const url = `${config.set_swarm_url}?swarm_id=${swarm_id}`;
+        const url = `${config.set_current_swarm_url}?swarm_id=${swarm_id}`;
 
         const { authorization, 'content-type': contentType } = req.headers;
 
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const response = await fetch(url, {
-            method: 'GET',
+            method: 'PUT',
             headers: headers,
             credentials: 'include'
         });

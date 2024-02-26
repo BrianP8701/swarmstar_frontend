@@ -3,6 +3,7 @@ import useSpawnSwarm from '@/hooks/swarm/spawnSwarm';
 import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
 import { setGoal } from '@/redux/swarmSlice';
+import useUpdateSwarm from '@/hooks/swarm/updateSwarm';
 
 const SwarmContols = () => {
     const dispatch = useDispatch();

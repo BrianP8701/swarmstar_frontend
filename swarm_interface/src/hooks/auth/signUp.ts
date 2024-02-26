@@ -11,11 +11,11 @@ const useSignUp = () => {
         dispatch(setToken(token));
     };
 
-    const handleSignUp = async (username: string, password: string, openai_key: string) => {
+    const handleSignUp = async (username: string, password: string) => {
         try {
             const response = await fetch('/api/auth/signup', {
                 method: 'PUT',
-                body: JSON.stringify({ username, password, openai_key }),
+                body: JSON.stringify({ username, password }),
                 headers: {
                     'Content-Type': 'application/json',
                 },

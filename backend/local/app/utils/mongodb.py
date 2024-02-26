@@ -39,7 +39,7 @@ def get_kv(collection_name: str, key: str) -> dict:
         result = collection.find_one({"key": key})
         if result is None:
             raise ValueError(f'Key {key} not found in MongoDB collection.')
-        return result
+        return clean(result)
     except Exception as e:
         raise ValueError(f'Failed to get from MongoDB collection: {str(e)}')
 
@@ -59,9 +59,15 @@ def update_kv(collection_name: str, key: str, update_value: dict) -> None:
         client = create_client(uri)
         db = client['swarm_interface']
         collection = db[collection_name]
-        result = collection.update_one({"key": key}, {"$set": update_value})
-        if result.matched_count == 0:
+        # Fetch the document to retain its _id
+        existing_document = collection.find_one({"key": key})
+        if existing_document is None:
             raise ValueError(f'Key {key} not found in MongoDB collection.')
+        # Ensure the update retains the original _id and key
+        update_value_with_id = {"_id": existing_document["_id"], "key": key, **update_value}
+        result = collection.replace_one({"_id": existing_document["_id"]}, update_value_with_id)
+        if result.matched_count == 0:
+            raise ValueError(f'Failed to update document with key {key} in MongoDB collection.')
     except Exception as e:
         raise ValueError(f'Failed to update MongoDB collection: {str(e)}')
 

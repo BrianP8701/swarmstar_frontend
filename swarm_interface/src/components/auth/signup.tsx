@@ -7,7 +7,6 @@ const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [openaiKey, setOpenaiKey] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const { handleSignUp } = useSignUp();
     const router = useRouter();
@@ -34,7 +33,7 @@ const SignUp = () => {
             return;
         }
         try {
-            await handleSignUp(username, password, openaiKey);
+            await handleSignUp(username, password);
             setErrorMessage('');
             router.push('/spawn');
         } catch (error: any) {
@@ -67,14 +66,6 @@ const SignUp = () => {
                     value={confirmPassword}
                     placeholder="Confirm Password"
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="text-border-white block w-full mb-2"
-                />
-                <input
-                    id="openaiKey"
-                    type="password"
-                    value={openaiKey}
-                    placeholder="OpenAI API Key"
-                    onChange={(e) => setOpenaiKey(e.target.value)}
                     className="text-border-white block w-full mb-2"
                 />
                 <div className="flex items-center justify-center">

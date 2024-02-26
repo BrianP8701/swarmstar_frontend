@@ -12,7 +12,7 @@ class GetChatResponse(BaseModel):
     messages: List[dict]
 
 @router.get('/chat/get_chat', response_model=GetChatResponse)
-async def get_chat(chat_id: str = Query(None, description="The chat/node id"), username: str = Depends(validate_token)):
+async def get_chat(chat_id: str = Query(None, description="The chat/node id"), user_id: str = Depends(validate_token)):
     try:        
         node_id = chat_id
         if not node_id:

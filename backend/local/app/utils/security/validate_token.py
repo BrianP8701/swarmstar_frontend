@@ -9,7 +9,7 @@ SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def validate_token(token: str = Depends(oauth2_scheme)):
+def validate_token(token: str = Depends(oauth2_scheme)) -> str:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -17,9 +17,9 @@ def validate_token(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None or datetime.fromtimestamp(payload.get("exp")) < datetime.utcnow():
+        user_id: str = payload.get("user_id")
+        if user_id is None or datetime.fromtimestamp(payload.get("exp")) < datetime.utcnow():
             raise credentials_exception
     except PyJWTError:  # Catch exceptions specific to PyJWT
         raise credentials_exception
-    return username
+    return user_id

@@ -38,10 +38,16 @@ const chatSlice = createSlice({
         },
         clearMessages: (state) => {
             state.messages = [];
+        },
+        clearChat: (state) => {
+            state.messages = [];
+            state.alive = false;
+            state.node_id = '';
+            state.owner = '';
         }
     },
 });
 
-export const { setChat, addMessage, clearMessages, setMessages } = chatSlice.actions;
+export const { setChat, addMessage, clearMessages, setMessages, clearChat } = chatSlice.actions;
 export default chatSlice.reducer;
 export type { ChatState };

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import useCreateSwarm from '@/hooks/swarm/createSwarm';
-import useSetSwarm from '@/hooks/swarm/getSwarm';
-import { useSelector, useDispatch } from 'react-redux';
+import useSetCurrentSwarm from '@/hooks/swarm/setCurrentSwarm';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 
 const SwarmSelection = () => {
     const swarm_ids = useSelector((state: RootStateType) => state.user.swarm_ids);
-    const swarm_names = useSelector((state: RootStateType) => state.user.swarm_names);
     const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);
-    const swarms = swarm_ids.map(swarm => [swarm, swarm_names[swarm]]);
+    const swarms = Object.entries(swarm_ids);
     const [newSwarm, setNewSwarm] = useState<string>('');
     const [showNewSwarmInput, setShowNewSwarmInput] = useState<boolean>(false);
     const { handleCreateSwarm } = useCreateSwarm();
-    const { handleSetSwarm } = useSetSwarm();
+    const { handleSetCurrentSwarm } = useSetCurrentSwarm();
+
+    console.log('swarm_ids:', swarm_ids);
 
     const createSwarm = (newSwarm: string) => {
         if (newSwarm != '') {
@@ -36,12 +37,12 @@ const SwarmSelection = () => {
             {/* Header Section */}
             <div className="text-lg font-bold bg-gray-900 flex justify-between items-center h-12 relative" style={{ width: '100%' }}>
                 <div style={{ textAlign: 'center', width: '100%' }}>Swarms</div>
-                <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); handleSetSwarm(''); }} style={{ position: 'absolute', right: '15px' }}>
+                <button onClick={() => { setShowNewSwarmInput(!showNewSwarmInput); handleSetCurrentSwarm(''); }} style={{ position: 'absolute', right: '15px' }}>
                     <img src="add.png" alt="Add New Swarm" style={{ width: '20px', height: '20px' }} />
                 </button>
             </div>
 
-            {/* Swarms List Section */}
+            {/* Create new swarm  */}
             <div className="overflow-auto" style={{ flexGrow: 1 }}>
                 {showNewSwarmInput && (
                     <div className="flex flex-row items-center w-full p-2 border-y border-gray-600">
@@ -61,11 +62,12 @@ const SwarmSelection = () => {
                         />
                     </div>
                 )}
+                {/* Swarms List Section */}
                 <div className="flex flex-col">
-                    {swarms.map(([swarm_id, swarm_name], index) => (
+                    {swarms.map(([swarm_id, swarm_name]) => (
                         <button
-                            key={index}
-                            onClick={() => { handleSetSwarm(swarm_id); }}
+                            key={swarm_id}
+                            onClick={() => { handleSetCurrentSwarm(swarm_id); }}
                             className={`p-2 border-b border-gray-600 w-full text-left ${current_swarm_id === swarm_id ? 'bg-gray-700' : ''}`}
                         >
                             {swarm_name}

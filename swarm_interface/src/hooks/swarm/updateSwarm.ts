@@ -16,7 +16,7 @@ const useUpdateSwarm = () => {
         try {
             const response = await fetch('/api/swarm/update_swarm', {
                 method: 'PUT',
-                body: JSON.stringify(updatedSwarm),
+                body: JSON.stringify({swarm: updatedSwarm}),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

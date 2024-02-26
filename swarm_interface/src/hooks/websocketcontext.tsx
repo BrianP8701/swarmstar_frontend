@@ -35,7 +35,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         handleAIMessage(data.data);
       else if (data.event === 'create_chat')
         dispatch(setSwarm(data.data.swarm));
-
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);
     socket.onclose = () => console.log('WebSocket disconnected');
