@@ -20,11 +20,11 @@ from app.api.http.user.update_user import router as update_user_router
 
 from app.api.websocket.websocket_manager import manager
 
-from app.api.swarm_operation_queue import swarm_operation_queue
+from app.api.swarm_operation_queue import swarm_operation_queue_worker
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(swarm_operation_queue())
+    asyncio.create_task(swarm_operation_queue_worker())
     yield
     # Flush the queue before the application stops
 

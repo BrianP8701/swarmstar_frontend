@@ -1,11 +1,13 @@
 import os
 from dotenv import load_dotenv
+from swarmstar import Swarmstar
+from swarmstar.swarm.types import SwarmConfig
+
 from app.utils.mongodb import get_kv
 from app.database_schemas.swarms import Swarm
+from app.api.swarm_operation_queue import swarm_operation_queue
 
-from swarmstar import Swarmstar
-from swarmstar.swarm.config import configure_swarm
-from swarmstar.swarm.types import SwarmConfig
+
 
 load_dotenv()
 db_name = os.getenv("SWARM_DB_NAME")
@@ -18,3 +20,6 @@ def spawn_swarm(swarm_id: str, goal: str):
     swarmstar = Swarmstar(swarm_config)
     swarmstar.spawn_root(goal)
     swarm_operations, root_node_id = swarmstar.spawn_root(goal)
+    swarm = get_kv(db_name, "swarm", swarm_id)
+    swarm['root_node_id'] = root_node_id
+    swarm['node_ids'].append(root_node_id)
