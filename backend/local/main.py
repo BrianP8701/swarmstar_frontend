@@ -20,19 +20,28 @@ from app.api.http.user.update_user import router as update_user_router
 
 from app.api.websocket.websocket_manager import manager
 
-from app.api.swarm_operation_queue import swarm_operation_queue_worker
+from app.api.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(swarm_operation_queue_worker())
+    worker_task = asyncio.create_task(swarm_operation_queue_worker())
+    print('starting application')
     yield
-    # Flush the queue before the application stops
+    print('stopping application')
+    # Cancel the worker task to stop fetching new operations
+    worker_task.cancel()
+    try:
+        await worker_task
+    except asyncio.CancelledError:
+        pass
+    # Wait for all remaining operations to be processed
+    await asyncio.sleep(1)  # Small delay to allow queue to empty, adjust as needed
+    while not swarm_operation_queue.empty():
+        await asyncio.sleep(0.1)  # Adjust sleep time as necessary
+    print('application stopped')
+
 
 app = FastAPI(lifespan=lifespan)
-
-    
-
-app = FastAPI()
 
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):

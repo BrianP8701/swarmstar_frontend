@@ -1,9 +1,20 @@
 import asyncio
+import os
+from dotenv import load_dotenv
 
-from app.utils.mongodb import get_kv
-from app.swarmstar_api.core import execute_swarm_operation
+from swarmstar import Swarmstar
+from swarmstar.swarm.types import SwarmConfig, SwarmOperation
+
+from app.utils.mongodb import get_kv, add_kv, append_to_list_with_versioning
+from app.utils.security.uuid import generate_uuid
 
 swarm_operation_queue = asyncio.Queue()
+
+load_dotenv()
+db_name = os.getenv("SWARMSTAR_INTERFACE_DB_NAME")
+
+def get_swarm_config() -> dict:
+    return SwarmConfig(**get_kv(db_name, "swarm", "swarm"))
 
 async def swarm_operation_queue_worker():
     '''
@@ -13,10 +24,27 @@ async def swarm_operation_queue_worker():
     Otherwise it will persist the operation in MongoDB to be processed later.
     '''
     while True:
-        operation, swarm_id = await swarm_operation_queue.get()
-        swarm = get_kv('swarms', swarm_id)
-        if swarm['active']:
-            await execute_swarm_operation(operation, swarm_id)
-        print(f"Processing operation {operation} for swarm_id {swarm_id}")
-        await asyncio.sleep(1)  # Simulate some processing time
+        swarm_id, operation = await swarm_operation_queue.get()
+        # Create a task for non-blocking operation execution
+        asyncio.create_task(process_swarm_operation(swarm_id, operation))
         swarm_operation_queue.task_done()
+
+def process_swarm_operation(swarm_id: str, operation: SwarmOperation) -> None:
+    swarm = get_kv('swarms', swarm_id)
+    swarm_config = get_swarm_config()
+    swarmstar = Swarmstar(swarm_config)
+    
+    swarm_operation_id = generate_uuid('swarm_operation')
+    add_kv('swarm_operations', swarm_operation_id, operation.model_dump())
+    
+    if swarm['active']:
+        next_operations = swarmstar.execute_operation(operation)
+        if operation.operation_type == 'spawn':
+            append_to_list_with_versioning("swarms", swarm_id, "node_ids", next_operations[0].node_id)
+        for next_operation in next_operations:
+            swarm_operation_queue.put((swarm_id, next_operation))
+    else:
+        append_to_list_with_versioning("swarms", swarm_id, "swarm_operation_ids", swarm_operation_id)
+    
+    swarm_operation_queue.task_done()
+    return None

@@ -106,7 +106,7 @@ def append_to_list_with_versioning(collection_name: str, key: str, list_field: s
     db = client['swarm_interface']
     collection = db[collection_name]
 
-    retries = 3
+    retries = 5
     for attempt in range(retries):
         # Fetch the current document
         current_document = collection.find_one({"key": key})
@@ -145,7 +145,7 @@ def add_to_dict_with_versioning(collection_name: str, key: str, dict_field: str,
     db = client['swarm_interface']
     collection = db[collection_name]
 
-    retries = 3
+    retries = 5
     for attempt in range(retries):
         # Fetch the current document
         current_document = collection.find_one({"key": key})
@@ -179,4 +179,5 @@ def add_to_dict_with_versioning(collection_name: str, key: str, dict_field: str,
 def clean(value: dict) -> dict:
     value.pop('key', None) 
     value.pop('_id', None)
+    value.pop('version', None)
     return value
