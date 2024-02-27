@@ -56,7 +56,8 @@ async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = 
             'root_node_id': '',
             'node_ids': [],
             'frames': 0,
-            'owner': username
+            'owner': username,
+            'swarm_operation_ids': []
         }
         
         add_kv('swarms', swarm_id, new_swarm)

@@ -14,6 +14,7 @@ interface SwarmState {
   node_ids: string[];
   frames: number;
   owner: string;
+  swarm_operation_ids: string[];
 }
 
 const initialState: SwarmState = {
@@ -28,7 +29,8 @@ const initialState: SwarmState = {
   root_node_id: '',
   node_ids: [],
   frames: 0,
-  owner: ''
+  owner: '',
+  swarm_operation_ids: [],
 };
 
 const swarmSlice = createSlice({
@@ -48,6 +50,7 @@ const swarmSlice = createSlice({
       state.node_ids = action.payload.node_ids;
       state.frames = action.payload.frames;
       state.owner = action.payload.owner;
+      state.swarm_operation_ids = action.payload.swarm_operation_ids;
     },
     setGoal: (state, action: PayloadAction<string>) => {
       state.goal = action.payload;

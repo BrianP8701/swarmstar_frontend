@@ -15,3 +15,4 @@ class Swarm(BaseModel):
     root_node_id: str
     frames: int
     owner: str # Username of swarm owner
+    swarm_operation_ids: list # List of swarm_operation_ids

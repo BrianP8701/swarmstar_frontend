@@ -36,10 +36,10 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         
         updated_swarm_values = {
             'spawned': True,
+            'active': True,
             'goal': goal,
         }
         update_kv('swarms', swarm_id, updated_swarm_values)
-        
         
         background_tasks.add_task(spawn_swarm, swarm_id)
         return {"swarm": get_kv('swarms', swarm_id)}

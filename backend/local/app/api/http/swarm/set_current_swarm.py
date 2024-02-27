@@ -28,7 +28,8 @@ async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, u
                 'root_node_id': '',
                 'node_ids': [],
                 'frames': 0,
-                'owner': ''
+                'owner': '',
+                'swarm_operation_ids': []
             }
             update_kv('user_profiles', user_id, {'current_swarm_id': ''})
             return {'swarm': empty_swarm, 'user': user_profile}

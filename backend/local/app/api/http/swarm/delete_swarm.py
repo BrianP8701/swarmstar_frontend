@@ -63,13 +63,16 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
             'chat_ids': {},
             'live_chat_ids': [],
             'terminated_chat_ids': [],
+            'root_node_id': '',
             'node_ids': [],
             'frames': 0,
-            'owner': ''
+            'owner': '',
+            'swarm_operation_ids': []
         }
         return {'user': get_kv('user_profiles', user_id), 'swarm': empty_swarm}
     except Exception as e:
         print(e)
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
 
