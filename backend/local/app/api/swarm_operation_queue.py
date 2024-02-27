@@ -48,3 +48,15 @@ def process_swarm_operation(swarm_id: str, operation: SwarmOperation) -> None:
     
     swarm_operation_queue.task_done()
     return None
+
+def spawn_swarm(swarm_id: str, goal: str):
+    '''
+    Begin the process of spawning a swarm by creating and executing the root node
+    '''
+    swarm_config = get_swarm_config()
+    swarmstar = Swarmstar(swarm_config)
+    
+    # This operation spawns the root node and returns the set of route
+    # action spawn operations with subdirectives derived from your goal
+    root_swarm_operation = swarmstar.spawn_root(goal)
+    swarm_operation_queue.put((swarm_id, root_swarm_operation))

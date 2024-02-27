@@ -193,3 +193,19 @@ Im gonna have different swarmconfigs with different configs. Each swarmconfig ca
 Ill have one swarmconfig local mode. ill save in the database according with all swarm_ids pointing to the same swarmconfig obj, and each with their unique swarm id. for example ill make a run and itll be saved, and if i test. ah damn this is weird i actually gotta like implement the stuff now. fuck challenge challenge challenge. nah this is easy ive already prepared for this shit.
 
 I need some sort of queue that takes swarm operations. from anywhere it doesent fuckin matter. it checks if that swarm is active. if it is run the op. if not store it. simple wimple this is how we pause and resume the swarm. 
+
+# Updating user ui from swarm operations with websocket events
+Now when i say updating the User's UI, what am i updating?
+- The chat interface
+- The swarm interface
+- Something else?
+
+It means i need to define what the redux store looks like. 
+i already did this, but theres stuff i need to add its not complete.
+
+spawn page showing goal and all swarm names
+chat page showing all chat names and chat messages of currently selected chat.
+chat page also showing more info about the currently selected chat. what info?
+we want stuff close to the mush, we want to see the PROMPTS used. the english, simple, role content. in chat we can show just the journal, make it expandable
+
+in the node visualization, lets call it treeviz: we display a tree representing each node, no words. a color representing its lifecycle. perhaps a symbol representing its action type. the chat journal has a button that can take you to the treeviz and highlight the node. you can click on a node and see developer logs. nice we got it. now lets modify the redux store to match this
