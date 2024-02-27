@@ -1,15 +1,13 @@
 import asyncio
 
-from app.utils.mongodb import get_kv, update_kv, add_kv
-from app.fastapi.websocket_manager import manager
+from app.utils.mongodb import get_kv, update_kv, add_kv, add_to_dict_with_versioning, append_to_list_with_versioning
+from app.api.websocket.websocket_manager import manager
 
 def create_chat(swarm_id, node_id, chat_name):
     swarm = get_kv('swarms', swarm_id)
     username = swarm['owner']
-    swarm = get_kv('swarms', swarm_id)
-    swarm['chat_ids'][node_id] = chat_name
-    swarm['live_chat_ids'].append(node_id)
-    update_kv('swarms', swarm_id, swarm)
+    add_to_dict_with_versioning('swarms', swarm_id, 'chat_ids', node_id, chat_name)
+    append_to_list_with_versioning('swarms', swarm_id, 'live_chat_ids', node_id)
     swarm_chat = {
         'message_ids': [],
         'alive': True,
@@ -20,7 +18,7 @@ def create_chat(swarm_id, node_id, chat_name):
     
     websocket_event = {
         'event': 'create_chat',
-        'data': {'swarm': swarm}
+        'data': {'swarm': get_kv('swarms', swarm_id)}
     }
     
     print('sending create chat event')

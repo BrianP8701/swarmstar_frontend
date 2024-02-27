@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List
 
 from app.utils.security.validate_token import validate_token
 from app.utils.mongodb import get_kv, update_kv
@@ -32,15 +31,15 @@ async def set_current_chat(request: SetCurrentChatRequest, user_id: str = Depend
             message = get_kv('swarm_messages', message_id)
             messages.append(message)
             
-        user = get_kv('user_profiles', user_id)
-        user['current_chat_id'] = node_id
-        update_kv('user_profiles', user_id, user)
+        
+        updated_user_values = {'current_chat_id': node_id}
+        ('user_profiles', user_id, updated_user_values)
 
         chat = get_kv('swarm_chats', node_id)
         del chat['message_ids']
         chat['messages'] = messages
         
-        return {'chat': chat, 'user': user}
+        return {'chat': chat, 'user': get_kv('user_profiles', user_id)}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))

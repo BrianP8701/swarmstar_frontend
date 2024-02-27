@@ -24,18 +24,12 @@ async def update_swarm(update_swarm_request: UpdateSwarmRequest, user_id: str = 
             raise HTTPException(status_code=400, detail="Swarm updates and swarm_id is required")
 
         try:
-            existing_swarm = get_kv("swarms", swarm_id)
+            get_kv("swarms", swarm_id)
         except:
             raise HTTPException(status_code=404, detail="Swarm not found")
-
-        # Update the existing swarm with the new values
-        for key, value in swarm_updates.items():
-            if key not in existing_swarm:
-                raise HTTPException(status_code=400, detail=f"Key '{key}' is not a valid swarm attribute")
-            existing_swarm[key] = value
         
-        update_kv("swarms", swarm_id, existing_swarm)
-        return {"swarm": existing_swarm}
+        update_kv("swarms", swarm_id, swarm_updates)
+        return {"swarm": get_kv("swarms", swarm_id)}
     
     except Exception as e:
         print(e)

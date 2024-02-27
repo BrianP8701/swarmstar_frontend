@@ -2,7 +2,8 @@ from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
-from app.utils.mongodb import get_kv, add_kv, update_kv
+from app.utils.db_utils import get_frontend_chat
+from app.utils.mongodb import get_kv, add_kv, append_to_list_with_versioning
 from app.utils.security.validate_token import validate_token
 from app.swarmstar_api.handle_user_response import handle_user_response
 from app.utils.security.uuid import generate_uuid
@@ -39,20 +40,12 @@ async def handle_user_message(background_tasks: BackgroundTasks, user_message_re
             raise HTTPException(status_code=404, detail="Chat not found")
         
         message_id = generate_uuid('message')
-        chat['message_ids'].append(message_id)
         add_kv('swarm_messages', message_id, message)
-        update_kv('swarm_chats', chat_id, chat)
+        append_to_list_with_versioning('swarm_chats', chat_id, 'message_ids', message_id)
         
         background_tasks.add_task(handle_user_response, chat_id, message)
         
-
-        messages = []
-        for message_id in chat['message_ids']:
-            message = get_kv('swarm_messages', message_id)
-            messages.append(message)
-        chat.pop('message_ids', None)
-        chat['messages'] = messages
-        return {'chat': chat}
+        return {'chat': get_frontend_chat(chat_id)}
         
     except Exception as e:
         print(e)

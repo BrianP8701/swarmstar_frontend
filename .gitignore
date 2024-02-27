@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 /backend/local/.env
+/backend/local/my_swarms/
 swarm_interface/.vercel/
 swarm_interface/.next/
 

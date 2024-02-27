@@ -46,10 +46,13 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
         
         delete_kv('swarms', swarm_id)
         
-        user_profile['swarm_ids'].pop(swarm_id)
-        user_profile['current_swarm_id'] = ''
-        user_profile['current_chat_id'] = ''
-        update_kv('user_profiles', user_id, user_profile)
+        new_swarm_ids = user_profile['swarm_ids'].pop(swarm_id)
+        updated_user_values = {
+            'swarm_ids': new_swarm_ids, 
+            'current_swarm_id': '', 
+            'current_chat_id': '',
+        }
+        update_kv('user_profiles', user_id, updated_user_values)
         
         empty_swarm = {
             'swarm_id': swarm_id,
@@ -64,7 +67,7 @@ async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = 
             'frames': 0,
             'owner': ''
         }
-        return {'user': user_profile, 'swarm': empty_swarm}
+        return {'user': get_kv('user_profiles', user_id), 'swarm': empty_swarm}
     except Exception as e:
         print(e)
         traceback.print_exc()

@@ -34,15 +34,15 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         if swarm_id not in swarm_ids:
             raise HTTPException(status_code=403, detail="User is not part of the swarm")
         
-        swarm = get_kv('swarms', swarm_id)
-        swarm['spawned'] = True
-        swarm['goal'] = goal
-        swarm['active'] = True
-        update_kv('swarms', swarm_id, swarm)
+        updated_swarm_values = {
+            'spawned': True,
+            'goal': goal,
+        }
+        update_kv('swarms', swarm_id, updated_swarm_values)
         
         
         background_tasks.add_task(spawn_swarm, swarm_id)
-        return {"swarm": swarm}
+        return {"swarm": get_kv('swarms', swarm_id)}
     
     except Exception as e:
         print(e)

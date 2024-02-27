@@ -19,18 +19,13 @@ async def update_user(update_user_request: UpdateUserRequest, user_id: str = Dep
             raise HTTPException(status_code=400, detail="User updates and user_id are required")
 
         try:
-            existing_user = get_kv("user_profiles", user_id)
+            get_kv("user_profiles", user_id)
         except:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Update the existing user with the new values
-        for key, value in user_updates.items():
-            if key not in existing_user:
-                raise HTTPException(status_code=400, detail=f"Key '{key}' is not a valid user attribute")
-            existing_user[key] = value
 
-        update_kv("users", user_id, existing_user)
-        return {"user": existing_user}
+        update_kv("user_profiles", user_id, user_updates)
+        return {"user": get_kv("user_profiles", user_id)}
     
     except Exception as e:
         print(e)

@@ -16,7 +16,6 @@ async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, u
         swarm_id = set_current_swarm_request.swarm_id
         user_profile = get_kv('user_profiles', user_id)
         if not swarm_id:
-            swarm_id = ''
             empty_swarm = {
                 'swarm_id': '',
                 'name': '',
@@ -31,13 +30,11 @@ async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, u
                 'frames': 0,
                 'owner': ''
             }
-            user_profile['current_swarm_id'] = swarm_id
+            update_kv('user_profiles', user_id, {'current_swarm_id': ''})
             return {'swarm': empty_swarm, 'user': user_profile}
 
-        swarm = get_kv("swarms", swarm_id)
-        user_profile['current_swarm_id'] = swarm_id
-        update_kv("user_profiles", user_id, user_profile)
-        return {'swarm': swarm, 'user': user_profile}
+        update_kv("user_profiles", user_id, {'current_swarm_id': swarm_id})
+        return {'swarm': get_kv("swarms", swarm_id), 'user': get_kv("user_profiles", user_id)}
     
     except Exception as e:
         print(e)

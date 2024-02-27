@@ -36,10 +36,12 @@ async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = 
         clean_swarm_name = "".join(e for e in new_swarm_name if e.isalnum())
         swarm_id = generate_uuid(clean_swarm_name)
         
-        user_profile['swarm_ids'][swarm_id] = new_swarm_name
-        user_profile['current_swarm_id'] = swarm_id
-        user_profile['current_chat_id'] = ''
-        update_kv('user_profiles', user_id, user_profile)
+        updated_user_values = {
+            'swarm_ids': user_profile['swarm_ids'], 
+            'current_swarm_id': swarm_id, 
+            'current_chat_id': ''
+        }
+        update_kv('user_profiles', user_id, updated_user_values)
          
         username = user_profile['username']
         new_swarm = {
@@ -58,7 +60,7 @@ async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = 
         }
         
         add_kv('swarms', swarm_id, new_swarm)
-        return {'swarm': new_swarm, 'user': user_profile}
+        return {'swarm': new_swarm, 'user': get_kv('user_profiles', user_id)}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
