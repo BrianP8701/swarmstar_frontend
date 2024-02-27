@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 
-from app.swarmstar_api.simulate_swarm_spawn import simulate_swarm_spawn
+from app.swarmstar_api.core import spawn_swarm
 from app.utils.mongodb import get_kv, update_kv
 from app.utils.security.validate_token import validate_token
 
@@ -40,7 +40,8 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
         swarm['active'] = True
         update_kv('swarms', swarm_id, swarm)
         
-        background_tasks.add_task(simulate_swarm_spawn, swarm_id)
+        
+        background_tasks.add_task(spawn_swarm, swarm_id)
         return {"swarm": swarm}
     
     except Exception as e:

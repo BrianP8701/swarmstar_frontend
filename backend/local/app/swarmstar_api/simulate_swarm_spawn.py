@@ -5,7 +5,7 @@ creating a chat id and sending messages
 import time
 import asyncio
 
-from app.fastapi.websocket_manager import manager
+from backend.local.app.api.websocket.websocket_manager import manager
 from app.utils.mongodb import get_kv
 from app.fastapi.chat.ai_message import ai_message
 from app.fastapi.chat.create_chat import create_chat

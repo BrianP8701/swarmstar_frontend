@@ -33,10 +33,6 @@ async def update_swarm(update_swarm_request: UpdateSwarmRequest, user_id: str = 
             if key not in existing_swarm:
                 raise HTTPException(status_code=400, detail=f"Key '{key}' is not a valid swarm attribute")
             existing_swarm[key] = value
-
-        print('\n\n\n\n\n')
-        print(existing_swarm)
-        print('\n\n\n\n\n')
         
         update_kv("swarms", swarm_id, existing_swarm)
         return {"swarm": existing_swarm}

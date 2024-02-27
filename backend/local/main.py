@@ -1,22 +1,36 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+import asyncio
 
-from app.fastapi.authentication.login import router as login_router
-from app.fastapi.authentication.auth_token import router as auth_token_router
-from app.fastapi.authentication.signup import router as signup_router
+from app.api.http.authentication.login import router as login_router
+from app.api.http.authentication.auth_token import router as auth_token_router
+from app.api.http.authentication.signup import router as signup_router
 
-from app.fastapi.swarm.create_swarm import router as create_swarm_router
-from app.fastapi.swarm.delete_swarm import router as delete_swarm_router
-from app.fastapi.swarm.set_current_swarm import router as set_current_swarm_router
-from app.fastapi.swarm.spawn_swarm import router as spawn_swarm_router
-from app.fastapi.swarm.update_swarm import router as update_swarm_router
+from app.api.http.swarm.create_swarm import router as create_swarm_router
+from app.api.http.swarm.delete_swarm import router as delete_swarm_router
+from app.api.http.swarm.set_current_swarm import router as set_current_swarm_router
+from app.api.http.swarm.spawn_swarm import router as spawn_swarm_router
+from app.api.http.swarm.update_swarm import router as update_swarm_router
 
-from app.fastapi.chat.set_current_chat import router as set_current_chat_router
-from app.fastapi.chat.handle_user_message import router as handle_user_message_router
+from app.api.http.chat.set_current_chat import router as set_current_chat_router
+from app.api.http.chat.handle_user_message import router as handle_user_message_router
 
-from app.fastapi.user.update_user import router as update_user_router
+from app.api.http.user.update_user import router as update_user_router
 
-from app.fastapi.websocket_manager import manager
+from app.api.websocket.websocket_manager import manager
+
+from app.api.swarm_operation_queue import swarm_operation_queue
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    asyncio.create_task(swarm_operation_queue())
+    yield
+    # Flush the queue before the application stops
+
+app = FastAPI(lifespan=lifespan)
+
+    
 
 app = FastAPI()
 

@@ -10,6 +10,7 @@ interface SwarmState {
   chat_ids: { [chat_id: string]: string };
   live_chat_ids: string[];
   terminated_chat_ids: string[];
+  root_node_id: string;
   node_ids: string[];
   frames: number;
   owner: string;
@@ -24,6 +25,7 @@ const initialState: SwarmState = {
   chat_ids: {},
   live_chat_ids: [],
   terminated_chat_ids: [],
+  root_node_id: '',
   node_ids: [],
   frames: 0,
   owner: ''
@@ -42,6 +44,7 @@ const swarmSlice = createSlice({
       state.chat_ids = action.payload.chat_ids;
       state.live_chat_ids = action.payload.live_chat_ids;
       state.terminated_chat_ids = action.payload.terminated_chat_ids;
+      state.root_node_id = action.payload.root_node_id;
       state.node_ids = action.payload.node_ids;
       state.frames = action.payload.frames;
       state.owner = action.payload.owner;

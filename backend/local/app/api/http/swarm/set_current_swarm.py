@@ -26,6 +26,7 @@ async def set_current_swarm(set_current_swarm_request: SetCurrentSwarmRequest, u
                 'chat_ids': {},
                 'live_chat_ids': [],
                 'terminated_chat_ids': [],
+                'root_node_id': '',
                 'node_ids': [],
                 'frames': 0,
                 'owner': ''

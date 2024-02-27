@@ -184,3 +184,12 @@ and then even farther in the future we can even imagine adding more stuff but fo
 
 
 A question to ask is does every node have a single unique chat??? Based off how complex the chat with the user action was... yeah bro lets just say yes tbh.
+
+
+# Managing swarms when testing frontend
+
+Im gonna have different swarmconfigs with different configs. Each swarmconfig can have multiple root ids. how do i test on frontend?
+
+Ill have one swarmconfig local mode. ill save in the database according with all swarm_ids pointing to the same swarmconfig obj, and each with their unique swarm id. for example ill make a run and itll be saved, and if i test. ah damn this is weird i actually gotta like implement the stuff now. fuck challenge challenge challenge. nah this is easy ive already prepared for this shit.
+
+I need some sort of queue that takes swarm operations. from anywhere it doesent fuckin matter. it checks if that swarm is active. if it is run the op. if not store it. simple wimple this is how we pause and resume the swarm. 

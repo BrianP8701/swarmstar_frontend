@@ -51,6 +51,7 @@ async def create_swarm(create_swarm_request: CreateSwarmRequest, user_id: str = 
             'chat_ids': {},
             'live_chat_ids': [],
             'terminated_chat_ids': [],
+            'root_node_id': '',
             'node_ids': [],
             'frames': 0,
             'owner': username

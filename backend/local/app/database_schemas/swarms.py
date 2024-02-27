@@ -12,5 +12,6 @@ class Swarm(BaseModel):
     live_chat_ids: list # List of chat_ids
     terminated_chat_ids: list # List of chat_ids
     node_ids: list # List of node_ids
+    root_node_id: str
     frames: int
     owner: str # Username of swarm owner
