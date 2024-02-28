@@ -18,5 +18,5 @@ configure_swarm(
     root_path=find_available_swarm_folder(),
     platform="mac",
     mongodb_uri=os.getenv('MONGODB_URI'),
-    mongodb_db_name=os.getenv('SWARM_DB_NAME')
+    mongodb_db_name=os.getenv('SWARMSTAR_SPACE_DB_NAME')
 )

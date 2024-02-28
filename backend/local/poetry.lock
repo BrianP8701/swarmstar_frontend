@@ -1376,13 +1376,13 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7
 
 [[package]]
 name = "swarmstar"
-version = "0.0.3"
+version = "0.0.6"
 description = ""
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "swarmstar-0.0.3-py3-none-any.whl", hash = "sha256:1af614dc553b835c109a6aae8b41e74c8ceabee2509c5a95a61c55649268b1f8"},
-    {file = "swarmstar-0.0.3.tar.gz", hash = "sha256:9a85c4c236ccab315c92897413dcd91aba9b45195a0ed92985c3aac4140104d0"},
+    {file = "swarmstar-0.0.6-py3-none-any.whl", hash = "sha256:45f29fab09b7661a20f9cabdaf2287d23800f728a6be9df39d24093bb5ff5600"},
+    {file = "swarmstar-0.0.6.tar.gz", hash = "sha256:b14ffc7b96c26f64b6905b4170ad82a7248d264bc2264b6af0ffdff57b42409e"},
 ]
 
 [package.dependencies]
@@ -1588,4 +1588,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6cdd1203121a327949b0cb2f1f33bf4f03cec44b5c138e6db64958ed0a6ae12b"
+content-hash = "3848120e90116f90a9356a7bc80703af744afeea02216875c105e429a89b7027"

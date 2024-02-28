@@ -3,31 +3,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
 
-from app.api.http.authentication.login import router as login_router
-from app.api.http.authentication.auth_token import router as auth_token_router
-from app.api.http.authentication.signup import router as signup_router
+from app.http.authentication.login import router as login_router
+from app.http.authentication.auth_token import router as auth_token_router
+from app.http.authentication.signup import router as signup_router
 
-from app.api.http.swarm.create_swarm import router as create_swarm_router
-from app.api.http.swarm.delete_swarm import router as delete_swarm_router
-from app.api.http.swarm.set_current_swarm import router as set_current_swarm_router
-from app.api.http.swarm.spawn_swarm import router as spawn_swarm_router
-from app.api.http.swarm.update_swarm import router as update_swarm_router
+from app.http.swarm.create_swarm import router as create_swarm_router
+from app.http.swarm.delete_swarm import router as delete_swarm_router
+from app.http.swarm.set_current_swarm import router as set_current_swarm_router
+from app.http.swarm.spawn_swarm import router as spawn_swarm_router
+from app.http.swarm.update_swarm import router as update_swarm_router
 
-from app.api.http.chat.set_current_chat import router as set_current_chat_router
-from app.api.http.chat.handle_user_message import router as handle_user_message_router
+from app.http.chat.set_current_chat import router as set_current_chat_router
+from app.http.chat.handle_user_message import router as handle_user_message_router
 
-from app.api.http.user.update_user import router as update_user_router
+from app.http.user.update_user import router as update_user_router
 
-from app.api.websocket.websocket_manager import manager
+from app.websocket.websocket_manager import manager
 
-from app.api.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
+from app.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     worker_task = asyncio.create_task(swarm_operation_queue_worker())
-    print('starting application')
     yield
-    print('stopping application')
     # Cancel the worker task to stop fetching new operations
     worker_task.cancel()
     try:
@@ -38,10 +36,9 @@ async def lifespan(app: FastAPI):
     await asyncio.sleep(1)  # Small delay to allow queue to empty, adjust as needed
     while not swarm_operation_queue.empty():
         await asyncio.sleep(0.1)  # Adjust sleep time as necessary
-    print('application stopped')
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, debug=True)
 
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
