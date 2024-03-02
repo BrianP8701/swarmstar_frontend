@@ -1,12 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/backend/local/.env
+backend/.env
 /backend/local/my_swarms/
-swarm_interface/.vercel/
-swarm_interface/.next/
+frontend/.vercel/
+frontend/.next/
 
 # dependencies
-/swarm_interface/node_modules
+/frontend/node_modules
 /frontend/.env
 /.pnp
 .pnp.js

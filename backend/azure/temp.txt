@@ -1,2 +1,0 @@
-interpreter path: 
-/Users/brianprzezdziecki/Library/Caches/pypoetry/virtualenvs/swarms-azure-backend-5yABR-bV-py3.10/bin/python

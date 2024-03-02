@@ -209,3 +209,8 @@ chat page also showing more info about the currently selected chat. what info?
 we want stuff close to the mush, we want to see the PROMPTS used. the english, simple, role content. in chat we can show just the journal, make it expandable
 
 in the node visualization, lets call it treeviz: we display a tree representing each node, no words. a color representing its lifecycle. perhaps a symbol representing its action type. the chat journal has a button that can take you to the treeviz and highlight the node. you can click on a node and see developer logs. nice we got it. now lets modify the redux store to match this
+
+# User message
+We need to save the blocking operation (context, next_function_to_call) for when the user responds. 
+
+all state history, node, journal and developer log handling happens INISDE the package
