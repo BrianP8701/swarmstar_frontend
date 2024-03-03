@@ -29,12 +29,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
     socket.onopen = () => console.log('WebSocket connected');
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.event === 'ai_message') {
-        dispatch(addMessage(data.data.message));
+      const websocket_event = JSON.parse(event.data);
+      if (websocket_event.type === 'ai_message') {
+        dispatch(addMessage(websocket_event.data.message));
       }
-      else if (data.event === 'create_chat') {
-        dispatch(setSwarm(data.data.swarm));
+      else if (websocket_event.type === 'create_chat') {
+        dispatch(setSwarm(websocket_event.data.swarm));
       }
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);

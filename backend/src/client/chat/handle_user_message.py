@@ -1,9 +1,8 @@
-from fastapi import FastAPI, Depends, APIRouter, HTTPException, BackgroundTasks
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 
-from backend.src.server.communication.handle_user_message import handle_user_message as server_handle_user_message
-from src.utils.database import append_message_to_chat, create_message, get_node_chat, get_user
+from src.server.communication.swarm_handle_user_message import swarm_handle_user_message
+from src.utils.database import create_swarm_message, get_node_chat, get_user
 from src.utils.security import validate_token
 from src.types import SwarmMessage, NodeChat
 
@@ -30,11 +29,10 @@ async def handle_user_message(background_tasks: BackgroundTasks, user_message_re
             raise HTTPException(status_code=400, detail="Chat ID and message is required")
 
         message = SwarmMessage(**message)
-        create_message(message)
-        append_message_to_chat(chat_id, message.id)
+        create_swarm_message(chat_id, message)
 
         user = get_user(user_id)
-        background_tasks.add_task(server_handle_user_message, user['swarm_id'], chat_id, message)
+        background_tasks.add_task(swarm_handle_user_message, user['swarm_id'], chat_id, message.id)
 
         return {'chat': get_node_chat(chat_id)}
 

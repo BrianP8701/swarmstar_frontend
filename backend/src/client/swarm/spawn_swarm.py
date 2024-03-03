@@ -29,7 +29,7 @@ async def spawn_swarm(background_tasks: BackgroundTasks, spawn_swarm_request: Sp
 
         update_user_swarm_on_spawn(swarm_id, goal)
 
-        background_tasks.add_task(server_spawn_swarm, swarm_id)
+        background_tasks.add_task(server_spawn_swarm, swarm_id, goal)
 
         return {"swarm": get_user_swarm(swarm_id)}
     

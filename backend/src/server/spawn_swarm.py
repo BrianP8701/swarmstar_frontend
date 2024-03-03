@@ -2,27 +2,15 @@
 This module is responsible for spawning a new swarm 
 when the user presses the spawn button in the UI.
 """
-import os
-from dotenv import load_dotenv
+from swarmstar import spawn_swarm as swarmstar_spawn_swarm
 
-from swarmstar import spawn_swarm
-from swarmstar.swarm.types import SwarmConfig, SwarmOperation
+from src.utils.database import get_swarm_config
+from src.server.swarm_operation_queue import swarm_operation_queue
 
-from server.communication.send_user_message import send_user_message
-from client.utils.mongodb import get_kv, add_kv
-from backend.local.server.utils.uuid import generate_uuid
-
-load_dotenv()
-db_name = os.getenv("SWARMSTAR_UI_DB_NAME")
-
-def get_swarm_config():
-    
-
-async def spawn_swarm_root(user_id: str, goal: str):
+async def spawn_swarm(swarm_id: str, goal: str):
     '''
     This is called when the user presses the spawn button
     '''
-    swarm_config = SwarmConfig(**get_kv("swarm", "swarm", db_name='swarmstar_space'))
-
-    root_swarm_operation = spawn_swarm(goal)
-    await swarm_operation_queue.put((swarm_id, root_swarm_operation))
+    swarm_config = get_swarm_config("default_config")
+    root_swarm_operation = swarmstar_spawn_swarm(swarm_config, goal)
+    await swarm_operation_queue.put((swarm_id, root_swarm_operation.id))

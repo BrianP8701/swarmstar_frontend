@@ -59,9 +59,9 @@ def set_current_chat_id(user_id: str, node_id: str) -> None:
 def get_user_swarm(swarm_id: str) -> UserSwarm:
     return UserSwarm(**get_kv(swarmstar_ui_db_name, "user_swarms", swarm_id))
 
-def create_empty_user_swarm(user_id: str, swarm_id: str, name: str) -> None:
+def create_empty_user_swarm(user_id: str, name: str) -> None:
     user_swarm = UserSwarm(
-        id=swarm_id, 
+        id=generate_uuid("swarm"), 
         name=name, 
         goal="", 
         spawned=False,
@@ -74,7 +74,7 @@ def create_empty_user_swarm(user_id: str, swarm_id: str, name: str) -> None:
     )
     add_kv(swarmstar_ui_db_name, "user_swarms", user_swarm.id, user_swarm.model_dump())
     user = get_user(user_id)
-    user.swarm_ids[swarm_id] = name
+    user.swarm_ids[user_swarm.id] = name
     set_user(user)
 
 def update_user_swarm_on_spawn(swarm_id: str, goal: str) -> None:
@@ -138,21 +138,23 @@ def get_node_chat(node_id: str) -> NodeChat:
     chat.journal = node.journal
     return NodeChat(**chat)
 
-def get_message(message_id: str):
-    return get_kv(swarmstar_ui_db_name, "messages", message_id)
+def get_message(message_id: str) -> SwarmMessage:
+    return SwarmMessage(**get_kv(swarmstar_ui_db_name, "messages", message_id))
 
-def create_empty_chat(swarm_id: str, node_id: str) -> None:
+def create_empty_chat(swarm_id: str, node_id: str) -> Chat:
     chat = Chat(id=node_id, message_ids=[], alive=True)
     add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
     append_to_list(swarmstar_ui_db_name, "user_swarms", swarm_id, "nodes_with_active_chat", chat.id)
+    return chat
     
-def create_message(message: SwarmMessage) -> None:
+def create_swarm_message(chat_id: str, message: SwarmMessage) -> None:
     add_kv(swarmstar_ui_db_name, "messages", message.id, message.model_dump())
-
-def append_message_to_chat(node_id: str, message_id: str) -> None:
-    append_to_list(swarmstar_ui_db_name, "chats", node_id, "message_ids", message_id)
+    append_to_list(swarmstar_ui_db_name, "chats", chat_id, "message_ids", message.id)
 
 def terminate_chat(swarm_id: str, node_id: str) -> None:
     remove_from_list_by_value(swarmstar_ui_db_name, "user_swarms", swarm_id, "nodes_with_active_chat", node_id)
     append_to_list(swarmstar_ui_db_name, "user_swarms", swarm_id, "nodes_with_terminated_chat", node_id)
     update_kv(swarmstar_ui_db_name, "chats", node_id, {"alive": False})
+
+def update_chat(node_id: str, updated_values: dict) -> None:
+    update_kv(swarmstar_ui_db_name, "chats", node_id, updated_values)

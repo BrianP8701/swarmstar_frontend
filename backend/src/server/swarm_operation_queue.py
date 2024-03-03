@@ -1,45 +1,35 @@
 """
-This module is responsible for handling the swarm operation queue.
+The swarm operation queue processes swarm operations of
+active swarms.
+
+When transitioning to a cloud-based backend, we'll
+replace this with a message queue.
 """
 import asyncio
-import os
-from dotenv import load_dotenv
 
-from swarmstar import Swarmstar
-from swarmstar.swarm.types import SwarmConfig, SwarmOperation
+from swarmstar.swarm.types import SwarmOperation
+from swarmstar import execute_swarmstar_operation
 
-from server.communication.send_user_message import send_user_message
-from client.utils.mongodb import get_kv, add_kv, append_to_list_with_versioning
-from backend.local.server.utils.uuid import generate_uuid
+from backend.src.server.communication.start_chat_with_user import start_chat_with_user
+from src.utils.database import get_user_swarm, append_queued_swarm_operation, get_swarm_config, get_swarm_operation
+from src.server.ui_updates import update_swarm_state_in_ui
 
 swarm_operation_queue = asyncio.Queue()
 
-
-
 async def swarm_operation_queue_worker():
     """
-    This worker constantly processes swarm operations while the swarm 
-    is active. If the swarm is not active, the operation is queued.
+    Execute any swarm operations that are queued up.
+    Queue the operation if the swarm is inactive.
     """
     while True:
-        swarm_id, operation = await swarm_operation_queue.get()
-        asyncio.create_task(process_swarm_operation(swarm_id, operation))
-
-async def process_swarm_operation(swarm_id: str, operation: SwarmOperation) -> None:
-    swarm = get_kv('swarms', swarm_id)
-    
-    if swarm['active']:
-        next_operations = execute_swarm_operation(swarm_id, operation)
-        for next_operation in next_operations:
-            await swarm_operation_queue.put((swarm_id, next_operation))
-    else:
-        swarm_operation_id = generate_uuid('swarm_operation')
-        add_kv('swarm_operations', swarm_operation_id, operation.model_dump())
-        append_to_list_with_versioning("swarms", swarm_id, "queued_swarm_operation_ids", swarm_operation_id)
-    
-    swarm_operation_queue.task_done()
-
-
+        swarm_id, operation_id = await swarm_operation_queue.get()
+        swarm = get_user_swarm(swarm_id)
+        
+        if swarm['active']:
+            asyncio.create_task(execute_swarm_operation(swarm_id, get_swarm_operation(operation_id)))
+        else:
+            append_queued_swarm_operation(swarm_id, operation_id)
+            swarm_operation_queue.task_done()
 
 def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
     '''
@@ -47,8 +37,12 @@ def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
     This function will appropriately handle swarm operations.
     '''
     if operation.operation_type == 'user_communication':
-        send_user_message(swarm_id, operation)
+        start_chat_with_user(swarm_id, operation)
     else:
-        swarm_config = get_swarm_config()
-        swarmstar = Swarmstar(swarm_config)
-        return swarmstar.execute(operation)
+        swarm_config = get_swarm_config("default_config")
+        next_operations = execute_swarmstar_operation(swarm_config, operation)
+        update_swarm_state_in_ui(swarm_id, operation.node_id)
+        for next_operation in next_operations:
+            swarm_operation_queue.put_nowait((swarm_id, next_operation.id))
+
+    swarm_operation_queue.task_done()

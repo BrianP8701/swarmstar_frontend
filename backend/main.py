@@ -3,24 +3,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
 
-from client.authentication.login import router as login_router
-from client.authentication.auth_token import router as auth_token_router
-from client.authentication.signup import router as signup_router
+from src.client.authentication.login import router as login_router
+from src.client.authentication.auth_token import router as auth_token_router
+from src.client.authentication.signup import router as signup_router
 
-from client.swarm.create_swarm import router as create_swarm_router
-from client.swarm.delete_swarm import router as delete_swarm_router
-from client.swarm.set_current_swarm import router as set_current_swarm_router
-from client.swarm.spawn_swarm import router as spawn_swarm_router
-from client.swarm.update_swarm import router as update_swarm_router
+from src.client.swarm.create_swarm import router as create_swarm_router
+from src.client.swarm.delete_swarm import router as delete_swarm_router
+from src.client.swarm.set_current_swarm import router as set_current_swarm_router
+from src.client.swarm.spawn_swarm import router as spawn_swarm_router
+from src.client.swarm.update_swarm import router as update_swarm_router
 
-from client.chat.set_current_chat import router as set_current_chat_router
-from client.chat.handle_user_message import router as handle_user_message_router
+from src.client.chat.set_current_chat import router as set_current_chat_router
+from src.client.chat.handle_user_message import router as handle_user_message_router
 
-from client.user.update_user import router as update_user_router
+from src.client.user.update_user import router as update_user_router
 
-from server.websocket_manager import manager
+from src.server.websocket_manager import manager
 
-from server.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
+from src.server.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

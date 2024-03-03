@@ -4,26 +4,34 @@ websocket connections to update the UI.
 '''
 from typing import Dict
 from fastapi import WebSocket
+from pydantic import BaseModel
+
+class WebsocketEvent(BaseModel):
+    type: str
+    data: dict
 
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
 
-    async def connect(self, client_id: str, websocket: WebSocket):
+    async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
-        self.active_connections[client_id] = websocket
+        self.active_connections[user_id] = websocket
 
-    def disconnect(self, client_id: str):
-        if client_id in self.active_connections:
-            del self.active_connections[client_id]
+    def disconnect(self, user_id: str):
+        if user_id in self.active_connections:
+            del self.active_connections[user_id]
+    
+    def is_connected(self, user_id: str) -> bool:
+        return user_id in self.active_connections
 
-    async def send_personal_message(self, message: dict, client_id: str):
+    async def send_personal_message(self, websocket_event: WebsocketEvent, user_id: str):
         '''
         Client id is username
         '''
-        if client_id in self.active_connections:
-            websocket = self.active_connections[client_id]
-            await websocket.send_json(message)
+        if user_id in self.active_connections:
+            websocket = self.active_connections[user_id]
+            await websocket.send_json(websocket_event.model_dump())
 
     async def broadcast(self, message: dict):
         for connection in self.active_connections.values():
