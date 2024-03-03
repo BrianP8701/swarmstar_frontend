@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "agent-swarm-backend"
+name = "swarmstar_ui_backend"
 version = "0.1.0"
 description = ""
 authors = ["BrianP8701 <brianp8701@gmail.com>"]
@@ -13,14 +13,18 @@ pydantic = "^2.6.1"
 openai = "^1.12.0"
 pymongo = "^4.6.1"
 requests = "^2.31.0"
-fastapi = "^0.109.2"
+fastapi = "^0.110.0"
 uvicorn = "^0.27.1"
 python-multipart = "^0.0.9"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 aiohttp = "^3.9.3"
 pyjwt = "^2.8.0"
-swarmstar = "^0.0.7"
+swarmstar = { path = "/Users/brianprzezdziecki/Code/swarm-star", develop = true }
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.0"
+httpx = "^0.27.0"
+fastapi = "^0.110.0"
 
 [build-system]
 requires = ["poetry-core"]

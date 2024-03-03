@@ -8,28 +8,31 @@ from src.types.user import User
 
 router = APIRouter()
 
+
 class SwarmDeleteRequest(BaseModel):
     swarm_id: str
+
 
 class SwarmDeleteResponse(BaseModel):
     swarm: None
     user: User
 
-@router.delete('/swarm/delete_swarm', response_model=SwarmDeleteResponse)
-async def delete_swarm(swarm_delete_request: SwarmDeleteRequest, user_id: str = Depends(validate_token)):
+
+@router.delete("/swarm/delete_swarm", response_model=SwarmDeleteResponse)
+async def delete_swarm(
+    swarm_delete_request: SwarmDeleteRequest, user_id: str = Depends(validate_token)
+):
     try:
         swarm_id = swarm_delete_request.swarm_id
         user = get_user(user_id)
-        
+
         if swarm_id not in user.swarm_ids:
             raise HTTPException(status_code=403, detail="User is not part of the swarm")
-                
+
         delete_user_swarm(swarm_id)
 
-        return {'user': get_user(user_id), 'swarm': None}
+        return {"user": get_user(user_id), "swarm": None}
     except Exception as e:
         print(e)
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
-
-

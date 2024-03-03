@@ -8,15 +8,20 @@ from src.types import User
 
 router = APIRouter()
 
+
 class UpdateUserRequest(BaseModel):
     user_updates: Dict
+
 
 class UpdateUserResponse(BaseModel):
     user: User
 
-@router.put('/user/update_user', response_model=UpdateUserResponse)
-async def update_user_values(update_user_request: UpdateUserRequest, user_id: str = Depends(validate_token)):
-    try:        
+
+@router.put("/user/update_user", response_model=UpdateUserResponse)
+async def update_user_values(
+    update_user_request: UpdateUserRequest, user_id: str = Depends(validate_token)
+):
+    try:
         user_updates = update_user_request.user_updates
 
         if not user_updates:

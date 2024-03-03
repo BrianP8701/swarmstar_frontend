@@ -1,6 +1,3 @@
-
-
-
 def configure_routes(app):
     from .authentication.login import login_route
     from .authentication.signup import signup_route
@@ -17,4 +14,3 @@ def configure_routes(app):
     app.register_blueprint(set_swarm_route)
     app.register_blueprint(spawn_swarm_route)
     app.register_blueprint(create_swarm_route)
-    
