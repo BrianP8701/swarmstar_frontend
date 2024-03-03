@@ -1,32 +1,30 @@
-from fastapi import FastAPI, Depends, APIRouter, HTTPException, Query
+from fastapi import Depends, APIRouter, HTTPException
 from typing import Dict
 from pydantic import BaseModel
 
-from backend.local.client.utils.validate_token import validate_token
-from client.utils.mongodb import update_kv, get_kv
-app = FastAPI()
+from src.utils.security import validate_token
+from src.utils.database import update_user, get_user
+from src.types import User
+
 router = APIRouter()
 
 class UpdateUserRequest(BaseModel):
     user_updates: Dict
 
-@router.put('/user/update_user')
-async def update_user(update_user_request: UpdateUserRequest, user_id: str = Depends(validate_token)):
+class UpdateUserResponse(BaseModel):
+    user: User
+
+@router.put('/user/update_user', response_model=UpdateUserResponse)
+async def update_user_values(update_user_request: UpdateUserRequest, user_id: str = Depends(validate_token)):
     try:        
         user_updates = update_user_request.user_updates
 
-        if not user_updates or not user_id:
-            raise HTTPException(status_code=400, detail="User updates and user_id are required")
+        if not user_updates:
+            raise HTTPException(status_code=400, detail="User updates are required")
 
-        try:
-            get_kv("user_profiles", user_id)
-        except:
-            raise HTTPException(status_code=404, detail="User not found")
+        update_user(user_id, user_updates)
+        return {"user": get_user(user_id)}
 
-
-        update_kv("user_profiles", user_id, user_updates)
-        return {"user": get_kv("user_profiles", user_id)}
-    
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))

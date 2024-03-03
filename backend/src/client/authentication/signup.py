@@ -1,23 +1,16 @@
-from fastapi import APIRouter, HTTPException, Depends
-from datetime import datetime, timedelta
-import jwt
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import os
 
-from client.utils.mongodb import add_kv, get_kv
-from backend.local.client.utils.passwords import hash_password
-from backend.local.server.utils.uuid import generate_uuid
-
-SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+from src.utils.database import create_new_user_profile, create_new_user, get_user
+from src.utils.security import create_token
+from src.types import UserProfile
 
 class SignupRequest(BaseModel):
     username: str
     password: str
     
 class SignupResponse(BaseModel):
-    user: dict
+    user: UserProfile
     token: str
 
 router = APIRouter()
@@ -28,28 +21,15 @@ async def signup(signup_data: SignupRequest):
     password = signup_data.password
     
     try:
-        get_kv('users', username)
+        get_user(username)
         raise HTTPException(status_code=401, detail="Username already exists")
     except ValueError:
         pass
     
-    hashed_password = hash_password(password)
-    clean_username = "".join(e for e in username if e.isalnum())
-    user_id = generate_uuid(clean_username)
-    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    expire = datetime.utcnow() + expires_delta
-    token_data = {"user_id": user_id, "exp": expire.timestamp()}
-    token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
+    user = create_new_user(username, password)
+    user_profile = create_new_user_profile(user)
     
-    user = {'user_id': user_id, 
-            'hashed_password': hashed_password,
-    }
-    user_profile = {
-        'username': username,
-        'swarm_ids': {},
-        'current_swarm_id': '',
-        'current_chat_id': '',
-    }
-    add_kv('users', username, user)
-    add_kv('user_profiles', user_id, user_profile)
-    return {"user": user_profile, "token": token}
+    user_id = user_profile.id
+    token = create_token(user_id)
+    
+    return {"user_profile": user_profile, "token": token}

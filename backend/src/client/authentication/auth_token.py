@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from backend.local.client.utils.validate_token import validate_token
+from src.utils.security import validate_token
 
 router = APIRouter()
 

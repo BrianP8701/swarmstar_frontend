@@ -9,6 +9,14 @@ SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+def create_token(user_id: str) -> str:
+    ACCESS_TOKEN_EXPIRE_MINUTES = 60
+    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + expires_delta
+    token_data = {"user_id": user_id, "exp": expire.timestamp()}
+    return jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
+    
+
 def validate_token(token: str = Depends(oauth2_scheme)) -> str:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

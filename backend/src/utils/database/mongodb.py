@@ -22,6 +22,7 @@ def add_kv(db_name: str, collection_name: str, _id: str, value: dict) -> None:
         db = client[db_name]
         collection = db[collection_name]
         # Initialize the document with a version number
+        value.pop('id', None)  # Remove the id field if it exists
         document = {"_id": _id, "version": 1, **value}
         collection.insert_one(document)
     except pymongo.errors.Duplicate_idError:
@@ -71,6 +72,7 @@ def update_kv(db_name: str, collection_name: str, _id: str, updated_values: dict
         client = create_client(uri)
         db = client[db_name]
         collection = db[collection_name]
+        updated_values.pop('id', None)  # Remove the id field if it exists
         
         retries = 3
         for attempt in range(retries):

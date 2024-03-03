@@ -6,7 +6,7 @@ from client.utils.mongodb import get_kv, add_kv
 from backend.local.server.utils.uuid import generate_uuid
 from server.swarm_operation_queue import swarm_operation_queue
 
-async def handle_user_response(chat_id: str, message: dict):
+async def handle_user_message(swarm_id: str, node_id: str, message: dict):
     try:
         chat = get_kv('swarm_chats', chat_id)
     except:

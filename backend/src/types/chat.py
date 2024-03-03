@@ -5,7 +5,7 @@ from swarmstar.swarm.types import UserCommunicationOperation
 
 from src.utils.security.uuid import generate_uuid
 
-class Message(BaseModel):
+class SwarmMessage(BaseModel):
     id: Optional[str] = Field(default_factory=lambda: generate_uuid('message'))
     role: str
     content: str
@@ -18,6 +18,6 @@ class Chat(BaseModel):
 
 class NodeChat(BaseModel):
     id: str # node_id
-    messages: List[Message] # List of messages
+    messages: List[SwarmMessage] # List of messages
     journal: List[Dict[str, Any]] = []
     alive: bool
