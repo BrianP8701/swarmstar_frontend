@@ -30,7 +30,7 @@ async def set_current_swarm(
         if not swarm_id:
             return {"swarm": None, "user": get_user(user_id)}
 
-        return {"swarm": get_user_swarm(user_id), "user": get_user(user_id)}
+        return {"swarm": get_user_swarm(swarm_id), "user": get_user(user_id)}
 
     except Exception as e:
         print(e)

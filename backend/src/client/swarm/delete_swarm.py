@@ -18,14 +18,13 @@ class SwarmDeleteResponse(BaseModel):
     user: User
 
 
-@router.delete("/swarm/delete_swarm", response_model=SwarmDeleteResponse)
+@router.delete("/swarm/delete_swarm/{swarm_id}", response_model=SwarmDeleteResponse)
 async def delete_swarm(
-    swarm_delete_request: SwarmDeleteRequest, user_id: str = Depends(validate_token)
+    swarm_id: str, user_id: str = Depends(validate_token)
 ):
     try:
-        swarm_id = swarm_delete_request.swarm_id
         user = get_user(user_id)
-
+        
         if swarm_id not in user.swarm_ids:
             raise HTTPException(status_code=403, detail="User is not part of the swarm")
 

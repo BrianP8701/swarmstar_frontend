@@ -11,6 +11,7 @@ from src.utils.database.mongodb import (
     set_kv,
     delete_kv,
     does_kv_exist,
+    get_kv_by_chosen_key
 )
 from src.utils.database.swarmstar_space_access import (
     get_swarm_node,
@@ -45,7 +46,7 @@ def create_new_user_profile(username: str, password: str) -> UserProfile:
 
 
 def create_new_user(user_profile: UserProfile) -> User:
-    user = User(id=user_profile.id, swarm_ids={})
+    user = User(id=user_profile.user_id, swarm_ids={})
     add_kv(swarmstar_ui_db_name, "users", user.id, user.model_dump())
     return user
 
@@ -60,15 +61,21 @@ def set_user(user: User) -> None:
 
 def set_current_swarm_id(user_id: str, swarm_id: str) -> None:
     update_kv(
-        swarmstar_ui_db_name, "user_profiles", user_id, {"current_swarm_id": swarm_id}
+        swarmstar_ui_db_name, "users", user_id, {"current_swarm_id": swarm_id}
     )
-
 
 def set_current_chat_id(user_id: str, node_id: str) -> None:
     update_kv(
-        swarmstar_ui_db_name, "user_profiles", user_id, {"current_chat_id": node_id}
+        swarmstar_ui_db_name, "users", user_id, {"current_chat_id": node_id}
     )
 
+def delete_user(user_id: str) -> None:
+    user = get_user(user_id)
+    for swarm_id in user.swarm_ids:
+        delete_user_swarm(swarm_id)
+    delete_kv(swarmstar_ui_db_name, "users", user_id)
+    user_profile = get_kv_by_chosen_key(swarmstar_ui_db_name, "user_profiles", "user_id", user_id)
+    delete_kv(swarmstar_ui_db_name, "user_profiles", user_profile["id"])
 
 """
     User Swarm Access Methods
@@ -79,23 +86,18 @@ def get_user_swarm(swarm_id: str) -> UserSwarm:
     return UserSwarm(**get_kv(swarmstar_ui_db_name, "swarms", swarm_id))
 
 
-def create_empty_user_swarm(user_id: str, name: str) -> None:
+def create_empty_user_swarm(user_id: str, name: str) -> UserSwarm:
     user_swarm = UserSwarm(
         id=generate_uuid("swarm"),
         name=name,
-        goal="",
-        spawned=False,
-        active=False,
-        complete=False,
-        owner=user_id,
-        queued_swarm_operations_ids=[],
-        nodes_with_active_chat=[],
-        nodes_with_terminated_chat=[],
+        owner=user_id
     )
     add_kv(swarmstar_ui_db_name, "swarms", user_swarm.id, user_swarm.model_dump())
     user = get_user(user_id)
     user.swarm_ids[user_swarm.id] = name
+    user.current_swarm_id = user_swarm.id
     set_user(user)
+    return user_swarm
 
 
 def update_user_swarm_on_spawn(swarm_id: str, goal: str) -> None:
@@ -146,17 +148,24 @@ def update_user_swarm(swarm_id: str, updated_values: dict) -> None:
 def delete_user_swarm(swarm_id: str) -> None:
     user_swarm = get_user_swarm(swarm_id)
     user = get_user(user_swarm.owner)
-    node_ids = get_swarm_node_ids(swarm_id)
-    for node_id in node_ids:
-        message_ids = get_chat(node_id).message_ids
-        for message_id in message_ids:
-            delete_kv(swarmstar_ui_db_name, "messages", message_id)
-        delete_kv(swarmstar_ui_db_name, "chats", node_id)
 
-    delete_swarm(swarm_id)
-    remove_from_list_by_value(
-        swarmstar_ui_db_name, "users", user.id, "swarm_ids", swarm_id
-    )
+
+    if user_swarm.spawned: 
+        node_ids = get_swarm_node_ids(swarm_id)
+        for node_id in node_ids:
+            message_ids = get_chat(node_id).message_ids
+            for message_id in message_ids:
+                delete_kv(swarmstar_ui_db_name, "messages", message_id)
+            delete_kv(swarmstar_ui_db_name, "chats", node_id)
+        delete_swarm(swarm_id)
+
+    user.swarm_ids.pop(swarm_id)
+    if user.current_swarm_id == swarm_id:
+        user.current_swarm_id = None
+    set_user(user)
+
+    
+    
 
 
 """

@@ -17,6 +17,7 @@ from src.client.chat.set_current_chat import router as set_current_chat_router
 from src.client.chat.handle_user_message import router as handle_user_message_router
 
 from src.client.user.update_user import router as update_user_router
+from src.client.user.delete_user import router as delete_user_router
 
 from src.server.websocket_manager import manager
 
@@ -72,3 +73,4 @@ app.include_router(update_swarm_router)
 app.include_router(set_current_chat_router)
 app.include_router(handle_user_message_router)
 app.include_router(update_user_router)
+app.include_router(delete_user_router)

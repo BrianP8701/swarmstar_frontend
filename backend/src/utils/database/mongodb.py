@@ -59,6 +59,28 @@ def get_kv(db_name: str, collection_name: str, _id: str) -> dict:
     except Exception as e:
         raise ValueError(f"Failed to get from MongoDB collection: {str(e)}")
 
+def get_kv_by_chosen_key(db_name: str, collection_name: str, key: str, value: str) -> dict:
+    """
+    Retrieve a document by a specified key-value pair from the collection.
+
+    Note:
+        This function allows for flexible document retrieval by any specified key.
+        It's important to ensure the key used is indexed or unique for efficient retrieval.
+    """
+    try:
+        client = create_client(uri)
+        db = client[db_name]
+        collection = db[collection_name]
+        result = collection.find_one({key: value})
+        if result is None:
+            raise ValueError(
+                f"Document with {key}={value} not found in MongoDB collection {collection_name}."
+            )
+        result_id = result.pop("_id")
+        result["id"] = result_id
+        return result
+    except Exception as e:
+        raise ValueError(f"Failed to get from MongoDB collection: {str(e)}")
 
 def delete_kv(db_name: str, collection_name: str, _id: str) -> None:
     try:

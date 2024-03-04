@@ -22,7 +22,7 @@ class SpawnSwarmResponse(BaseModel):
 async def spawn_swarm(
     background_tasks: BackgroundTasks,
     spawn_swarm_request: SpawnSwarmRequest,
-    username: str = Depends(validate_token),
+    user_id: str = Depends(validate_token),
 ):
     try:
         swarm_id = spawn_swarm_request.swarm_id
