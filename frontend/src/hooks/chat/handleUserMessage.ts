@@ -25,7 +25,6 @@ const useHandleUserMessage = () => {
             const data = await response.json();
 
             if (response.ok) {
-                console.log('data:', data);
                 dispatch(setChat(data.chat));
             } else {
                 throw new Error('Sending user message failed due to server error');

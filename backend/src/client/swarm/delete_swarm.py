@@ -23,6 +23,7 @@ async def delete_swarm(
     swarm_id: str, user_id: str = Depends(validate_token)
 ):
     try:
+        print(swarm_id, user_id)
         user = get_user(user_id)
         
         if swarm_id not in user.swarm_ids:

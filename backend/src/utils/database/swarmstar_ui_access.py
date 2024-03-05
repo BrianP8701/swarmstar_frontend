@@ -149,6 +149,11 @@ def delete_user_swarm(swarm_id: str) -> None:
     user_swarm = get_user_swarm(swarm_id)
     user = get_user(user_swarm.owner)
 
+    delete_kv(swarmstar_ui_db_name, "swarms", swarm_id)
+    user.swarm_ids.pop(swarm_id)
+    if user.current_swarm_id == swarm_id:
+        user.current_swarm_id = None
+    set_user(user)
 
     if user_swarm.spawned: 
         node_ids = get_swarm_node_ids(swarm_id)
@@ -159,10 +164,7 @@ def delete_user_swarm(swarm_id: str) -> None:
             delete_kv(swarmstar_ui_db_name, "chats", node_id)
         delete_swarm(swarm_id)
 
-    user.swarm_ids.pop(swarm_id)
-    if user.current_swarm_id == swarm_id:
-        user.current_swarm_id = None
-    set_user(user)
+
 
     
     

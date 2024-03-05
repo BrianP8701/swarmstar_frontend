@@ -18,7 +18,7 @@ def get_swarm_node(node_id: str) -> SwarmNode:
 
 def get_swarm_operation(operation_id: str) -> SwarmOperation:
     return SwarmOperation(
-        **get_kv(swarmstar_space_db_name, "swarm_operations", operation_id)
+        **get_kv(swarmstar_space_db_name, "swarm_history", operation_id)
     )
 
 
@@ -27,7 +27,7 @@ def get_swarm_node_ids(swarm_id: str) -> list:
 
 
 def get_swarm_operation_ids(swarm_id: str) -> list:
-    return get_kv(swarmstar_space_db_name, "swarm_operations", swarm_id)["data"]
+    return get_kv(swarmstar_space_db_name, "swarm_history", swarm_id)["data"]
 
 
 def get_swarm_memory_ids(swarm_id: str) -> list:
@@ -46,7 +46,7 @@ def delete_swarm(swarm_id: str) -> None:
     for node_id in get_swarm_node_ids(swarm_id):
         delete_kv(swarmstar_space_db_name, "swarm_state", node_id)
     for operation_id in get_swarm_operation_ids(swarm_id):
-        delete_kv(swarmstar_space_db_name, "swarm_operations", operation_id)
+        delete_kv(swarmstar_space_db_name, "swarm_history", operation_id)
     for memory_id in get_swarm_memory_ids(swarm_id):
         delete_kv(swarmstar_space_db_name, "memory_space", memory_id)
     for action_id in get_swarm_action_ids(swarm_id):
@@ -58,7 +58,9 @@ def delete_swarm(swarm_id: str) -> None:
     delete_kv(swarmstar_space_db_name, "action_space", swarm_id)
     delete_kv(swarmstar_space_db_name, "util_space", swarm_id)
     delete_kv(swarmstar_space_db_name, "swarm_state", swarm_id)
-    delete_kv(swarmstar_space_db_name, "swarm_operations", swarm_id)
+    delete_kv(swarmstar_space_db_name, "swarm_history", swarm_id)
+
+    
 
 
 def get_current_swarm_state_representation(swarm_id: str):

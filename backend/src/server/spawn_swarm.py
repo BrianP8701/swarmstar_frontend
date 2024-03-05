@@ -13,5 +13,6 @@ async def spawn_swarm(swarm_id: str, goal: str):
     This is called when the user presses the spawn button
     """
     swarm_config = get_swarm_config("default_config")
+    swarm_config.swarm_id = swarm_id
     root_swarm_operation = swarmstar_spawn_swarm(swarm_config, goal)
     swarm_operation_queue.put_nowait((swarm_id, root_swarm_operation.id))

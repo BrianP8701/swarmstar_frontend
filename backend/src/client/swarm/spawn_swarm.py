@@ -1,7 +1,7 @@
 from fastapi import Depends, APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 
-from src.server import spawn_swarm as server_spawn_swarm
+from src.server.spawn_swarm import spawn_swarm as server_spawn_swarm
 from src.utils.security import validate_token
 from src.utils.database import update_user_swarm_on_spawn, get_user_swarm
 from src.types import UserSwarm

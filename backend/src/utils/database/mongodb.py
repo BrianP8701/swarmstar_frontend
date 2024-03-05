@@ -148,6 +148,7 @@ def set_kv(db_name: str, collection_name: str, _id: str, new_value: dict) -> Non
         client = create_client(uri)  # Assume create_client is defined elsewhere
         db = client[db_name]
         collection = db[collection_name]
+        new_value.pop("id", None)  # Remove the id field if it exists
 
         retries = 5
         for attempt in range(retries):

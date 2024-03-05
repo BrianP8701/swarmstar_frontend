@@ -2,24 +2,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Message {
+    id: string;
     role: string;
     content: string;
 }
 
 interface ChatState {
+    id: string;
     messages: Message[];
+    journal: { [key: string]: any };
     alive: boolean;
-    node_id: string;
-    owner: string;
-    user_communication_operation: any;
 };
 
 const initialState: ChatState = {
+    id: '',
     messages: [],
+    journal: {},
     alive: false,
-    node_id: '',
-    owner: '',
-    user_communication_operation: {},
 };
 
 const chatSlice = createSlice({
@@ -27,11 +26,10 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         setChat: (state, action: PayloadAction<ChatState>) => {
+            state.id = action.payload.id;
             state.messages = action.payload.messages;
             state.alive = action.payload.alive;
-            state.node_id = action.payload.node_id;
-            state.owner = action.payload.owner;
-            state.user_communication_operation = action.payload.user_communication_operation;
+            state.journal = action.payload.journal;
         },
         addMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
@@ -43,11 +41,10 @@ const chatSlice = createSlice({
             state.messages = [];
         },
         clearChat: (state) => {
+            state.id = '';
             state.messages = [];
             state.alive = false;
-            state.node_id = '';
-            state.owner = '';
-            state.user_communication_operation = '';
+            state.journal = {};
         }
     },
 });

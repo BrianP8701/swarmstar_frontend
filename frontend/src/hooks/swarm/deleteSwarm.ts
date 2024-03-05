@@ -16,9 +16,8 @@ const useDeleteSwarm = () => {
 
     const handleDeleteSwarm = async (swarm_id: string) => {
         try {
-            const response = await fetch('/api/swarm/delete_swarm', {
+            const response = await fetch(`/api/swarm/delete_swarm?swarm_id=${swarm_id}`, {
                 method: 'DELETE',
-                body: JSON.stringify({ swarm_id }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -32,7 +31,7 @@ const useDeleteSwarm = () => {
                 throw new Error('Deleting swarm failed due to server error');
             }
         } catch (error) {
-            console.error("Error creating swarm:", error);
+            console.error("Error deleting swarm:", error);
             throw error;
         }
     };
