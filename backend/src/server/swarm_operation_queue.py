@@ -7,7 +7,7 @@ replace this with a message queue.
 """
 import asyncio
 
-from swarmstar.swarm.types import SwarmOperation
+from swarmstar.types import SwarmOperation
 from swarmstar import execute_swarmstar_operation
 
 from src.server.communication.handle_swarm_message import handle_swarm_message
@@ -28,23 +28,32 @@ async def swarm_operation_queue_worker():
     Queue the operation if the swarm is inactive.
     """
     while True:
-        swarm_id, operation_id = await swarm_operation_queue.get()
-        swarm = get_user_swarm(swarm_id)
-
-        if swarm["active"]:
-            asyncio.create_task(
-                execute_swarm_operation(swarm_id, get_swarm_operation(operation_id))
-            )
-        else:
-            append_queued_swarm_operation(swarm_id, operation_id)
+        try:
+            swarm_id, operation = await swarm_operation_queue.get()
+            swarm = get_user_swarm(swarm_id)
+            if swarm.active:
+                print('swarm is active')
+                asyncio.create_task(
+                    execute_swarm_operation(swarm_id, operation)
+                )
+            else:
+                print('swarm is inactive')
+                append_queued_swarm_operation(swarm_id, operation.id)
+                swarm_operation_queue.task_done()
+        except Exception as e:
+            print("\n\n\n Error in swarm_operation_queue_worker:\n")
+            print(e)
+            print("\n\n\n")
             swarm_operation_queue.task_done()
+            continue
 
 
-def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
+async def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
     """
     Some blocking operations need custom handling in the backend.
     This function will appropriately handle swarm operations.
     """
+    print(f"Executing operation \n\n{operation}\n\n for swarm {swarm_id}")
     if operation.operation_type == "user_communication":
         handle_swarm_message(swarm_id, operation)
     else:
@@ -52,6 +61,6 @@ def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
         next_operations = execute_swarmstar_operation(swarm_config, operation)
         update_swarm_state_in_ui(swarm_id, operation.node_id)
         for next_operation in next_operations:
-            swarm_operation_queue.put_nowait((swarm_id, next_operation.id))
+            swarm_operation_queue.put_nowait((swarm_id, next_operation))
 
     swarm_operation_queue.task_done()

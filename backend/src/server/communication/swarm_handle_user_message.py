@@ -1,4 +1,4 @@
-from swarmstar.swarm.types import BlockingOperation
+from swarmstar.types import BlockingOperation
 
 from src.server.swarm_operation_queue import swarm_operation_queue
 from src.types import SwarmMessage

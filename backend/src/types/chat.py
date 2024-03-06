@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List, Any, Dict
 
-from swarmstar.swarm.types import UserCommunicationOperation
+from swarmstar.types import UserCommunicationOperation
 
 from src.utils.security.generate_uuid import generate_uuid
 

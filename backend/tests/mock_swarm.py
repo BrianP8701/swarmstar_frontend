@@ -1,19 +1,18 @@
-"""
-This module tests client side endpoints expect for the 
-spawn swarm endpoint.
-"""
 import pytest
 from fastapi.testclient import TestClient
 from main import app
+import time
 
+from swarmstar.types import UserCommunicationOperation, SpawnOperation, TerminationOperation, NodeEmbryo
+
+from src.server.swarm_operation_queue import swarm_operation_queue
+from src.utils.database import create_empty_user_swarm, get_swarm_state, get_swarm_config, get_swarm_node
 from src.types import UserSwarm, User
 from src.utils.security import validate_token
 
 client = TestClient(app)
 
 @pytest.fixture(scope="module")
-@pytest.mark.unit
-@pytest.mark.fast
 def create_test_user():
     response = client.put(
         "/auth/signup",
@@ -26,11 +25,8 @@ def create_test_user():
     assert "token" in response.json()
     
     token = validate_token(response.json()["token"])
-    
 
 @pytest.fixture(scope="module")
-@pytest.mark.unit
-@pytest.mark.fast
 def token(create_test_user):
     response = client.post(
         "/auth/login",
@@ -52,10 +48,8 @@ def token(create_test_user):
     if response.status_code != 200:
         print(f"User deletion failed: {response.json()}")
     assert response.status_code == 200
-
+    
 @pytest.fixture(scope="module")
-@pytest.mark.unit
-@pytest.mark.fast
 def swarm_id(token):
     response = client.post(
         "/swarm/create_swarm",
@@ -107,48 +101,37 @@ def swarm_id(token):
     assert "testswarm1" not in user.swarm_ids.values()
     assert response.json()["swarm"] == None
 
-@pytest.mark.unit
-@pytest.mark.fast
-def test_set_current_swarm(token, swarm_id):
-    response = client.put(
-        "/swarm/set_current_swarm",
-        json={"swarm_id": None},
-        headers={"Authorization": f"Bearer {token}"}
+@pytest.mark.slow
+def test_mock_swarm(swarm_id):
+    goal = "this is a mock test swarm."
+    
+    user_comm_node_1 = SpawnOperation(
+        node_embryo=NodeEmbryo(
+            action_id="swarmstar/actions/reasoning/decompose_directive",
+            message="Determine the users favorite color and favorite food."
+        )
+    )
+    
+    user_comm_node_2 = SpawnOperation(
+        node_embryo=NodeEmbryo(
+            action_id="swarmstar/actions/reasoning/decompose_directive",
+            message="Determine what the user is doing right now."
+        )
     )
 
-    if response.status_code != 200:
-        print(f"Signup failed: {response.json()}")
-    assert response.status_code == 200
+    swarm_operation_queue.put_nowait((swarm_id, user_comm_node_1))
+    swarm_operation_queue.put_nowait((swarm_id, user_comm_node_2))
 
-    user = User(**response.json()["user"])
-
-    assert "swarm" in response.json()
-    assert "user" in response.json()
-
-    user = User(**response.json()["user"])
-    assert user.current_swarm_id == None
-    assert response.json()["swarm"] == None
-
-    response = client.put(
-        "/swarm/set_current_swarm",
-        json={"swarm_id": swarm_id},
-        headers={"Authorization": f"Bearer {token}"}
-    )
-
-    if response.status_code != 200:
-        print(f"Setting current swarm failed: {response.json()}")
-    assert response.status_code == 200
-
-    user = User(**response.json()["user"])
-    swarm = UserSwarm(**response.json()["swarm"])
-
-    assert "swarm" in response.json()
-    assert "user" in response.json()
-
-    user = User(**response.json()["user"])
-    swarm = UserSwarm(**response.json()["swarm"])
-
-    assert user.current_swarm_id == swarm_id
-    assert swarm.id == swarm_id
-    assert swarm.name == "testswarm1"
-    assert swarm.owner == user.id
+    time.sleep(1)
+    swarm_config = get_swarm_config("default_config")
+    swarm_config.id = swarm_id
+    
+    node_ids = get_swarm_state(swarm_config)
+    
+    while True:
+        if get_swarm_node(swarm_config, node_ids[0]).alive:
+            time.sleep(1)
+        elif get_swarm_node(swarm_config, node_ids[1]).alive:
+            break
+        else:
+            time.sleep(1)

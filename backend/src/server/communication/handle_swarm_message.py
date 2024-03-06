@@ -1,4 +1,4 @@
-from swarmstar.swarm.types import UserCommunicationOperation
+from swarmstar.types import UserCommunicationOperation
 
 from src.utils.database import (
     does_chat_exist,
@@ -21,7 +21,7 @@ def handle_swarm_message(
     if not does_chat_exist(node_id):
         create_empty_chat(swarm_id, user_comm_operation.node_id)
 
-    message: str = user_comm_operation.args["message"]
+    message: str = user_comm_operation.message
     message = SwarmMessage(role="ai", content=message)
     create_swarm_message(node_id, message)
     update_chat(node_id, {"user_communication_operation": user_comm_operation})
