@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import Tree from 'react-d3-tree';
+import { useSelector } from 'react-redux';
+import { RootStateType } from '@models/rootstate';
 
 const SwarmTree = () => {
-  const [treeData, setTreeData] = useState(null);
+  const treeData = useSelector((state: RootStateType) => state.tree.swarmState);
+  const is_swarm_active = useSelector((state: RootStateType) => state.swarm.active);
 
-  useEffect(() => {
-    // Fetch the initial tree data from the backend API
-    fetch('/api/tree-data')
-      .then((response) => response.json())
-      .then((data) => setTreeData(data));
-  }, []);
+  console.log('treeData:', treeData)
 
   if (!treeData) {
-    return <div>Loading...</div>;
+    if (is_swarm_active) {
+      return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '18px' }}>
+        Loading...
+      </div>;
+    }
+    else {
+      return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '18px' }}>
+        No active swarm
+      </div>;
+    }
   }
 
   return (

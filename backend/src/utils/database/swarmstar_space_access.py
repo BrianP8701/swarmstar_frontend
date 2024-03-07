@@ -51,7 +51,9 @@ const orgChart = {
   ],
 };
 """
-def get_current_swarm_state_representation(swarm_config: SwarmConfig):
+def get_current_swarm_state_representation(swarm_id: str):
+    
+    swarm_config = get_swarm_config(swarm_id)
     swarm_state = get_swarm_state(swarm_config)
     root_node_id = swarm_state[0]
     root_node = get_swarm_node(swarm_config, root_node_id)
@@ -62,7 +64,8 @@ def _convert_node_to_d3_tree_node_recursive(swarm_config: SwarmConfig, node: Swa
     node_representation = {
         "name": node.name,
         "attributes": {
-            "directive": node.message
+            "directive": node.message,
+            "node_id": node.id,
         }
     }
     if len(node.children_ids) != 0:

@@ -2,17 +2,14 @@ import { UserState } from '@redux/userSlice';
 import { ChatState } from '@redux/chatSlice';
 import { Swarm } from '@redux/swarmSlice';
 import { TokenState } from '@redux/tokenSlice';
-import { SwarmHistory } from '@redux/swarmHistorySlice';
-import { SwarmState } from '@redux/swarmStateSlice';
+import { SwarmTree } from '@redux/treeSlice';
 
 interface RootStateType {
   user: UserState;
   chat: ChatState;
   swarm: Swarm;
-  swarmHistory: SwarmHistory;
-  swarmState: SwarmState;
   token: TokenState;
+  tree: SwarmTree;
 }
 
-export type { RootStateType, UserState, TokenState, ChatState, SwarmState, SwarmHistory, Swarm };
-
+export type { RootStateType, UserState, TokenState, ChatState, Swarm, SwarmTree };

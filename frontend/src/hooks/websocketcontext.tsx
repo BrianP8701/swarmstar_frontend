@@ -4,6 +4,7 @@ import { RootStateType } from '@models/rootstate';
 import config from '@configs/configLoader';
 import { setSwarm } from '@/redux/swarmSlice';
 import { addMessage } from '@/redux/chatSlice';
+import { addNode } from '@/redux/treeSlice';
 
 interface WebSocketContextType {
   // Define the shape of your context here, for now it's empty since you're not providing any value
@@ -35,6 +36,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       }
       if (websocket_event.type === 'append_message_to_chat') {
         dispatch(addMessage(websocket_event.data.message));
+      }
+      if (websocket_event.type === 'add_node_to_tree') {
+        dispatch(addNode({ 
+          parentNodeId: websocket_event.data.parent_node_id, 
+          newNode: websocket_event.data.new_node 
+        }));
       }
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);

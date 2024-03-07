@@ -16,9 +16,13 @@ from src.utils.database import (
     append_queued_swarm_operation,
     get_swarm_config,
     get_swarm_operation,
-    update_after_executing_swarm_operation
+    does_chat_exist,
+    terminate_chat
 )
-from src.server.ui_updates import update_user_swarm_in_ui
+from src.server.ui_updates import (
+    update_user_swarm_in_ui,
+    add_node_to_tree_in_ui
+    )
 
 swarm_operation_queue = asyncio.Queue()
 
@@ -70,3 +74,21 @@ async def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
         print("\n\n\n")
     finally:
         swarm_operation_queue.task_done()
+
+
+def update_after_executing_swarm_operation(swarm_id: str, operation_id: str) -> None:
+    """
+    Call this after executing a swarm operation.
+    """
+    try:
+        swarm_config = get_swarm_config(swarm_id)
+        swarm_operation = get_swarm_operation(swarm_config, operation_id)
+        
+        if swarm_operation.operation_type == "terminate":
+            if does_chat_exist(swarm_operation.node_id):
+                terminate_chat(swarm_id, swarm_operation.node_id)
+        elif swarm_operation.operation_type == "spawn":
+            add_node_to_tree_in_ui(swarm_id, swarm_operation.node_id)
+    except Exception as e:
+        print('Error in update_after_executing_swarm_operation:\n', e)
+        raise e

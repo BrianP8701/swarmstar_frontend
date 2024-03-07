@@ -3,14 +3,17 @@ import { setSwarm, Swarm } from '@/redux/swarmSlice';
 import { setUser, UserState } from '@/redux/userSlice';
 import { RootStateType } from '@models/rootstate';
 import { clearChat } from '@/redux/chatSlice';
+import { SwarmNode, setSwarmTree } from "@/redux/treeSlice";
 
 const useSetCurrentSwarm = () => {
     const dispatch = useDispatch();
     const token = useSelector((state: RootStateType) => state.token.token);
 
-    const handleResponse = (swarm: Swarm, user: UserState) => {
+    const handleResponse = (swarm: Swarm, user: UserState, swarm_tree: SwarmNode) => {
         dispatch(setSwarm(swarm));
         dispatch(setUser(user));
+        dispatch(setSwarmTree(swarm_tree))
+        console.log('swarm_tree:', swarm_tree)
         dispatch(clearChat());
     };
 
@@ -28,7 +31,7 @@ const useSetCurrentSwarm = () => {
             const data = await response.json();
 
             if (response.ok) {
-                handleResponse(data.swarm, data.user);
+                handleResponse(data.swarm, data.user, data.swarm_tree);
             } else {
                 return data.error;
             }

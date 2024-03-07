@@ -3,12 +3,11 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
-import userReducer from '@redux/userSlice'; // Adjust based on your slice file paths
-import conversatonReducer from '@redux/chatSlice'; // Adjust based on your slice file paths
-import swarmReducer from '@redux/swarmSlice'; // Adjust based on your slice file paths
-import tokenReducer from '@redux/tokenSlice'; // Adjust based on your slice file paths
-import swarmHistoryReducer from '@redux/swarmHistorySlice';
-import swarmStateReducer from '@redux/swarmStateSlice';
+import userReducer from '@redux/userSlice';
+import conversatonReducer from '@redux/chatSlice';
+import swarmReducer from '@redux/swarmSlice';
+import tokenReducer from '@redux/tokenSlice';
+import treeReducer from '@redux/treeSlice';
 
 // Combine reducers
 const rootReducer = combineReducers({
@@ -16,8 +15,7 @@ const rootReducer = combineReducers({
     chat: conversatonReducer,
     swarm: swarmReducer,
     token: tokenReducer,
-    swarmHistory: swarmHistoryReducer,
-    swarmState: swarmStateReducer,
+    tree: treeReducer,
 });
 
 // Persist config

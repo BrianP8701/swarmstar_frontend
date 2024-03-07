@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from swarmstar.types import SwarmConfig
 from swarmstar.utils.swarmstar_space import get_swarm_state, get_swarm_operation
 
+from src.utils.database.swarmstar_space_access import get_current_swarm_state_representation
+
 from src.types import UserSwarm, User, UserProfile, SwarmMessage, Chat, NodeChat
 from src.utils.database.mongodb import (
     get_kv,
@@ -61,16 +63,21 @@ def set_user(user: User) -> None:
     set_kv(swarmstar_ui_db_name, "users", user.id, user.model_dump())
 
 
-def set_current_swarm_id(user_id: str, swarm_id: str) -> None:
+def set_current_swarm(user_id: str, swarm_id: str) -> None:
     update_kv(
         swarmstar_ui_db_name, "users", user_id, {"current_swarm_id": swarm_id}
     )
+    user_swarm = get_user_swarm(swarm_id)
+    if user_swarm.spawned:
+        return get_current_swarm_state_representation(swarm_id)
+    else:
+        return None
 
 def set_current_chat_id(user_id: str, node_id: str) -> None:
     update_kv(
         swarmstar_ui_db_name, "users", user_id, {"current_chat_id": node_id}
     )
-
+    
 def delete_user(user_id: str) -> None:
     user = get_user(user_id)
     username = user.username
@@ -242,20 +249,5 @@ def update_chat(node_id: str, updated_values: dict) -> None:
 
 
 
-def update_after_executing_swarm_operation(swarm_id: str, operation_id: str) -> None:
-    """
-    Call this after executing a swarm operation.
-    """
-    try:
-        swarm_config = get_swarm_config(swarm_id)
-        swarm_operation = get_swarm_operation(swarm_config, operation_id)
-        
-        if swarm_operation.operation_type == "terminate":
-            if does_chat_exist(swarm_operation.node_id):
-                terminate_chat(swarm_id, swarm_operation.node_id)
-        else:
-            pass
-    except Exception as e:
-        print('Error in update_after_executing_swarm_operation:\n', e)
-        raise e
+
 
