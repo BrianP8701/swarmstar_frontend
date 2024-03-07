@@ -20,7 +20,6 @@ type: "append_message_to_chat"
 data: {message: SwarmMessage} 
 """
 
-
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
@@ -47,11 +46,20 @@ class ConnectionManager:
             websocket_event = WebsocketEvent.model_validate(websocket_event)
         if user_id in self.active_connections:
             websocket = self.active_connections[user_id]
-            await websocket.send_json(websocket_event.model_dump())
+            try:
+                await websocket.send_json(websocket_event.model_dump())
+            except Exception as e:
+                print(f"Error sending message: {e}")
+                # Disconnect the WebSocket connection
+                self.disconnect(user_id)
 
     async def broadcast(self, message: dict):
-        for connection in self.active_connections.values():
-            await connection.send_json(message)
-
-
+        for user_id, connection in list(self.active_connections.items()):
+            try:
+                await connection.send_json(message)
+            except Exception as e:
+                print(f"Error broadcasting message: {e}")
+                # Disconnect the WebSocket connection
+                self.disconnect(user_id)
+                
 manager = ConnectionManager()

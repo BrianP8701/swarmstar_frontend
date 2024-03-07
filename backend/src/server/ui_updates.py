@@ -3,7 +3,7 @@ These are UI updates that are pushed from the swarm to the user's UI.
 """
 import asyncio
 
-from src.utils.database import get_user, get_user_profile, get_user_swarm, get_message
+from src.utils.database.swarmstar_ui_access import get_user, get_user_swarm, get_message
 from src.server.websocket_manager import manager
 
 
@@ -53,12 +53,6 @@ def add_message_to_swarm_chat_in_ui(
     except Exception as e:
         raise e
 
-
-def update_swarm_state_in_ui(swarm_id: str, operation_id: str) -> None:
-    """
-    Call this after executing a swarm operation.
-    """
-    pass
 
 
 def append_message_to_chat_in_ui(swarm_id: str, chat_id: str, message_id: str) -> None:

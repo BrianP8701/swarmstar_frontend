@@ -10,6 +10,10 @@ const ChatSection = () => {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const { handleUserMessage } = useHandleUserMessage();
     const [currentMessage, setCurrentMessage] = useState('');
+    const chat = useSelector((state: RootStateType) => state.chat);
+    const is_chat_alive = chat.alive;
+
+    console.log('is chat alive', is_chat_alive)
 
     let messages = useSelector((state: RootStateType) => state.chat.messages);
     if (!messages) {
@@ -50,8 +54,10 @@ const ChatSection = () => {
                     ref={textareaRef}
                     value={currentMessage}
                     onChange={(e) => {
-                        setCurrentMessage(e.target.value);
-                        setText(e.target.value);
+                        if (is_chat_alive) {
+                            setCurrentMessage(e.target.value);
+                            setText(e.target.value);
+                        }
                     }}
                     className="resize-none border border-gray-300 p-4 rounded-20"
                     style={{
@@ -63,6 +69,7 @@ const ChatSection = () => {
                         outline: 'none',
                     }}
                     placeholder="Type your message here..."
+                    disabled={!is_chat_alive}
                 />
                 <button
                     className="right-0 mb-3"

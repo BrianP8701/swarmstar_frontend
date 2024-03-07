@@ -43,7 +43,7 @@ async def handle_user_message(
 
         user = get_user(user_id)
         background_tasks.add_task(
-            swarm_handle_user_message, user["swarm_id"], chat_id, message.id
+            swarm_handle_user_message, user.current_swarm_id, chat_id, message.id
         )
 
         return {"chat": get_node_chat(chat_id)}

@@ -50,8 +50,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             # Process incoming messages if necessary
     except Exception as e:
         print(f"Error: {e}")
-    finally:
+        # Disconnect the WebSocket connection
         manager.disconnect(client_id)
+        # Attempt to reconnect after a short delay
+        await asyncio.sleep(1)
+        await websocket_endpoint(websocket, client_id)
 
 app.add_middleware(
     CORSMiddleware,

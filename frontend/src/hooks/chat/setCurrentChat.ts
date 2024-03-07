@@ -8,8 +8,6 @@ const useSetCurrentChat = () => {
     const token = useSelector((state: RootStateType) => state.token.token);
 
     const handleResponse = (chat: ChatState, user: UserState) => {
-        console.log('user', user)
-        console.log('chat', chat)
         dispatch(setChat( chat ));
         dispatch(setUser( user ));
     };

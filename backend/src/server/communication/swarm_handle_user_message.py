@@ -9,7 +9,7 @@ async def swarm_handle_user_message(swarm_id: str, node_id: str, message_id: str
     chat = get_chat(node_id)
     message = get_message(message_id)
 
-    user_communication_operation = chat["user_communication_operation"]
+    user_communication_operation = chat.user_communication_operation
 
     return_operation = BlockingOperation(
         node_id=chat.id,

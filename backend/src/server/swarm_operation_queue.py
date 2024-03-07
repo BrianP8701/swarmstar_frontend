@@ -16,8 +16,9 @@ from src.utils.database import (
     append_queued_swarm_operation,
     get_swarm_config,
     get_swarm_operation,
+    update_after_executing_swarm_operation
 )
-from src.server.ui_updates import update_swarm_state_in_ui
+from src.server.ui_updates import update_user_swarm_in_ui
 
 swarm_operation_queue = asyncio.Queue()
 
@@ -59,7 +60,8 @@ async def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
         else:
             swarm_config = get_swarm_config(swarm_id)
             next_operations = execute_swarmstar_operation(swarm_config, operation)
-            update_swarm_state_in_ui(swarm_id, operation.node_id)
+            update_after_executing_swarm_operation(swarm_id, operation.id)
+            update_user_swarm_in_ui(swarm_id)
             for next_operation in next_operations:
                 swarm_operation_queue.put_nowait((swarm_id, next_operation))
     except Exception as e:
