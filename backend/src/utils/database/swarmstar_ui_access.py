@@ -202,7 +202,6 @@ def get_node_chat(node_id: str) -> NodeChat:
     for message_id in message_ids:
         messages.append(get_message(message_id))
     chat.messages = messages
-    chat.journal = node.journal
     return NodeChat(**chat)
 
 

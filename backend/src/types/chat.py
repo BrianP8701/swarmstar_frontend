@@ -22,5 +22,4 @@ class Chat(BaseModel):
 class NodeChat(BaseModel):
     id: str  # node_id
     messages: List[SwarmMessage]  # List of messages
-    journal: List[Dict[str, Any]] = []
     alive: bool
