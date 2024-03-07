@@ -21,8 +21,7 @@ class SpawnSwarmResponse(BaseModel):
 @router.put("/swarm/spawn_swarm", response_model=SpawnSwarmResponse)
 async def spawn_swarm(
     background_tasks: BackgroundTasks,
-    spawn_swarm_request: SpawnSwarmRequest,
-    user_id: str = Depends(validate_token),
+    spawn_swarm_request: SpawnSwarmRequest
 ):
     try:
         swarm_id = spawn_swarm_request.swarm_id

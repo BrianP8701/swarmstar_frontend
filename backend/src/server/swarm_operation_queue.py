@@ -32,12 +32,10 @@ async def swarm_operation_queue_worker():
             swarm_id, operation = await swarm_operation_queue.get()
             swarm = get_user_swarm(swarm_id)
             if swarm.active:
-                print('swarm is active')
                 asyncio.create_task(
                     execute_swarm_operation(swarm_id, operation)
                 )
             else:
-                print('swarm is inactive')
                 append_queued_swarm_operation(swarm_id, operation.id)
                 swarm_operation_queue.task_done()
         except Exception as e:
@@ -54,13 +52,19 @@ async def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
     This function will appropriately handle swarm operations.
     """
     print(f"Executing operation \n\n{operation}\n\n for swarm {swarm_id}")
-    if operation.operation_type == "user_communication":
-        handle_swarm_message(swarm_id, operation)
-    else:
-        swarm_config = get_swarm_config("default_config")
-        next_operations = execute_swarmstar_operation(swarm_config, operation)
-        update_swarm_state_in_ui(swarm_id, operation.node_id)
-        for next_operation in next_operations:
-            swarm_operation_queue.put_nowait((swarm_id, next_operation))
-
-    swarm_operation_queue.task_done()
+    try:
+        if operation.operation_type == "user_communication":
+            print("\n\n\nwe are calling handle_swarm_message\n\n\n")
+            handle_swarm_message(swarm_id, operation)
+        else:
+            swarm_config = get_swarm_config(swarm_id)
+            next_operations = execute_swarmstar_operation(swarm_config, operation)
+            update_swarm_state_in_ui(swarm_id, operation.node_id)
+            for next_operation in next_operations:
+                swarm_operation_queue.put_nowait((swarm_id, next_operation))
+    except Exception as e:
+        print("\n\n\n Error in execute_swarm_operation:\n")
+        print(e)
+        print("\n\n\n")
+    finally:
+        swarm_operation_queue.task_done()

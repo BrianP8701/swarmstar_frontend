@@ -17,19 +17,19 @@ interface WebSocketProviderProps {
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
   // Ensure your RootStateType correctly types `state.user.username` and others
-  const username = useSelector((state: RootStateType) => state.user.username);
+  const user_id = useSelector((state: RootStateType) => state.user.id);
   const dispatch = useDispatch();
 
-
   useEffect(() => {
-    if (!username) return; // Ensures username is present before proceeding
+    if (!user_id) return; // Ensures username is present before proceeding
 
-    const wsUrl = `${config.backend_ws_url}/${username}`;
+    const wsUrl = `${config.backend_ws_url}/${user_id}`;
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => console.log('WebSocket connected');
     socket.onmessage = (event) => {
       const websocket_event = JSON.parse(event.data);
+      console.log('WebSocket message:', websocket_event)
       if (websocket_event.type === 'ai_message') {
         dispatch(addMessage(websocket_event.data.message));
       }
@@ -41,7 +41,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     socket.onclose = () => console.log('WebSocket disconnected');
 
     return () => socket.close();
-  }, [username]);
+  }, [user_id]);
 
   // This value can be expanded to include methods to send messages, etc.
   const value = {};

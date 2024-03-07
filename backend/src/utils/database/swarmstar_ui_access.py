@@ -157,6 +157,13 @@ def delete_user_swarm(swarm_id: str) -> None:
     swarm_config = get_swarm_config(swarm_id)
     user = get_user(user_swarm.owner)
 
+    node_ids_with_chats = user_swarm.nodes_with_active_chat + user_swarm.nodes_with_terminated_chat
+    
+    for node_id in node_ids_with_chats:
+        for message_id in get_chat(node_id).message_ids:
+            delete_kv(swarmstar_ui_db_name, "messages", message_id)
+        delete_kv(swarmstar_ui_db_name, "chats", node_id)
+
     delete_kv(swarmstar_ui_db_name, "swarms", swarm_id)
     user.swarm_ids.pop(swarm_id)
     
@@ -165,14 +172,8 @@ def delete_user_swarm(swarm_id: str) -> None:
     set_user(user)
 
     if user_swarm.spawned: 
-        node_ids = get_swarm_state(swarm_config)
-        for node_id in node_ids:
-            message_ids = get_chat(node_id).message_ids
-            for message_id in message_ids:
-                delete_kv(swarmstar_ui_db_name, "messages", message_id)
-            delete_kv(swarmstar_ui_db_name, "chats", node_id)
+        print('deleting swarmstar space')
         delete_swarmstar_space(swarm_config)
-
 
 
 

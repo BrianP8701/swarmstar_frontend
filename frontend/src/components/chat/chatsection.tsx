@@ -15,12 +15,10 @@ const ChatSection = () => {
     if (!messages) {
         messages = [];
     }
-    console.log('messages', messages);
 
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = '40px'; // Reset height to shrink back when deleting text
-            console.log('textareaRef.current.scrollHeight', textareaRef.current.scrollHeight);
             const newHeight = Math.min(textareaRef.current.scrollHeight, 400); // Allow growth up to 200px
             textareaRef.current.style.height = `${newHeight}px`;
         }

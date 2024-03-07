@@ -2,6 +2,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
+  id: string;
   username: string;
   swarm_ids: { [swarm_id: string]: string };
   current_swarm_id: string;
@@ -10,6 +11,7 @@ interface UserState {
 
 // Define the initial state using that type
 const initialState: UserState = {
+  id: '',
   username: '',
   swarm_ids: {},
   current_swarm_id: '',
@@ -30,6 +32,7 @@ const userSlice = createSlice({
       state.current_chat_id = action.payload;
     },
     setUser: (state, action: PayloadAction<UserState>) => {
+      state.id = action.payload.id;
       state.swarm_ids = action.payload.swarm_ids;
       state.current_swarm_id = action.payload.current_swarm_id;
       state.current_chat_id = action.payload.current_chat_id;

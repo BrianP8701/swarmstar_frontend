@@ -42,6 +42,9 @@ class ConnectionManager:
         """
         Client id is username
         """
+        print(f"\n\nSending message {websocket_event} to {user_id}\n\n")
+        if type(websocket_event) is dict:
+            websocket_event = WebsocketEvent.model_validate(websocket_event)
         if user_id in self.active_connections:
             websocket = self.active_connections[user_id]
             await websocket.send_json(websocket_event.model_dump())

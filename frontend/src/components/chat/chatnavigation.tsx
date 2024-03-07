@@ -8,6 +8,7 @@ const ChatNavigation = () => {
     const node_ids_to_chat_names = useSelector((state: RootStateType) => state.swarm.node_ids_to_chat_names);
     const { handleSetCurrentChat } = useSetCurrentChat();
     
+    console.log('nodes_with_active_chat:', nodes_with_active_chat)
 
     return (
         <div className="h-full w-full bg-gray-800 pl-1 pr-1 pt-2 pb-2 agent-navigation-container border-r border-gray-700">

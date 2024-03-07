@@ -12,41 +12,56 @@ def is_user_online(user_id: str) -> bool:
 
 
 def update_user_swarm_in_ui(swarm_id: str) -> None:
-    user_swarm = get_user_swarm(swarm_id)
-    if not is_user_online(user_swarm.owner):
-        return
-    user = get_user(user_swarm.owner)
+    print('Hello are we in here?')
+    try:
+        user_swarm = get_user_swarm(swarm_id)
+        if not is_user_online(user_swarm.owner):
+            return
+        user = get_user(user_swarm.owner)
 
-    if user.current_swarm_id == swarm_id:
-        asyncio.create_task(
-            manager.send_personal_message(
-                {
-                    "type": "update_swarm",
-                    "data": {"swarm": get_user_swarm(swarm_id).model_dump()},
-                },
-                user_swarm.owner,
+        print(f"Current swarm id: {user.current_swarm_id}")
+        print(f"Swarm id: {swarm_id}")
+        
+        if user.current_swarm_id == swarm_id:
+            asyncio.create_task(
+                manager.send_personal_message(
+                    {
+                        "type": "update_swarm",
+                        "data": {"swarm": get_user_swarm(swarm_id).model_dump()},
+                    },
+                    user_swarm.owner,
+                )
             )
-        )
-
+            print(f"Sent update to {user_swarm.owner} for swarm {swarm_id}")
+    except Exception as e:
+        raise e
 
 def add_message_to_swarm_chat_in_ui(
     swarm_id: str, chat_id: str, message_id: str
 ) -> None:
-    user_swarm = get_user_swarm(swarm_id)
-    if not is_user_online(user_swarm.owner):
-        return
-    user = get_user(user_swarm.owner)
+    print('we are in add_message_to_swarm_chat_in_ui')
+    try:
+        user_swarm = get_user_swarm(swarm_id)
+        if not is_user_online(user_swarm.owner):
+            return
+        user = get_user(user_swarm.owner)
 
-    if user.current_chat_id == chat_id:
-        asyncio.create_task(
-            manager.send_personal_message(
-                {
-                    "type": "append_message_to_chat",
-                    "data": {"message": get_message(message_id).model_dump()},
-                },
-                user_swarm.owner,
+        print(f"Current swarm id: {user.current_swarm_id}")
+        print(f"Swarm id: {swarm_id}")
+
+        if user.current_chat_id == chat_id:
+            asyncio.create_task(
+                manager.send_personal_message(
+                    {
+                        "type": "append_message_to_chat",
+                        "data": {"message": get_message(message_id).model_dump()},
+                    },
+                    user_swarm.owner,
+                )
             )
-        )
+            print(f"Sent message to {user_swarm.owner} for chat {chat_id}")
+    except Exception as e:
+        raise e
 
 
 def update_swarm_state_in_ui(swarm_id: str, operation_id: str) -> None:
