@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, APIRouter, HTTPException
 from pydantic import BaseModel
 
 from src.utils.security import validate_token
-from src.utils.database import set_current_chat_id, get_node_chat
+from src.utils.database import set_current_chat_id, get_node_chat, get_user
 from src.types import NodeChat, User
 
 app = FastAPI()
@@ -35,7 +35,7 @@ async def set_current_chat(
 
         set_current_chat_id(user_id, node_id)
 
-        return {"chat": chat, "user": chat}
+        return {"chat": chat, "user": get_user(user_id)}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))

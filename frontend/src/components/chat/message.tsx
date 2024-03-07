@@ -16,7 +16,7 @@ const Message: React.FC<MessageProps> = ({ text, role }) => {
                 <div className="flex items-center" style={{ minHeight: '20px' }}>
                     <span>{role}</span>
                 </div>
-                <div style={{ padding: '5px', overflowWrap: 'break-word' }}>
+                <div style={{ padding: '5px', overflowWrap: 'normal' }}>
                     <ReactMarkdown>{text}</ReactMarkdown>
                 </div>
             </div>

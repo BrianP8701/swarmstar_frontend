@@ -8,9 +8,8 @@ interface Swarm {
   spawned: boolean;
   active: boolean;
   complete: boolean;
-  nodes_with_active_chat: string[];
-  nodes_with_terminated_chat: string[];
-  node_ids_to_chat_names: { [key: string]: string };
+  nodes_with_active_chat: { [key: string]: string };
+  nodes_with_terminated_chat: { [key: string]: string };
 }
 
 const initialState: Swarm = {
@@ -20,9 +19,8 @@ const initialState: Swarm = {
   spawned: false,
   active: false,
   complete: false,
-  nodes_with_active_chat: [],
-  nodes_with_terminated_chat: [],
-  node_ids_to_chat_names: {},
+  nodes_with_active_chat: {},
+  nodes_with_terminated_chat: {},
 };
 
 const swarmSlice = createSlice({
@@ -42,7 +40,6 @@ const swarmSlice = createSlice({
         state.complete = action.payload.complete;
         state.nodes_with_active_chat = action.payload.nodes_with_active_chat;
         state.nodes_with_terminated_chat = action.payload.nodes_with_terminated_chat;
-        state.node_ids_to_chat_names = action.payload.node_ids_to_chat_names;
       };
     },
     setGoal: (state, action: PayloadAction<string>) => {

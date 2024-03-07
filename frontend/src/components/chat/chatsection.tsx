@@ -18,8 +18,8 @@ const ChatSection = () => {
 
     useEffect(() => {
         if (textareaRef.current) {
-            textareaRef.current.style.height = '40px'; // Reset height to shrink back when deleting text
-            const newHeight = Math.min(textareaRef.current.scrollHeight, 400); // Allow growth up to 200px
+            textareaRef.current.style.height = '40px';
+            const newHeight = Math.min(textareaRef.current.scrollHeight, 400);
             textareaRef.current.style.height = `${newHeight}px`;
         }
     }, [text, messages.length]);
@@ -27,14 +27,16 @@ const ChatSection = () => {
     return (
         <div className="flex flex-col w-full h-full">
             <div ref={messagesContainerRef} className="flex-grow overflow-auto px-64">
-                {messages.map((message, index) => (
-                    <div key={index} className="mb-4 last:mb-0">
-                        <Message text={message.content} role={message.role} />
-                    </div>
-                ))}
+                <div className="w-full">
+                    {messages.map((message, index) => (
+                        <div key={index} className="mb-4 last:mb-0">
+                            <Message text={message.content} role={message.role} />
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="flex justify-center items-end w-full pb-5">
-                <button
+            <button
                     className="left-0 mb-3"
                     style={{
                         width: '30px',

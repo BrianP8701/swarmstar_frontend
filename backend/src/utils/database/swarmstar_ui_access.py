@@ -157,8 +157,7 @@ def delete_user_swarm(swarm_id: str) -> None:
     swarm_config = get_swarm_config(swarm_id)
     user = get_user(user_swarm.owner)
 
-    node_ids_with_chats = user_swarm.nodes_with_active_chat + user_swarm.nodes_with_terminated_chat
-    
+    node_ids_with_chats = list(user_swarm.nodes_with_active_chat.keys()) + list(user_swarm.nodes_with_terminated_chat.keys())
     for node_id in node_ids_with_chats:
         for message_id in get_chat(node_id).message_ids:
             delete_kv(swarmstar_ui_db_name, "messages", message_id)
@@ -194,17 +193,19 @@ def get_chat(node_id: str) -> Chat:
 
 
 def get_node_chat(node_id: str) -> NodeChat:
-    chat = get_chat(node_id)
-    node = get_swarm_node(node_id)
+    try:
+        chat = get_chat(node_id)
 
-    chat = chat.model_dump()
-    messages = []
-    message_ids = chat.pop("message_ids")
-    for message_id in message_ids:
-        messages.append(get_message(message_id))
-    chat.messages = messages
-    return NodeChat(**chat)
-
+        chat = chat.model_dump()
+        messages = []
+        message_ids = chat.pop("message_ids")
+        for message_id in message_ids:
+            messages.append(get_message(message_id))
+        chat["messages"] = messages
+        return NodeChat(**chat)
+    except Exception as e:
+        print('Error in get_node_chat:\n', e)
+        raise e
 
 def get_message(message_id: str) -> SwarmMessage:
     return SwarmMessage(**get_kv(swarmstar_ui_db_name, "messages", message_id))
@@ -212,10 +213,11 @@ def get_message(message_id: str) -> SwarmMessage:
 
 def create_empty_chat(swarm_id: str, node_id: str) -> Chat:
     chat = Chat(id=node_id, message_ids=[], alive=True)
+    node = get_swarm_node(get_swarm_config(swarm_id), node_id)
     add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
-    append_to_list(
-        swarmstar_ui_db_name, "swarms", swarm_id, "nodes_with_active_chat", chat.id
-    )
+    user_swarm = get_user_swarm(swarm_id)
+    user_swarm.nodes_with_active_chat[node_id] = node.name
+    set_kv(swarmstar_ui_db_name, "swarms", swarm_id, user_swarm.model_dump())
     return chat
 
 

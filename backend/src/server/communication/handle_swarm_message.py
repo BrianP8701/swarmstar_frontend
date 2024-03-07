@@ -17,7 +17,6 @@ def handle_swarm_message(
     swarm_id: str, user_comm_operation: UserCommunicationOperation
 ):
     try:
-        print("we are in handle_swarm_message")
         node_id = user_comm_operation.node_id
 
         if not does_chat_exist(node_id):
@@ -27,9 +26,8 @@ def handle_swarm_message(
         message = SwarmMessage(role="ai", content=message)
         create_swarm_message(node_id, message)
         update_chat(node_id, {"user_communication_operation": user_comm_operation.model_dump()})
-        print('made it up to here')
         update_user_swarm_in_ui(swarm_id)
         add_message_to_swarm_chat_in_ui(swarm_id, node_id, message.id)
-        print('made it to the end')
     except Exception as e:
         print('Error in handle_swarm_message:\n', e)
+        raise e
