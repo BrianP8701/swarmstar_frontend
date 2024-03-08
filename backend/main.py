@@ -19,6 +19,8 @@ from src.client.chat.handle_user_message import router as handle_user_message_ro
 from src.client.user.update_user import router as update_user_router
 from src.client.user.delete_user import router as delete_user_router
 
+from src.client.tree.set_current_node import router as set_current_node_router
+
 from src.server.websocket_manager import manager
 
 from src.server.swarm_operation_queue import swarm_operation_queue_worker, swarm_operation_queue
@@ -43,7 +45,8 @@ app = FastAPI(lifespan=lifespan, debug=True)
 
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
-    await manager.connect(client_id, websocket)
+    if not manager.is_connected(client_id):
+        await manager.connect(client_id, websocket)
     try:
         while True:
             data = await websocket.receive_text()
@@ -52,9 +55,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
         print(f"Error: {e}")
         # Disconnect the WebSocket connection
         manager.disconnect(client_id)
-        # Attempt to reconnect after a short delay
-        await asyncio.sleep(1)
-        await websocket_endpoint(websocket, client_id)
 
 app.add_middleware(
     CORSMiddleware,
@@ -77,3 +77,4 @@ app.include_router(set_current_chat_router)
 app.include_router(handle_user_message_router)
 app.include_router(update_user_router)
 app.include_router(delete_user_router)
+app.include_router(set_current_node_router)

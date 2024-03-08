@@ -14,43 +14,7 @@ def get_swarm_config(swarm_id: str) -> SwarmConfig:
     return SwarmConfig(**get_kv(swarmstar_space_db_name, "config", swarm_id))
 
 
-"""
-const orgChart = {
-  name: 'CEO',
-  children: [
-    {
-      name: 'Manager',
-      attributes: {
-        department: 'Production',
-      },
-      children: [
-        {
-          name: 'Foreman',
-          attributes: {
-            department: 'Fabrication',
-          },
-          children: [
-            {
-              name: 'Worker',
-            },
-          ],
-        },
-        {
-          name: 'Foreman',
-          attributes: {
-            department: 'Assembly',
-          },
-          children: [
-            {
-              name: 'Worker',
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-"""
+
 def get_current_swarm_state_representation(swarm_id: str):
     
     swarm_config = get_swarm_config(swarm_id)
@@ -61,14 +25,22 @@ def get_current_swarm_state_representation(swarm_id: str):
     return swarm_state_representation
 
 def _convert_node_to_d3_tree_node_recursive(swarm_config: SwarmConfig, node: SwarmNode):
+    is_leaf_node = len(node.children_ids) == 0
+    is_terminated = not node.alive
+    if is_terminated: status = "terminated"
+    elif is_leaf_node: status = "active"
+    else: status = "waiting"
+    
     node_representation = {
         "name": node.name,
         "attributes": {
             "directive": node.message,
             "node_id": node.id,
+            "status": status
         }
     }
-    if len(node.children_ids) != 0:
+    
+    if not is_leaf_node:
         node_representation["children"] = []
         for child_id in node.children_ids:
             child_node = get_swarm_node(swarm_config, child_id)

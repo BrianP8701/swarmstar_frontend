@@ -6,10 +6,6 @@ from src.utils.database import (
     create_swarm_message,
     update_chat,
 )
-from src.server.ui_updates import (
-    update_user_swarm_in_ui,
-    add_message_to_swarm_chat_in_ui,
-)
 from src.types import SwarmMessage
 
 
@@ -26,8 +22,7 @@ def handle_swarm_message(
         message = SwarmMessage(role="ai", content=message)
         create_swarm_message(node_id, message)
         update_chat(node_id, {"user_communication_operation": user_comm_operation.model_dump()})
-        update_user_swarm_in_ui(swarm_id)
-        add_message_to_swarm_chat_in_ui(swarm_id, node_id, message.id)
+                
     except Exception as e:
         print('Error in handle_swarm_message:\n', e)
         raise e

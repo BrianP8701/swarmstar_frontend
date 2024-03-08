@@ -192,6 +192,9 @@ def delete_user_swarm(swarm_id: str) -> None:
 
 
 def does_chat_exist(node_id: str) -> bool:
+    """
+    Checks if the given node has a chat in the UI database.
+    """
     return does_kv_exist(swarmstar_ui_db_name, "chats", node_id)
 
 
@@ -234,6 +237,9 @@ def create_swarm_message(chat_id: str, message: SwarmMessage) -> None:
 
 
 def terminate_chat(swarm_id: str, node_id: str) -> None:
+    """
+    Update chat and swarm object in UI database to reflect that the chat is terminated.
+    """
     user_swarm = get_user_swarm(swarm_id)
     nodes_with_active_chat = user_swarm.nodes_with_active_chat
     nodes_with_terminated_chat = user_swarm.nodes_with_terminated_chat

@@ -7,4 +7,5 @@ class User(BaseModel):
     swarm_ids: Dict[str, str]
     current_swarm_id: Optional[str] = None
     current_chat_id: Optional[str] = None
+    current_node_id: Optional[str] = None
     username: str

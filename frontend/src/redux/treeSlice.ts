@@ -5,6 +5,7 @@ interface SwarmNode {
     attributes: {
         directive: string;
         node_id: string;
+        status: string;
     };
     children?: SwarmNode[];
 }
@@ -22,6 +23,11 @@ interface SwarmTree {
 interface AddNodePayload {
     parentNodeId?: string | null;
     newNode: SwarmNode;
+}
+
+interface UpdateNodeStatusPayload {
+    nodeId: string;
+    status: 'terminated' | 'active' | 'waiting';
 }
 
 const initialState: SwarmTree = {
@@ -74,10 +80,34 @@ const swarmTreeSlice = createSlice({
                 addNodeRecursive(state.swarmState);
             }
         },
+        updateNodeStatus: (state, action: PayloadAction<UpdateNodeStatusPayload>) => {
+            const { nodeId, status } = action.payload;
+
+            const updateStatusRecursive = (node: SwarmNode | null): boolean => {
+                if (node === null) return false;
+
+                if (node.attributes.node_id === nodeId) {
+                    node.attributes.status = status;
+                    return true;
+                }
+
+                if (node.children) {
+                    for (const child of node.children) {
+                        if (updateStatusRecursive(child)) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            };
+
+            updateStatusRecursive(state.swarmState);
+        },
     },
 });
 
-export const { setSwarmTree, addNode, setNodeLogs } = swarmTreeSlice.actions;
+export const { setSwarmTree, addNode, setNodeLogs, updateNodeStatus } = swarmTreeSlice.actions;
 export default swarmTreeSlice.reducer;
 export type { SwarmTree, SwarmNode, AddNodePayload, NodeLog };
 
