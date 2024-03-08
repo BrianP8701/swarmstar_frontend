@@ -9,8 +9,14 @@ interface SwarmNode {
     children?: SwarmNode[];
 }
 
+interface NodeLog {
+    role: string;
+    content: string;
+}
+
 interface SwarmTree {
     swarmState: SwarmNode | null;
+    node_logs: NodeLog[];
 }
 
 interface AddNodePayload {
@@ -20,6 +26,7 @@ interface AddNodePayload {
 
 const initialState: SwarmTree = {
     swarmState: null,
+    node_logs: []
 };
 
 const swarmTreeSlice = createSlice({
@@ -29,6 +36,9 @@ const swarmTreeSlice = createSlice({
         setSwarmTree: (state, action: PayloadAction<SwarmNode | null>) => {
             console.log('setSwarmTree:', action.payload)
             state.swarmState = action.payload;
+        },
+        setNodeLogs: (state, action: PayloadAction<NodeLog[]>) => {
+            state.node_logs = action.payload;
         },
         addNode: (state, action: PayloadAction<AddNodePayload>) => {
             const { parentNodeId, newNode } = action.payload;
@@ -67,6 +77,7 @@ const swarmTreeSlice = createSlice({
     },
 });
 
-export const { setSwarmTree, addNode } = swarmTreeSlice.actions;
+export const { setSwarmTree, addNode, setNodeLogs } = swarmTreeSlice.actions;
 export default swarmTreeSlice.reducer;
-export type { SwarmTree, SwarmNode, AddNodePayload };
+export type { SwarmTree, SwarmNode, AddNodePayload, NodeLog };
+
