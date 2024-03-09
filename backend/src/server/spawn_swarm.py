@@ -20,8 +20,8 @@ async def spawn_swarm(swarm_id: str, goal: str):
         swarm_config.id = swarm_id
         swarm_config.root_path = root_path
         
-        root_swarm_operation_id = swarmstar_spawn_swarm(swarm_config, goal)
-        swarm_operation_queue.put_nowait((swarm_id, root_swarm_operation_id))
+        root_swarm_operation = swarmstar_spawn_swarm(swarm_config, goal)
+        swarm_operation_queue.put_nowait((swarm_id, root_swarm_operation))
     except Exception as e:
         print(e)
 

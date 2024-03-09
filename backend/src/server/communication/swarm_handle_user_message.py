@@ -1,8 +1,8 @@
-from swarmstar.types import BlockingOperation
+from swarmstar.types import ActionOperation
+from swarmstar.utils.swarmstar_space import save_swarm_operation
 
 from src.server.swarm_operation_queue import swarm_operation_queue
-from src.types import SwarmMessage
-from src.utils.database import get_chat, get_message, update_chat
+from src.utils.database import get_chat, get_message, update_chat, get_swarm_config
 
 
 async def swarm_handle_user_message(swarm_id: str, node_id: str, message_id: str):
@@ -11,13 +11,13 @@ async def swarm_handle_user_message(swarm_id: str, node_id: str, message_id: str
 
     user_communication_operation = chat.user_communication_operation
 
-    return_operation = BlockingOperation(
+    return_operation = ActionOperation(
         node_id=chat.id,
-        blocking_type="internal_action",
-        args={"user_response": message.content},
-        context=user_communication_operation.context,
-        next_function_to_call=user_communication_operation.next_function_to_call,
+        args={**{"user_response": message.content}, **user_communication_operation.context},
+        function_to_call=user_communication_operation.next_function_to_call,
     )
+    
+    save_swarm_operation(get_swarm_config(swarm_id), return_operation)
 
     update_chat(chat.id, {"user_communication_operation": None})
     swarm_operation_queue.put_nowait((swarm_id, return_operation))

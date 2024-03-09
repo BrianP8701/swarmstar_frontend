@@ -28,8 +28,6 @@ async def set_current_swarm(
     try:
         swarm_id = set_current_swarm_request.swarm_id
         swarm_tree = server_set_current_swarm(user_id, swarm_id)
-
-        print(f"\n\n\nswarm_tree: {swarm_tree}\n\n\n")
         
         if not swarm_id:
             return {"swarm": None, "user": get_user(user_id)}

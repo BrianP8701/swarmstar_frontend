@@ -179,7 +179,6 @@ def delete_user_swarm(swarm_id: str) -> None:
     set_user(user)
 
     if user_swarm.spawned: 
-        print('deleting swarmstar space')
         delete_swarmstar_space(swarm_config)
 
 
