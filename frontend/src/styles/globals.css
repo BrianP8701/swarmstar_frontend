@@ -142,7 +142,6 @@
     text-align: left;
     color: white;
     background-color: #343541;
-    /* Example background color, adjust as needed */
   }
 
   .agent-button::after {
@@ -158,11 +157,10 @@
 
   .agent-button:hover,
   .agent-button:focus,
-  .agent-button:active {
-    background-color: rgba(255, 255, 255, 0.2);
-    outline: none;
-  }
 
+  .selected-chat {
+    background-color: #4B5563; /* Adjust the background color for the selected chat button */
+  }
 
   .agent-navigation-container {
     overflow-y: scroll;

@@ -115,14 +115,16 @@ def update_node_status_in_ui(swarm_id: str, operation_id: str) -> None:
                 )
             )
         elif operation_type == "terminate":
-            asyncio.create_task(
-                manager.send_personal_message(
-                    {
-                        "type": "update_node_status",
-                        "data": {"node_id": node_id, "status": "terminated"},
-                    },
-                    user_id
+            node = get_swarm_node(get_swarm_config(swarm_id), node_id)
+            if not node.alive:
+                asyncio.create_task(
+                    manager.send_personal_message(
+                        {
+                            "type": "update_node_status",
+                            "data": {"node_id": node_id, "status": "terminated"},
+                        },
+                        user_id
+                    )
                 )
-            )
     except Exception as e:
         raise e

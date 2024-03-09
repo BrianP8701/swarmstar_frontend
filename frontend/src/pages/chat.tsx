@@ -4,14 +4,12 @@ import ChatSection from '@/components/chat/chatsection';
 
 const ChatPage = () => (
     <Layout>
-        <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gridTemplateRows: '50px 1fr', height: '100%', width: '100%', overflow: 'hidden' }}>
-            <div style={{ gridColumn: '1', gridRow: '1 / -1' }}>
+        <div style={{ display: 'flex', height: '100%', width: '100%', overflow: 'hidden' }}>
+            <div style={{ width: '250px', overflowY: 'auto', flexShrink: 0 }}>
                 <ChatNavigation />
             </div>
-            <div style={{ gridColumn: '2', gridRow: '2', height: 'calc(100vh - 48px)', overflow: 'hidden', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'auto' }}>
-                    <ChatSection />
-                </div>
+            <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+                <ChatSection />
             </div>
         </div>
     </Layout>
