@@ -39,9 +39,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         dispatch(addMessage(websocket_event.data.message));
       }
       else if (websocket_event.type === 'add_node_to_tree') {
-        dispatch(addNode({ 
-          parentNodeId: websocket_event.data.parent_node_id, 
-          newNode: websocket_event.data.new_node 
+        dispatch(addNode({
+          parentNodeId: websocket_event.data.parent_node_id,
+          newNode: websocket_event.data.new_node
         }));
       }
       else if (websocket_event.type === 'update_node_status') {
@@ -53,11 +53,16 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       else {
         console.error('Unknown WebSocket event:', websocket_event);
       }
-      
+
     };
     socket.onerror = (error) => console.error('WebSocket error:', error);
-    socket.onclose = () => console.log('WebSocket disconnected');
-
+    socket.onclose = (event) => {
+      console.log('WebSocket disconnected');
+      console.log('Close event:', event);
+      if (event.code !== 1000) {
+        console.error('WebSocket closed unexpectedly:', event);
+      }
+    };
     return () => socket.close();
   }, [user_id, dispatch]);
 

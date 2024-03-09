@@ -12,6 +12,7 @@ const useSpawnSwarm = () => {
 
     const handleSpawnSwarm = async (goal: string, swarm_id: string) => {
         try {
+            console.log('Spawning swarm:', swarm_id);
             const response = await fetch('/api/swarm/spawn_swarm', {
                 method: 'PUT',
                 body: JSON.stringify({ goal, swarm_id }),
@@ -24,6 +25,7 @@ const useSpawnSwarm = () => {
 
             if (response.ok) {
                 dispatch(setSwarm(data.swarm));
+                console.log('Swarm spawned:', data.swarm);
             } else {
                 throw new Error('Spawning swarm failed due to server error');
             }

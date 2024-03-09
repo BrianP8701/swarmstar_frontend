@@ -40,15 +40,15 @@ const swarmTreeSlice = createSlice({
     initialState,
     reducers: {
         setSwarmTree: (state, action: PayloadAction<SwarmNode | null>) => {
-            console.log('setSwarmTree:', action.payload)
             state.swarmState = action.payload;
         },
         setNodeLogs: (state, action: PayloadAction<NodeLog[]>) => {
             state.node_logs = action.payload;
         },
         addNode: (state, action: PayloadAction<AddNodePayload>) => {
+            console.log('payloda received in addNode reducer:', action.payload)
             const { parentNodeId, newNode } = action.payload;
-
+            console.log('addNode:', parentNodeId, newNode)
             const addNodeRecursive = (node: SwarmNode | null): boolean => {
                 if (node === null) return false;
 
@@ -72,13 +72,14 @@ const swarmTreeSlice = createSlice({
                 return false;
             };
 
-            if (parentNodeId === undefined || parentNodeId === null) {
+            if (parentNodeId === undefined || parentNodeId === null || state.swarmState === null) {
                 // If parentNodeId is not provided or is null, set the new node as the root
                 state.swarmState = newNode;
             } else {
                 // Otherwise, find the parent node and add the new node as its child
                 addNodeRecursive(state.swarmState);
             }
+            console.log('addNode:', state.swarmState)
         },
         updateNodeStatus: (state, action: PayloadAction<UpdateNodeStatusPayload>) => {
             const { nodeId, status } = action.payload;

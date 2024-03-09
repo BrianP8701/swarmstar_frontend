@@ -13,8 +13,6 @@ const SwarmTree = () => {
   const node_logs = useSelector((state: RootStateType) => state.tree.node_logs);
   const { setCurrentNode } = useSetCurrentNode();
 
-  console.log("node_logs", node_logs)
-
   const handleNodeClick = (nodeDatum: any) => {
     setIsSheetOpen(true);
     setCurrentNode(nodeDatum.attributes?.node_id);

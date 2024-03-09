@@ -13,7 +13,6 @@ const useSetCurrentSwarm = () => {
         dispatch(setSwarm(swarm));
         dispatch(setUser(user));
         dispatch(setSwarmTree(swarm_tree))
-        console.log('swarm_tree:', swarm_tree)
         dispatch(clearChat());
     };
 

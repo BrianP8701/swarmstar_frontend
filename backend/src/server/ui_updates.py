@@ -19,6 +19,9 @@ def is_user_online(user_id: str) -> bool:
     return manager.is_connected(user_id)
 
 def is_user_in_swarm(user_id: str, swarm_id: str) -> bool:
+    print("\n\n\n\nswarm_id vs current_swarm_id")
+    print(swarm_id, user_id, get_user(user_id).current_swarm_id)
+    print('\n\n\n\n')
     return get_user(user_id).current_swarm_id == swarm_id
 
 def is_user_in_chat(user_id: str, chat_id: str) -> bool:
@@ -74,8 +77,8 @@ def add_new_nodes_to_tree_in_ui(swarm_id: str, swarm_operation: SwarmOperation) 
         for node_id in parent_node.children_ids:
             node = get_swarm_node(swarm_config, node_id)
             add_node_payload = {
-                "parentNodeId" : parent_id,
-                "newNode": {
+                "parent_node_id" : parent_id,
+                "new_node": {
                     "name": node.name,
                     "attributes": {
                         "directive": node.message,

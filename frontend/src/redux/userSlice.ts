@@ -29,6 +29,7 @@ const userSlice = createSlice({
     },
     setCurrentSwarmID: (state, action: PayloadAction<string>) => {
       state.current_swarm_id = action.payload;
+
     },
     setCurrentChatID: (state, action: PayloadAction<string>) => {
       state.current_chat_id = action.payload;
@@ -46,7 +47,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserSwarms, setCurrentSwarmID, setCurrentChatID, setCurrentNodeID, setUser,  } = userSlice.actions;
+export const { setUserSwarms, setCurrentSwarmID, setCurrentChatID, setCurrentNodeID, setUser, } = userSlice.actions;
 export default userSlice.reducer;
 export type { UserState };
-

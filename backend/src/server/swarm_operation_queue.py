@@ -66,9 +66,11 @@ async def execute_swarm_operation(swarm_id: str, operation: SwarmOperation):
             handle_swarm_message(swarm_id, operation)
         else:
             next_operations = execute_swarmstar_operation(get_swarm_config(swarm_id), operation)
-            for next_operation in next_operations:
-                swarm_operation_queue.put_nowait((swarm_id, next_operation))
+            if next_operations:
+                for next_operation in next_operations:
+                    swarm_operation_queue.put_nowait((swarm_id, next_operation))
         
+        print("\n\nSwarm operation executed. Updating UI...\n\n")
         update_ui_after_swarm_operation(swarm_id, operation.id)
         
     except Exception as e:
@@ -94,14 +96,15 @@ def update_ui_after_swarm_operation(swarm_id: str, operation_id: str) -> None:
             if is_user_in_swarm(user_id, swarm_id):
                 print(f"User {user_id} is in swarm {swarm_id}")
                 
-                send_swarm_update_to_ui(swarm_id)
                 update_node_status_in_ui(swarm_id, swarm_operation)
                 if swarm_operation_type == "user_communication" and \
                 is_user_in_chat(user_id, swarm_operation.node_id):
                     append_message_to_chat_in_ui(swarm_id, swarm_operation.message_id)
                 elif swarm_operation_type == "spawn":
+                    send_swarm_update_to_ui(swarm_id)
                     add_new_nodes_to_tree_in_ui(swarm_id, swarm_operation)
                 elif swarm_operation_type == "terminate":
+                    send_swarm_update_to_ui(swarm_id)
                     if does_chat_exist(swarm_operation.node_id):
                         terminate_chat(swarm_id, swarm_operation.node_id)
 

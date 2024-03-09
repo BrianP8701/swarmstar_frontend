@@ -67,11 +67,12 @@ def set_current_swarm(user_id: str, swarm_id: str) -> None:
     update_kv(
         swarmstar_ui_db_name, "users", user_id, {"current_swarm_id": swarm_id}
     )
-    user_swarm = get_user_swarm(swarm_id)
-    if user_swarm.spawned:
-        return get_current_swarm_state_representation(swarm_id)
-    else:
-        return None
+    if swarm_id:
+        user_swarm = get_user_swarm(swarm_id)
+        if user_swarm.spawned:
+            return get_current_swarm_state_representation(swarm_id)
+        else:
+            return None
 
 def set_current_chat_id(user_id: str, node_id: str) -> None:
     update_kv(

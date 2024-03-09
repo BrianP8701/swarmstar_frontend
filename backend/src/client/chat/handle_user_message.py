@@ -1,5 +1,6 @@
-from fastapi import Depends, APIRouter, HTTPException, BackgroundTasks
+from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
+import asyncio
 
 from src.server.communication.swarm_handle_user_message import swarm_handle_user_message
 from src.utils.database import create_swarm_message, get_node_chat, get_user
@@ -25,7 +26,6 @@ class UserMessageResponse(BaseModel):
 
 @router.put("/chat/handle_user_message")
 async def handle_user_message(
-    background_tasks: BackgroundTasks,
     user_message_request: UserMessageRequest,
     user_id: str = Depends(validate_token),
 ):
@@ -42,8 +42,9 @@ async def handle_user_message(
         create_swarm_message(chat_id, message)
 
         user = get_user(user_id)
-        background_tasks.add_task(
-            swarm_handle_user_message, user.current_swarm_id, chat_id, message.id
+        
+        asyncio.create_task(
+            swarm_handle_user_message(user.current_swarm_id, chat_id, message.id)
         )
 
         return {"chat": get_node_chat(chat_id)}

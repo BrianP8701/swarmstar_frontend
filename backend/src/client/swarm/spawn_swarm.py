@@ -1,5 +1,6 @@
-from fastapi import Depends, APIRouter, HTTPException, BackgroundTasks
+from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
+import asyncio
 
 from src.server.spawn_swarm import spawn_swarm as server_spawn_swarm
 from src.utils.security import validate_token
@@ -20,8 +21,8 @@ class SpawnSwarmResponse(BaseModel):
 
 @router.put("/swarm/spawn_swarm", response_model=SpawnSwarmResponse)
 async def spawn_swarm(
-    background_tasks: BackgroundTasks,
-    spawn_swarm_request: SpawnSwarmRequest
+    spawn_swarm_request: SpawnSwarmRequest,
+    user_id: str = Depends(validate_token),
 ):
     try:
         swarm_id = spawn_swarm_request.swarm_id
@@ -34,7 +35,7 @@ async def spawn_swarm(
 
         update_user_swarm_on_spawn(swarm_id, goal)
 
-        background_tasks.add_task(server_spawn_swarm, swarm_id, goal)
+        asyncio.create_task(server_spawn_swarm(swarm_id, goal))
 
         return {"swarm": get_user_swarm(swarm_id)}
 
