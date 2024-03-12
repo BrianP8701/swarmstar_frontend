@@ -15,9 +15,11 @@ interface NodeLog {
     content: string;
 }
 
+type NodeLogList = NodeLog | NodeLog[] | NodeLogList[];
+
 interface SwarmTree {
     swarmState: SwarmNode | null;
-    node_logs: NodeLog[];
+    node_logs: unknown[]; // This should be NodeLogList, but it's infinitely recursive so it's not possible to define it here
 }
 
 interface AddNodePayload {
@@ -47,7 +49,7 @@ const swarmTreeSlice = createSlice({
         },
         addNode: (state, action: PayloadAction<AddNodePayload>) => {
             const { parentNodeId, newNode } = action.payload;
-            
+
             console.log("addNodePayload", action.payload);
 
             const addNodeRecursive = (node: SwarmNode | null): boolean => {
@@ -121,5 +123,5 @@ const swarmTreeSlice = createSlice({
 
 export const { setSwarmTree, addNode, setNodeLogs, updateNodeStatus } = swarmTreeSlice.actions;
 export default swarmTreeSlice.reducer;
-export type { SwarmTree, SwarmNode, AddNodePayload, NodeLog };
+export type { SwarmTree, SwarmNode, AddNodePayload, NodeLog, NodeLogList, UpdateNodeStatusPayload};
 

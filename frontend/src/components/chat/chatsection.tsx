@@ -41,7 +41,7 @@ const ChatSection = () => {
             {is_chat_alive && (
                 <div className="flex justify-center items-end w-full pb-5">
                     <button
-                        className="left-0 mb-3"
+                        className="left-0 mb-3 mr-2" // Added margin-right of 8px
                         style={{
                             width: '30px',
                             height: '30px',
@@ -57,9 +57,9 @@ const ChatSection = () => {
                             setCurrentMessage(e.target.value);
                             setText(e.target.value);
                         }}
-                        className="resize-none border border-gray-300 p-4 rounded-20"
+                        className="resize-none shadow-outside p-4 rounded-20"
                         style={{
-                            width: 'calc(100% - 520px)',
+                            width: 'calc(100% - 536px)', // Adjusted width to account for added spacing
                             minHeight: '40px',
                             maxHeight: '400px',
                             overflowY: 'auto',
@@ -76,7 +76,7 @@ const ChatSection = () => {
                         }}
                     />
                     <button
-                        className="right-0 mb-3"
+                        className="right-0 mb-3 ml-2" // Added margin-left of 8px
                         style={{
                             width: '30px',
                             height: '30px',

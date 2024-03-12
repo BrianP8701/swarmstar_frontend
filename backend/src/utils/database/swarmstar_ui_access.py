@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
+import copy
 
 from swarmstar.types import SwarmConfig
 from swarmstar.utils.swarmstar_space import get_swarm_state, get_swarm_operation
 
-from src.utils.database.swarmstar_space_access import get_current_swarm_state_representation
+from src.utils.database.swarmstar_space_access import get_current_swarm_state_representation, duplicate_swarm
 
 from src.types import UserSwarm, User, UserProfile, SwarmMessage, Chat, NodeChat
 from src.utils.database.mongodb import (
@@ -38,6 +39,7 @@ def get_user_profile(username: str) -> UserProfile:
 
 
 def get_user(user_id: str) -> User:
+    user = get_kv(swarmstar_ui_db_name, "users", user_id)
     return User(**get_kv(swarmstar_ui_db_name, "users", user_id))
 
 
@@ -114,6 +116,50 @@ def create_empty_user_swarm(user_id: str, name: str) -> UserSwarm:
     set_user(user)
     return user_swarm
 
+def copy_swarm(user_id: str, swarm_name: str, old_swarm_id: str):
+    try:
+        old_swarm = get_user_swarm(old_swarm_id)
+        swarm_copy = copy.deepcopy(old_swarm)
+        swarm_copy.id = generate_uuid("swarm")
+        swarm_copy.name = swarm_name
+        add_kv(swarmstar_ui_db_name, "swarms", swarm_copy.id, swarm_copy.model_dump())
+        user = get_user(user_id)
+        user.swarm_ids[swarm_copy.id] = swarm_name
+        user.current_swarm_id = swarm_copy.id
+        set_user(user)
+        if swarm_copy.spawned:
+            swarm_copy.nodes_with_active_chat = []
+            for chat_id in old_swarm.nodes_with_active_chat.keys():
+                chat = get_chat(chat_id)
+                chat.id = generate_uuid("chat")
+                swarm_copy.nodes_with_active_chat.append(chat.id)
+                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
+                swarm_copy.message_ids = []
+                for message_id in chat.message_ids:
+                    message = get_message(message_id)
+                    message.id = generate_uuid("message")
+                    swarm_copy.message_ids.append(message.id)
+                    add_kv(swarmstar_ui_db_name, "messages", message.id, message.model_dump())
+                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
+            
+            swarm_copy.nodes_with_terminated_chat = []
+            for chat_id in old_swarm.nodes_with_terminated_chat.keys():
+                chat = get_chat(chat_id)
+                chat.id = generate_uuid("chat")
+                swarm_copy.nodes_with_terminated_chat.append(chat.id)
+                chat.message_ids = []
+                for message_id in chat.message_ids:
+                    message = get_message(message_id)
+                    message.id = generate_uuid("message")
+                    chat.message_ids.append(message.id)
+                    add_kv(swarmstar_ui_db_name, "messages", message.id, message.model_dump())
+                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
+            
+            set_kv(swarmstar_ui_db_name, "swarms", swarm_copy.id, swarm_copy.model_dump())
+            duplicate_swarm(old_swarm_id, swarm_copy.id)
+        return swarm_copy
+    except Exception as e:
+        raise e
 
 def update_user_swarm_on_spawn(swarm_id: str, goal: str) -> None:
     update_kv(
@@ -223,11 +269,14 @@ def get_message(message_id: str) -> SwarmMessage:
 
 def create_empty_chat(swarm_id: str, node_id: str) -> Chat:
     chat = Chat(id=node_id, message_ids=[], alive=True)
-    node = get_swarm_node(get_swarm_config(swarm_id), node_id)
     add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
+    
     user_swarm = get_user_swarm(swarm_id)
+    node = get_swarm_node(get_swarm_config(swarm_id), node_id)
+
     user_swarm.nodes_with_active_chat[node_id] = node.name
     set_kv(swarmstar_ui_db_name, "swarms", swarm_id, user_swarm.model_dump())
+    print(f"Created chat in swarm: {user_swarm.model_dump()}")
     return chat
 
 
@@ -238,7 +287,7 @@ def create_swarm_message(chat_id: str, message: SwarmMessage) -> None:
 
 def terminate_chat(swarm_id: str, node_id: str) -> None:
     """
-    Update chat and swarm object in UI database to reflect that the chat is terminated.
+    Update chat and swarm object in database to reflect that the chat is terminated.
     """
     user_swarm = get_user_swarm(swarm_id)
     nodes_with_active_chat = user_swarm.nodes_with_active_chat

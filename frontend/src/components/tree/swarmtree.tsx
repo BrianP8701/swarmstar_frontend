@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootStateType } from '@models/rootstate';
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@components/ui/sheet';
 import useSetCurrentNode from '@hooks/tree/setCurrentNode';
-
+import { NodeLog, NodeLogList } from '@redux/treeSlice';
 
 const SwarmTree = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -53,6 +53,25 @@ const SwarmTree = () => {
       </g>
     );
   };
+
+  const renderNodeLogs = (logs: unknown, depth = 0): JSX.Element[] | JSX.Element => {
+    if (!Array.isArray(logs)) {
+      return renderLog(logs as NodeLog);
+    }
+
+    return logs.map((log, index) => (
+      <div key={`${depth}-${index}`} style={{ margin: '4px', padding: '4px', border: depth > 0 ? '1px solid black' : 'none' }}>
+        {Array.isArray(log) ? renderNodeLogs(log, depth + 1) : renderLog(log as NodeLog)}
+      </div>
+    ));
+  };
+
+  const renderLog = (log: NodeLog): JSX.Element => (
+    <div className="mb-4 bg-gray-900 text-white p-4 rounded">
+      <p className="font-bold mb-2 pl-2">{log.role}</p>
+      <p className="pl-2 whitespace-pre-wrap">{log.content}</p>
+    </div>
+  );
 
   const handleSheetClose = () => {
     setIsSheetOpen(false);
@@ -106,12 +125,7 @@ const SwarmTree = () => {
         <SheetContent style={{ width: '600px', maxWidth: '100%' }}>
           <SheetHeader>
             <SheetDescription>
-              {node_logs.map((log, index) => (
-                <div key={index} className="mb-4 bg-gray-900 text-white p-4 rounded">
-                  <p className="font-bold mb-2 pl-2">{log.role}</p>
-                  <p className="pl-2 whitespace-pre-wrap">{log.content}</p>
-                </div>
-              ))}
+              {renderNodeLogs(node_logs)}
             </SheetDescription>
           </SheetHeader>
         </SheetContent>

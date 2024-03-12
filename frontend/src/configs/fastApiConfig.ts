@@ -16,6 +16,7 @@ const flaskConfig = {
     update_user_url: "http://lvh.me:5000/user/update_user",
     set_current_chat_url: "http://lvh.me:5000/chat/set_current_chat",
     set_current_node_url: "http://lvh.me:5000/tree/set_current_node",
+    copy_swarm_url: "http://lvh.me:5000/swarm/copy_swarm",
 };
 
 

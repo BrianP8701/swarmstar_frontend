@@ -30,12 +30,13 @@ def send_swarm_update_to_ui(swarm_id: str) -> None:
     After any change to the UserSwarm, send the updated UserSwarm to the UI.
     """
     try:
-        user_id = get_user_swarm(swarm_id).owner
+        user_swarm = get_user_swarm(swarm_id)
+        user_id = user_swarm.owner
         asyncio.create_task(
             manager.send_personal_message(
                 {
                     "type": "update_swarm",
-                    "data": {"swarm": get_user_swarm(swarm_id).model_dump()},
+                    "data": {"swarm": user_swarm.model_dump()},
                 },
                 user_id,
             )
@@ -61,7 +62,6 @@ def append_message_to_chat_in_ui(swarm_id: str, message_id: str) -> None:
     except Exception as e:
         raise e
 
-
 def add_new_nodes_to_tree_in_ui(swarm_id: str, spawn_operation_id: str) -> None:
     """
     After a spawn operation, add the new node to the tree in the UI.
@@ -72,7 +72,7 @@ def add_new_nodes_to_tree_in_ui(swarm_id: str, spawn_operation_id: str) -> None:
         swarm_config = get_swarm_config(swarm_id)
         
         parent_id = spawn_operation.node_id
-        spawned_node = get_swarm_node(swarm_config, spawn_operation.child_node_id)
+        spawned_node = get_swarm_node(swarm_config, spawn_operation.node_id)
 
         add_node_payload = {
             "parent_node_id" : parent_id,
@@ -104,6 +104,7 @@ def update_node_status_in_ui(swarm_id: str, operation_id: str) -> None:
         user_id = get_user_swarm(swarm_id).owner
         operation_type = operation.operation_type
         node_id = operation.node_id
+        
         if operation_type == "spawn":
             asyncio.create_task(
                 manager.send_personal_message(

@@ -44,7 +44,7 @@ const SwarmContols = () => {
                             placeholder="Enter goal"
                             value={goal}
                             readOnly
-                            className="text-1 p-5"
+                            className="text-1 p-5 shadow-outside"
                             style={{
                                 resize: 'both',
                                 overflow: 'auto',
@@ -75,7 +75,7 @@ const SwarmContols = () => {
                             placeholder="Enter goal"
                             value={goal}
                             readOnly
-                            className="text-1 p-5"
+                            className="text-1 p-5 shadow-outside"
                             style={{
                                 resize: 'both',
                                 overflow: 'auto',
@@ -105,7 +105,7 @@ const SwarmContols = () => {
                         placeholder="Enter goal"
                         value={goal || ''}
                         onChange={(e) => dispatch(setGoal(e.target.value))}
-                        className="text-1 p-5"
+                        className="text-1 p-5 shadow-outside"
                         style={{
                             resize: 'both',
                             overflow: 'auto',

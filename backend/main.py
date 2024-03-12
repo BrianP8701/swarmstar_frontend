@@ -12,6 +12,7 @@ from src.client.swarm.delete_swarm import router as delete_swarm_router
 from src.client.swarm.set_current_swarm import router as set_current_swarm_router
 from src.client.swarm.spawn_swarm import router as spawn_swarm_router
 from src.client.swarm.update_swarm import router as update_swarm_router
+from src.client.swarm.copy_swarm import router as copy_swarm_router
 
 from src.client.chat.set_current_chat import router as set_current_chat_router
 from src.client.chat.handle_user_message import router as handle_user_message_router
@@ -78,3 +79,4 @@ app.include_router(handle_user_message_router)
 app.include_router(update_user_router)
 app.include_router(delete_user_router)
 app.include_router(set_current_node_router)
+app.include_router(copy_swarm_router)
