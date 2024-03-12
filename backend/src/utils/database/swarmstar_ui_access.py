@@ -128,31 +128,31 @@ def copy_swarm(user_id: str, swarm_name: str, old_swarm_id: str):
         user.current_swarm_id = swarm_copy.id
         set_user(user)
         if swarm_copy.spawned:
-            swarm_copy.nodes_with_active_chat = []
+            swarm_copy.nodes_with_active_chat = {}
             for chat_id in old_swarm.nodes_with_active_chat.keys():
-                chat = get_chat(chat_id)
+                old_chat = get_chat(chat_id)
+                chat = copy.deepcopy(old_chat)
                 chat.id = generate_uuid("chat")
-                swarm_copy.nodes_with_active_chat.append(chat.id)
-                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
-                swarm_copy.message_ids = []
-                for message_id in chat.message_ids:
-                    message = get_message(message_id)
-                    message.id = generate_uuid("message")
-                    swarm_copy.message_ids.append(message.id)
-                    add_kv(swarmstar_ui_db_name, "messages", message.id, message.model_dump())
-                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
-            
-            swarm_copy.nodes_with_terminated_chat = []
-            for chat_id in old_swarm.nodes_with_terminated_chat.keys():
-                chat = get_chat(chat_id)
-                chat.id = generate_uuid("chat")
-                swarm_copy.nodes_with_terminated_chat.append(chat.id)
+                swarm_copy.nodes_with_active_chat[chat.id] = old_swarm.nodes_with_active_chat[chat_id]
                 chat.message_ids = []
-                for message_id in chat.message_ids:
+                for message_id in old_chat.message_ids:
                     message = get_message(message_id)
                     message.id = generate_uuid("message")
                     chat.message_ids.append(message.id)
                     add_kv(swarmstar_ui_db_name, "messages", message.id, message.model_dump())
+                add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
+            
+            swarm_copy.nodes_with_terminated_chat = {}
+            for chat_id in old_swarm.nodes_with_terminated_chat.keys():
+                old_chat = get_chat(chat_id)
+                chat = copy.deepcopy(old_chat)
+                chat.id = generate_uuid("chat")
+                swarm_copy.nodes_with_terminated_chat[chat.id] = old_swarm.nodes_with_terminated_chat[chat_id]
+                chat.message_ids = []
+                for message_id in old_chat.message_ids:
+                    message = get_message(message_id)
+                    message.id = generate_uuid("message")
+                    chat.message_ids.append(message.id)
                 add_kv(swarmstar_ui_db_name, "chats", chat.id, chat.model_dump())
             
             set_kv(swarmstar_ui_db_name, "swarms", swarm_copy.id, swarm_copy.model_dump())

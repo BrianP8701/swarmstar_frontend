@@ -56,8 +56,8 @@ def duplicate_swarm(old_swarm_id: str, copied_swarm_id):
     swarm_config.id = copied_swarm_id
 
     add_kv(swarmstar_space_db_name, "config", copied_swarm_id, swarm_config.model_dump())
-    add_kv(swarmstar_space_db_name, "swarm_state", copied_swarm_id, swarm_state)
-    add_kv(swarmstar_space_db_name, "swarm_history", copied_swarm_id, swarm_history)
+    add_kv(swarmstar_space_db_name, "swarm_state", copied_swarm_id, {"data": swarm_state})
+    add_kv(swarmstar_space_db_name, "swarm_history", copied_swarm_id, {"data": swarm_history})
 
     for node_id in swarm_state:
         node = get_swarm_node(swarm_config, node_id)

@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import pymongo
 import dotenv
 import os
+from pymongo.errors import DuplicateKeyError
 
 dotenv.load_dotenv()
 
@@ -20,18 +21,23 @@ def add_kv(db_name: str, collection_name: str, _id: str, value: dict) -> None:
     """
     Add a _id-value pair to the collection with an initial version number.
     """
+    if type(value) is not dict:
+        raise ValueError(f"Value must be a dictionary. Got {type(value)}.")
     try:
         client = create_client(uri)
         db = client[db_name]
         collection = db[collection_name]
+        
         # Initialize the document with a version number
         value.pop("id", None)  # Remove the id field if it exists
         document = {"_id": _id, "version": 1, **value}
         collection.insert_one(document)
-    except pymongo.errors.Duplicate_idError:
+    except DuplicateKeyError as e:
         raise ValueError(f"A document with _id {_id} already exists.")
     except Exception as e:
         raise ValueError(f"Failed to add to MongoDB collection: {str(e)}")
+    finally:
+        client.close()
 
 
 def get_kv(db_name: str, collection_name: str, _id: str) -> dict:

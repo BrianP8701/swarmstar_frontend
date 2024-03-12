@@ -71,7 +71,7 @@ def add_new_nodes_to_tree_in_ui(swarm_id: str, spawn_operation_id: str) -> None:
         user_id = get_user_swarm(swarm_id).owner
         swarm_config = get_swarm_config(swarm_id)
         
-        parent_id = spawn_operation.node_id
+        parent_id = spawn_operation.parent_node_id
         spawned_node = get_swarm_node(swarm_config, spawn_operation.node_id)
 
         add_node_payload = {
@@ -103,26 +103,26 @@ def update_node_status_in_ui(swarm_id: str, operation_id: str) -> None:
         operation = get_swarm_operation(get_swarm_config(swarm_id), operation_id)
         user_id = get_user_swarm(swarm_id).owner
         operation_type = operation.operation_type
-        node_id = operation.node_id
+        parent_node_id = operation.parent_node_id
         
         if operation_type == "spawn":
             asyncio.create_task(
                 manager.send_personal_message(
                     {
                         "type": "update_node_status",
-                        "data": {"node_id": node_id, "status": "waiting"},
+                        "data": {"node_id": parent_node_id, "status": "waiting"},
                     },
                     user_id,
                 )
             )
         elif operation_type == "terminate":
-            node = get_swarm_node(get_swarm_config(swarm_id), node_id)
+            node = get_swarm_node(get_swarm_config(swarm_id), parent_node_id)
             if not node.alive:
                 asyncio.create_task(
                     manager.send_personal_message(
                         {
                             "type": "update_node_status",
-                            "data": {"node_id": node_id, "status": "terminated"},
+                            "data": {"node_id": parent_node_id, "status": "terminated"},
                         },
                         user_id
                     )
