@@ -4,12 +4,14 @@ import { RootStateType } from '@models/rootstate';
 import { useSelector, useDispatch } from 'react-redux';
 import { setGoal } from '@/redux/swarmSlice';
 import useUpdateSwarm from '@/hooks/swarm/updateSwarm';
+import usePauseSwarm from '@/hooks/swarm/pauseSwarm';
 
 const SwarmContols = () => {
     const dispatch = useDispatch();
 
     const { handleDeleteSwarm } = useDeleteSwarm();
     const { handleSpawnSwarm } = useSpawnSwarm();
+    const { handlePauseSwarm } = usePauseSwarm();
 
     const current_swarm_id = useSelector((state: RootStateType) => state.user.current_swarm_id);
     const isSpawned = useSelector((state: RootStateType) => state.swarm.spawned);
@@ -26,6 +28,7 @@ const SwarmContols = () => {
             handleSpawnSwarm(goal, current_swarm_id);
         }
     }
+
 
     return (
         <div style={{
@@ -95,6 +98,13 @@ const SwarmContols = () => {
                             style={{ display: 'block', margin: '10px auto' }}
                         >
                             Delete
+                        </button>
+                        <button
+                            onClick={() => handlePauseSwarm(current_swarm_id)}
+                            className="button-text mt-3.5"
+                            style={{ display: 'block', margin: '10px auto' }}
+                        >
+                            Pause
                         </button>
                     </div>
                 </div>
